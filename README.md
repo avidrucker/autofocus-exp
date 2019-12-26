@@ -2,6 +2,10 @@
 
 ## Supplemental Docs
 - [Figma design doc](https://www.figma.com/file/xLQLwhw01n12pKgAnRt8Pt/AutoFocus-Design-Doc?node-id=0%3A1)
+- [Quick Start User Stories](https://github.com/avidrucker/autofocus-exp/blob/master/quick_start_user_stories.md)
+- [E2E Test FVP](https://github.com/avidrucker/autofocus-exp/blob/master/end-to-end-test-fvp.md)
+- [Todo Item Shape](https://github.com/avidrucker/autofocus-exp/blob/master/todo_item_shape.md)
+- [Current State Enum](https://github.com/avidrucker/autofocus-exp/blob/master/current_state_enum.md)
 
 ## Intent, Method, Team, Motivation
 
