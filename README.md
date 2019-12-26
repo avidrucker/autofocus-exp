@@ -1,5 +1,8 @@
 # AutoFocus Todo List App (Experience)
 
+## Supplemental Docs
+- [Figma design doc](https://www.figma.com/file/xLQLwhw01n12pKgAnRt8Pt/AutoFocus-Design-Doc?node-id=0%3A1)
+
 ## Intent, Method, Team, Motivation
 
 ### What:
