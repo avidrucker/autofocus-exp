@@ -1,6 +1,7 @@
-var world = 'world';
-var hello = function (word) {
-    if (word === void 0) { word = world; }
-    return "Hello " + world + "!";
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+const APP_NAME = 'AutoFocus';
+exports.greetUser = (word = APP_NAME) => {
+    return `Welcome to ${APP_NAME}!`;
 };
-console.log(hello());
+console.log(exports.greetUser());

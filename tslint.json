@@ -1,9 +1,0 @@
-{
-  "defaultSeverity": "error",
-  "extends": "gts/tslint.json",
-  "linterOptions": {
-    "exclude": [
-      "**/*.json"
-    ]
-  }
-}

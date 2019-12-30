@@ -1,7 +1,7 @@
-const world = 'world';
+const APP_NAME = 'AutoFocus';
 
-const hello = (word: string = world): string => {
-  return `Hello ${world}!`;
+export const greetUser = (word: string = APP_NAME): string => {
+  return `Welcome to ${APP_NAME}!`;
 }
 
-console.log(hello());
+console.log(greetUser());
