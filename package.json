@@ -20,7 +20,7 @@
     "test": "mocha",
     "quick-run": "node src/index.js",
     "run": "nodemon src/index.js",
-    "test-and-run": "npx tsc && npm test && npm run-script quick-run"
+    "test-and-run": "npx tsc && tslint -c tslint.json 'src/*.ts' && npm test && npm run-script quick-run"
   },
   "repository": {
     "type": "git",
