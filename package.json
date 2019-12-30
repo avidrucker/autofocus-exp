@@ -1,27 +1,41 @@
 {
-  "name": "",
+  "name": "autofocus-exp",
   "version": "0.0.0",
-  "description": "",
-  "main": "build/src/index.js",
-  "types": "build/src/index.d.ts",
-  "files": [
-    "build/src"
-  ],
-  "license": "Apache-2.0",
-  "keywords": [],
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "check": "gts check",
-    "clean": "gts clean",
-    "compile": "tsc -p .",
-    "fix": "gts fix",
-    "prepare": "npm.cmd run compile",
-    "pretest": "npm.cmd run compile",
-    "posttest": "npm.cmd run check"
+  "description": "cross platform app for todos",
+  "main": "src/index.js",
+  "directories": {
+    "test": "test"
   },
   "devDependencies": {
-    "gts": "^1.1.2",
-    "typescript": "~3.7.0",
-    "@types/node": "^10.0.3"
+    "@types/chai": "^4.2.7",
+    "@types/mocha": "^5.2.7",
+    "chai": "^4.2.0",
+    "mocha": "^6.2.2",
+    "nodemon": "^2.0.2",
+    "prettier": "1.19.1",
+    "tslint": "^5.20.1",
+    "tslint-config-prettier": "^1.18.0"
+  },
+  "scripts": {
+    "test": "mocha",
+    "quick-run": "node src/index.js",
+    "run": "nodemon src/index.js",
+    "test-and-run": "npx tsc && tslint -c tslint.json 'src/*.ts' && npm test && npm run-script quick-run"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/avidrucker/autofocus-exp.git"
+  },
+  "keywords": [
+    "todo-app"
+  ],
+  "author": "Avi Drucker",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/avidrucker/autofocus-exp/issues"
+  },
+  "homepage": "https://github.com/avidrucker/autofocus-exp#readme",
+  "dependencies": {
+    "typescript": "^3.7.4"
   }
 }

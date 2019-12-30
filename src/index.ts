@@ -1,7 +1,8 @@
-const world = 'world';
+const APP_NAME = 'AutoFocus';
 
-const hello = (word: string = world): string => {
-  return `Hello ${world}!`;
+export const greetUser = (word: string = APP_NAME): string => {
+  return `Welcome to ${APP_NAME}!`;
 }
 
-console.log(hello());
+// tslint:disable-next-line:no-console
+console.log(greetUser());
