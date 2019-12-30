@@ -11,13 +11,16 @@
     "@types/mocha": "^5.2.7",
     "chai": "^4.2.0",
     "mocha": "^6.2.2",
-    "nodemon": "^2.0.2"
+    "nodemon": "^2.0.2",
+    "prettier": "1.19.1",
+    "tslint": "^5.20.1",
+    "tslint-config-prettier": "^1.18.0"
   },
   "scripts": {
     "test": "mocha",
     "quick-run": "node src/index.js",
-		"run": "nodemon src/index.js",
-		"test-and-run": "npx tsc && npm test && npm run-script quick-run"
+    "run": "nodemon src/index.js",
+    "test-and-run": "npx tsc && npm test && npm run-script quick-run"
   },
   "repository": {
     "type": "git",
@@ -31,5 +34,8 @@
   "bugs": {
     "url": "https://github.com/avidrucker/autofocus-exp/issues"
   },
-  "homepage": "https://github.com/avidrucker/autofocus-exp#readme"
+  "homepage": "https://github.com/avidrucker/autofocus-exp#readme",
+  "dependencies": {
+    "typescript": "^3.7.4"
+  }
 }
