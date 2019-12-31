@@ -38,5 +38,10 @@
   "homepage": "https://github.com/avidrucker/autofocus-exp#readme",
   "dependencies": {
     "typescript": "^3.7.4"
-  }
+	},
+	"husky": {
+		"hooks": {
+			"pre-push":"CI=true npm test"
+		}
+	}
 }
