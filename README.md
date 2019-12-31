@@ -1,5 +1,10 @@
 # AutoFocus Todo List App (Experience)
 
+## Getting Started
+
+1. Install project dependencies: `npm install`
+2. Execute tests & run app in terminal window: `npm run-script test-and-run`
+
 ## Supplemental Docs
 - [Figma design doc](https://www.figma.com/file/xLQLwhw01n12pKgAnRt8Pt/AutoFocus-Design-Doc?node-id=0%3A1)
 - [Quick Start User Stories](https://github.com/avidrucker/autofocus-exp/blob/master/quick_start_user_stories.md)
