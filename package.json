@@ -37,11 +37,13 @@
   },
   "homepage": "https://github.com/avidrucker/autofocus-exp#readme",
   "dependencies": {
+    "@types/readline-sync": "^1.4.3",
+    "readline-sync": "^1.4.10",
     "typescript": "^3.7.4"
-	},
-	"husky": {
-		"hooks": {
-			"pre-push":"CI=true npm test"
-		}
-	}
+  },
+  "husky": {
+    "hooks": {
+      "pre-push": "CI=true npm test"
+    }
+  }
 }
