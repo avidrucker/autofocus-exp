@@ -19,9 +19,11 @@
     "tslint-config-prettier": "^1.18.0"
   },
   "scripts": {
-    "test": "mocha",
-    "quick-run": "node src/index.js",
-    "test-and-run": "npx tsc && tslint -c tslint.json 'src/*.ts' && npm test"
+		"test": "mocha",
+		"build": "npx tsc && tslint -c tslint.json 'src/*.ts'",
+		"run": "node src/index.js",
+		"build-and-run": "npm run-script build && npm run-script run",
+    "build-and-test": "npm run-script build && npm test"
   },
   "repository": {
     "type": "git",
@@ -43,7 +45,7 @@
   },
   "husky": {
     "hooks": {
-      "pre-push": "cross-env CI=true npm test"
+      "pre-push": "CI=true npm run-script build-and-test"
     }
   }
 }
