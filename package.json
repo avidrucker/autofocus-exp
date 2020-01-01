@@ -43,7 +43,7 @@
   },
   "husky": {
     "hooks": {
-      "pre-push": "set CI=true&&npm test --no-stdin"
+      "pre-push": "($env:CI = 'true') -and (npm test --env=node)"
     }
   }
 }
