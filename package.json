@@ -10,6 +10,7 @@
     "@types/chai": "^4.2.7",
     "@types/mocha": "^5.2.7",
     "chai": "^4.2.0",
+    "cross-env": "^6.0.3",
     "husky": "^3.1.0",
     "mocha": "^6.2.2",
     "nodemon": "^2.0.2",
@@ -20,8 +21,7 @@
   "scripts": {
     "test": "mocha",
     "quick-run": "node src/index.js",
-    "run": "nodemon src/index.js",
-    "test-and-run": "npx tsc && tslint -c tslint.json 'src/*.ts' && npm test && npm run-script quick-run"
+    "test-and-run": "npx tsc && tslint -c tslint.json 'src/*.ts' && npm test"
   },
   "repository": {
     "type": "git",
@@ -43,7 +43,7 @@
   },
   "husky": {
     "hooks": {
-      "pre-push": "CI=true npm test"
+      "pre-push": "cross-env CI=true npm test"
     }
   }
 }
