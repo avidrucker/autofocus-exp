@@ -43,7 +43,7 @@
   },
   "husky": {
     "hooks": {
-      "pre-push": "cross-env CI=true npx test"
+      "pre-push": "cross-env CI=true npm test"
     }
   }
 }
