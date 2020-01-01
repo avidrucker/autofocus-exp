@@ -8,7 +8,7 @@ describe('Greet User', () => {
         chai_1.expect(greeting).equals('Welcome to AutoFocus!');
     });
 });
-describe.skip('Husky', () => {
+describe('Husky', () => {
     it('should prevent repo from being pushed when tests fail', () => {
         chai_1.expect(true).equals(false);
     });

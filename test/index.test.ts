@@ -9,7 +9,7 @@ describe('Greet User', () => {
   });
 });
 
-describe.skip('Husky', () => {
+describe('Husky', () => {
   it('should prevent repo from being pushed when tests fail', () => {
 
     expect(true).equals(false);
