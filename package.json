@@ -43,7 +43,7 @@
   },
   "husky": {
     "hooks": {
-      "pre-push": "set CI=true --no-stdin npm test"
+      "pre-push": "set CI=true && npm test"
     }
   }
 }
