@@ -43,7 +43,7 @@
   },
   "husky": {
     "hooks": {
-      "pre-push": "CI=true npm test --no-verify"
+      "pre-push": "--no-verify && CI=true && npm test"
     }
   }
 }
