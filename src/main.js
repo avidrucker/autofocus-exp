@@ -49,9 +49,12 @@ ENTER to quit: ";
 const newItemBodyPrompt = "Give your todo item a comment (ie. use \
 dishwasher for non-glass items) or hit ENTER key to skip: ";
 exports.promptUserForNewTodoItem = () => {
-    const titleText = readline_sync_1.default.question(newItemTitlePrompt);
+    const headerText = readline_sync_1.default.question(newItemTitlePrompt, {
+        limit: /\w+/i,
+        limitMessage: 'Sorry, $<lastInput> is not a valid todo item title'
+    });
     let bodyText = "";
-    if (titleText.toLowerCase() === 'q') {
+    if (headerText.toLowerCase() === 'q') {
         return null;
     }
     else {
@@ -63,7 +66,7 @@ exports.promptUserForNewTodoItem = () => {
         const newItem = {
             body: bodyText,
             created: "temp_created_date",
-            header: titleText,
+            header: headerText,
             modified: "temp_created_date",
             state: TodoState.Unmarked,
             uuid: "temp_unique_universal_identifier"

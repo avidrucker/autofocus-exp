@@ -61,9 +61,12 @@ const newItemBodyPrompt = "Give your todo item a comment (ie. use \
 dishwasher for non-glass items) or hit ENTER key to skip: ";
 
 export const promptUserForNewTodoItem = (): ITodoItem | null => {
-	const titleText = readlineSync.question(newItemTitlePrompt);
+	const headerText = readlineSync.question(newItemTitlePrompt, {
+		limit: /\w+/i,
+		limitMessage: 'Sorry, $<lastInput> is not a valid todo item title'
+	}); // prevent empty input
 	let bodyText = "";
-	if(titleText.toLowerCase() === 'q') {
+	if(headerText.toLowerCase() === 'q') {
 		return null;
 	} else {
 		bodyText = readlineSync.question(newItemBodyPrompt);
@@ -75,7 +78,7 @@ export const promptUserForNewTodoItem = (): ITodoItem | null => {
 		const newItem: ITodoItem = {
 			body: bodyText,
 			created:"temp_created_date",
-			header: titleText,
+			header: headerText,
 			modified:"temp_created_date",
 			state: TodoState.Unmarked,
 			uuid:"temp_unique_universal_identifier"
@@ -108,6 +111,8 @@ export const main = ():void => {
 			const temp: ITodoItem | null = promptUserForNewTodoItem();
 			if(temp !== null) {
 				todoList.push(temp);
+				// todo_AD5: in 071, put state mutation directly in main program loop
+				// Next, dev implements todo item store using redux pattern
 				printTodoItemCount();
 			}
 		}
