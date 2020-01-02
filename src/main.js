@@ -52,7 +52,7 @@ exports.promptUserForNewTodoItem = () => {
     const headerText = readline_sync_1.default.question(newItemTitlePrompt, {
         limit: /\w+/i,
         limitMessage: 'Sorry, $<lastInput> is not a valid todo item title'
-    });
+    }); // prevent empty input
     let bodyText = "";
     if (headerText.toLowerCase() === 'q') {
         return null;
@@ -94,6 +94,8 @@ exports.main = () => {
             const temp = exports.promptUserForNewTodoItem();
             if (temp !== null) {
                 todoList.push(temp);
+                // todo_AD5: in 071, put state mutation directly in main program loop
+                // Next, dev implements todo item store using redux pattern
                 printTodoItemCount();
             }
         }
