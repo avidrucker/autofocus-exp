@@ -3,7 +3,12 @@
 ## Getting Started
 
 1. Install project dependencies: `npm install`
-2. Execute tests & run app in terminal window: `npm run-script test-and-run`
+2. Build project & run console app in terminal window: `npm run-script build-and-run`
+3. Build project & test console app in terminal window: `npm run-script build-and-test`
+4. You may also build, test, or run individually (this will be faster) via:
+  - `npm run-script build`
+  - `npm test`
+  - `npm run-script run`
 
 ## Supplemental Docs
 - [Figma design doc](https://www.figma.com/file/xLQLwhw01n12pKgAnRt8Pt/AutoFocus-Design-Doc?node-id=0%3A1)
