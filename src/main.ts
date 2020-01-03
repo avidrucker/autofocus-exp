@@ -1,14 +1,13 @@
 import readlineSync from 'readline-sync';
 
+import {constructNewTodoItem, ITodoItem, printTodoItemCount, TodoState} from './todoItem';
+
+import {print} from './utility';
+
 const APP_NAME = 'AutoFocus';
 
 export const greetUser = (word: string = APP_NAME): string => {
   return `Welcome to ${APP_NAME}!`;
-}
-
-const print = (s: string):void => {
-	// tslint:disable-next-line:no-console
-	console.log(s);
 }
 
 enum MainMenuChoice {
@@ -34,33 +33,15 @@ const promptUserWithMainMenu = (): MainMenuChoice => {
 	return selection;
 }
 
-enum TodoState {
-	Unmarked,
-	Marked,
-	Completed,
-	Archived
-}
-
-interface ITodoItem {
-	created: string;
-	modified: string;
-	uuid: string;
-	header: string;
-	body?: string;
-	state: TodoState;
-}
-
-const todoList: ITodoItem[] = [];
-
 // todo_AD3: in 071: create constants over entire file as needed
 // next, dev consolidates constant variables at the top of file
 const newItemTitlePrompt = "Give your todo item a name (ie. wash the \
-dishes) then hit the ENTER key to confirm. Or, type ‘Q’ and hit \
+dishes) then hit the ENTER key to confirm. Or, type 'Q' and hit \
 ENTER to quit: ";
 const newItemBodyPrompt = "Give your todo item a comment (ie. use \
 dishwasher for non-glass items) or hit ENTER key to skip: ";
 
-export const promptUserForNewTodoItem = (): ITodoItem | null => {
+const promptUserForNewTodoItem = (): ITodoItem | null => {
 	const headerText = readlineSync.question(newItemTitlePrompt, {
 		limit: /\w+/i,
 		limitMessage: 'Sorry, $<lastInput> is not a valid todo item title'
@@ -75,31 +56,19 @@ export const promptUserForNewTodoItem = (): ITodoItem | null => {
 		// Next, dev implements momentjs datetime for created & modified fields.
 		// todo_AD2: in 071, place down temp ITodoItem field data uuid
 		// Next, dev implements uuid w/ conventional method (datetime + random digit).
-		const newItem: ITodoItem = {
-			body: bodyText,
-			created:"temp_created_date",
-			header: headerText,
-			modified:"temp_created_date",
-			state: TodoState.Unmarked,
-			uuid:"temp_unique_universal_identifier"
-		}
+		const newItem: ITodoItem = constructNewTodoItem(
+			headerText, bodyText);
 
-		print(`New todo item '${newItem.header}' successfully created!`)
+		print(`New todo item '${newItem.header}' successfully created!`);
 
 		return newItem;
 	}
 }
 
-const printTodoItemCount = ():void => {
-	let plural = "";
-	if(todoList.length !== 1) {
-		plural = "s";
-	}
-	print(`You have ${todoList.length} todo item${plural}.`);
-}
-
 export const main = ():void => {
 	print(greetUser());
+
+	const todoList: ITodoItem[] = [];
 
 	// todo_AD4: in 071, put main program loop inside of main function
 	// Next, dev extracts out pieces of main program loop into
@@ -113,7 +82,7 @@ export const main = ():void => {
 				todoList.push(temp);
 				// todo_AD5: in 071, put state mutation directly in main program loop
 				// Next, dev implements todo item store using redux pattern
-				printTodoItemCount();
+				printTodoItemCount(todoList);
 			}
 		}
 		if(answer === MainMenuChoice.Quit) {
