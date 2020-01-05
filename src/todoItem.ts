@@ -35,3 +35,7 @@ export const printTodoItemCount = (list: ITodoItem[]):void => {
 	}
 	print(`You have ${list.length} todo item${plural}.`);
 }
+
+export const printTodoItemList = (list: ITodoItem[]):void => {
+	list.map(x => print(x.header));
+}

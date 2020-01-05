@@ -1,6 +1,6 @@
 import readlineSync from 'readline-sync';
 
-import {constructNewTodoItem, ITodoItem, printTodoItemCount, TodoState} from './todoItem';
+import {constructNewTodoItem, ITodoItem, printTodoItemCount, printTodoItemList, TodoState} from './todoItem';
 
 import {print} from './utility';
 
@@ -85,6 +85,12 @@ export const main = ():void => {
 				printTodoItemCount(todoList);
 			}
 		}
+
+		if(answer === MainMenuChoice.ReviewTodos) {
+			print("Your Todo List:")
+			printTodoItemList(todoList);
+		}
+
 		if(answer === MainMenuChoice.Quit) {
 			running = false;
 		}

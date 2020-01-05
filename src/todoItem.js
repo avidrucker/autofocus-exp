@@ -26,3 +26,6 @@ exports.printTodoItemCount = (list) => {
     }
     utility_1.print(`You have ${list.length} todo item${plural}.`);
 };
+exports.printTodoItemList = (list) => {
+    list.map(x => utility_1.print(x.header));
+};

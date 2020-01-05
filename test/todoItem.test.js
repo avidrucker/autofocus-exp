@@ -16,3 +16,12 @@ describe('Creating, adding a new item', () => {
         chai_1.expect(newItem.state).equals(todoItem_1.TodoState.Unmarked);
     });
 });
+// TODO: evaluate necessity of print unit test
+describe.skip('Printing a todo item list', () => {
+    it('does nothing when there are no list items', () => {
+        // printTodoItemList()
+    });
+    it('correctly prints 3 lines when there are 3 todo items', () => {
+        // printTodoItemList()
+    });
+});
