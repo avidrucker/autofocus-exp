@@ -76,6 +76,10 @@ exports.main = () => {
                 todoItem_1.printTodoItemCount(todoList);
             }
         }
+        if (answer === MainMenuChoice.ReviewTodos) {
+            utility_1.print("Your Todo List:");
+            todoItem_1.printTodoItemList(todoList);
+        }
         if (answer === MainMenuChoice.Quit) {
             running = false;
         }
