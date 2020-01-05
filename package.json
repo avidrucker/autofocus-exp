@@ -19,10 +19,10 @@
     "tslint-config-prettier": "^1.18.0"
   },
   "scripts": {
-		"test": "mocha",
-		"build": "npx tsc && tslint -c tslint.json 'src/*.ts'",
-		"run": "node src/index.js",
-		"build-and-run": "npm run-script build && npm run-script run",
+    "test": "mocha",
+    "build": "npx tsc && tslint -c tslint.json 'src/*.ts'",
+    "run": "node src/index.js",
+    "build-and-run": "npm run-script build && npm run-script run",
     "build-and-test": "npm run-script build && npm test"
   },
   "repository": {
