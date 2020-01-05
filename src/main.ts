@@ -119,6 +119,18 @@ export const main = ():void => {
 			// list[current_index]? to which they can answer yes, no, or
 			// quit ('Y','N','Q').
 			
+			// todo_AD8: in 095, in 095, implement review of todo items where
+			// it is assumed that 2 or more items exist in todo list
+			// Next, dev implements E2E test using simulated user / automated
+			// command line input.
+			
+			// todo_AD9: in 095, in 095, implement review of todo items where
+			// program & functions within assume command line input
+			// Next, dev implements redux state pattern (or rxjs) to enable
+			// platform, time, & input method agnostic state updates and
+			// therefor also modularized, atomic functions, which are not
+			// tightly coupled with user input systems.
+			
 			for(let i = 0; i < todoList.length - 1; i++) {
 				const current = todoList[i].header;
 				const next = todoList[i+1].header;
