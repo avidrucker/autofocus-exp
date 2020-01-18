@@ -33,8 +33,7 @@ const promptUserWithMainMenu = (): MainMenuChoice => {
 	return selection;
 }
 
-// todo_AD3: in 071: create constants over entire file as needed
-// next, dev consolidates constant variables at the top of file
+// issue: Dev moves all constants to top of file #102
 const newItemTitlePrompt = "Give your todo item a name (ie. wash the \
 dishes) then hit the ENTER key to confirm. Or, type 'Q' and hit \
 ENTER to quit: ";
@@ -56,10 +55,8 @@ const promptUserForNewTodoItem = (): ITodoItem | null => {
 	} else {
 		bodyText = readlineSync.question(newItemBodyPrompt);
 
-		// todo_AD1: in 071, place down temp ITodoItem field data created, modified
-		// Next, dev implements momentjs datetime for created & modified fields.
-		// todo_AD2: in 071, place down temp ITodoItem field data uuid
-		// Next, dev implements uuid w/ conventional method (datetime + random digit).
+		// issue: Dev implements momentjs datetime #103
+		// issue: Dev implements ITodoItem uuid #104
 		const newItem: ITodoItem = constructNewTodoItem(
 			headerText, bodyText);
 
@@ -75,9 +72,7 @@ export const main = ():void => {
 	const todoList: ITodoItem[] = [];
 	let cmwtd: string = "";
 
-	// todo_AD4: in 071, put main program loop inside of main function
-	// Next, dev extracts out pieces of main program loop into
-	// atomic functions which they can then compose main function with.
+	// issue: Dev extracts all non-func code from main #105
 	let running = true;
 	while(running) {
 		const answer = promptUserWithMainMenu();
@@ -85,52 +80,32 @@ export const main = ():void => {
 			const temp: ITodoItem | null = promptUserForNewTodoItem();
 			if(temp !== null) {
 				todoList.push(temp);
-				// todo_AD5: in 071, put state mutation directly in main program loop
-				// Next, dev implements todo item store using redux pattern
+				// issue: Dev implements todo item store using redux pattern #106
 				printTodoItemCount(todoList);
 			}
 		}
 
 		if(answer === MainMenuChoice.ReviewTodos) {
-			// todo_AD6: in 095, implement review of todo items where
-			// it is assumed that 2 or more items exist in todo list
-			// Next, dev implements safety guards which prevent review
-			// of todos from occurring where there are 0 or 1 items only,
-			// instead, printing a message "You have no todo items yet!"
-			// or "Marking the only todo item in your list 'todo item title'",
-			// respectively.
+			// issue: Dev handles for list review when there are 2 or less items #107
 			
 			// following the AutoFocus algorithm
 			// step 1: dot the first item
 			todoList[0].state = TodoState.Marked;
-			cmwtd = todoList[0].header; // Q_AD_001 // CMWTD is initialized to first item
+			cmwtd = todoList[0].header; // CMWTD is initialized to first item // issue: Architect decides how to manage todo items in backend #108
 			generalPrint(`Dotting first item '${cmwtd}' ...\n`)
 
 			generalPrint("Your Todo List:")
 			printTodoItemList(todoList);
 
-			// todo_AD7: in 095, in 095, implement review of todo items where
-			// it is assumed that 2 or more items exist in todo list
-			// Next, dev implements non-acceptable answer to be interpretted
-			// as a 'do you want to quit?' option to accomodate users who
-			// have either malfactioning keyboards or physical impairments.
+			// issue: Architect designs option to always quit mid-menu #109
 			
 			// step 2: for each item after the first, the user is asked,
 			// do you want to do list[current index + 1] more than 
 			// list[current_index]? to which they can answer yes, no, or
 			// quit ('Y','N','Q').
 			
-			// todo_AD8: in 095, in 095, implement review of todo items where
-			// it is assumed that 2 or more items exist in todo list
-			// Next, dev implements E2E test using simulated user / automated
-			// command line input.
-			
-			// todo_AD9: in 095, in 095, implement review of todo items where
-			// program & functions within assume command line input
-			// Next, dev implements redux state pattern (or rxjs) to enable
-			// platform, time, & input method agnostic state updates and
-			// therefor also modularized, atomic functions, which are not
-			// tightly coupled with user input systems.
+			// issue: Dev implements E2E test for CLA #110
+			// issue: Dev implements todo item store using redux pattern #106
 			
 			for(let i = 0; i < todoList.length - 1; i++) {
 				const current = todoList[i].header;
@@ -140,7 +115,7 @@ export const main = ():void => {
 				if(ans === 'y') {
 					todoList[i+1].state = TodoState.Marked;
 					generalPrint(`Marking '${todoList[i+1].header}'...`);
-					cmwtd = todoList[i+1].header; // Q_AD_001: question to architect: ought this be uuid? todo: post question as issue
+					cmwtd = todoList[i+1].header; // Architect decides how to manage todo items in backend #108
 					generalPrint(`Setting current most want to do to '${todoList[i+1].header}'.`);
 				}
 				if(ans === 'n') {
