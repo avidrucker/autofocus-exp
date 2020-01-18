@@ -99,15 +99,16 @@ export const main = ():void => {
 			// instead, printing a message "You have no todo items yet!"
 			// or "Marking the only todo item in your list 'todo item title'",
 			// respectively.
-		
-			generalPrint("Your Todo List:")
-			printTodoItemList(todoList);
 			
 			// following the AutoFocus algorithm
 			// step 1: dot the first item
 			todoList[0].state = TodoState.Marked;
 			cmwtd = todoList[0].header; // Q_AD_001 // CMWTD is initialized to first item
-			
+			generalPrint(`Dotting first item '${cmwtd}' ...\n`)
+
+			generalPrint("Your Todo List:")
+			printTodoItemList(todoList);
+
 			// todo_AD7: in 095, in 095, implement review of todo items where
 			// it is assumed that 2 or more items exist in todo list
 			// Next, dev implements non-acceptable answer to be interpretted
@@ -146,7 +147,7 @@ export const main = ():void => {
 					generalPrint(`Understood.`)
 				}
 				if(ans === 'q') {
-					generalPrint('Discontinuing the review process early...')
+					generalPrint('Discontinuing the review process early ...')
 					break;
 				}
 			}
