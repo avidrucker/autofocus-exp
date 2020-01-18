@@ -1,4 +1,4 @@
-import {print} from './utility';
+import {generalPrint, printTodoItem} from './utility';
 
 export enum TodoState {
 	Unmarked,
@@ -33,9 +33,10 @@ export const printTodoItemCount = (list: ITodoItem[]):void => {
 	if(list.length !== 1) {
 		plural = "s";
 	}
-	print(`You have ${list.length} todo item${plural}.`);
+	generalPrint(`You have ${list.length} todo item${plural}.`);
 }
 
 export const printTodoItemList = (list: ITodoItem[]):void => {
-	list.map(x => print(x.header));
+	list.map(x => printTodoItem(x));
+	generalPrint('');
 }
