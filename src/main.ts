@@ -2,7 +2,7 @@ import readlineSync from 'readline-sync';
 
 import {constructNewTodoItem, ITodoItem, printTodoItemCount, printTodoItemList, TodoState} from './todoItem';
 
-import {print} from './utility';
+import {generalPrint} from './utility';
 
 const APP_NAME = 'AutoFocus';
 
@@ -63,14 +63,14 @@ const promptUserForNewTodoItem = (): ITodoItem | null => {
 		const newItem: ITodoItem = constructNewTodoItem(
 			headerText, bodyText);
 
-		print(`New todo item '${newItem.header}' successfully created!`);
+		generalPrint(`New todo item '${newItem.header}' successfully created!`);
 
 		return newItem;
 	}
 }
 
 export const main = ():void => {
-	print(greetUser());
+	generalPrint(greetUser());
 
 	const todoList: ITodoItem[] = [];
 	let cmwtd: string = "";
@@ -100,7 +100,7 @@ export const main = ():void => {
 			// or "Marking the only todo item in your list 'todo item title'",
 			// respectively.
 		
-			print("Your Todo List:")
+			generalPrint("Your Todo List:")
 			printTodoItemList(todoList);
 			
 			// following the AutoFocus algorithm
@@ -138,21 +138,21 @@ export const main = ():void => {
 				// 'y','n','q'
 				if(ans === 'y') {
 					todoList[i+1].state = TodoState.Marked;
-					print(`Marking '${todoList[i+1].header}'...`);
+					generalPrint(`Marking '${todoList[i+1].header}'...`);
 					cmwtd = todoList[i+1].header; // Q_AD_001: question to architect: ought this be uuid? todo: post question as issue
-					print(`Setting current most want to do to '${todoList[i+1].header}'.`);
+					generalPrint(`Setting current most want to do to '${todoList[i+1].header}'.`);
 				}
 				if(ans === 'n') {
-					print(`Understood.`)
+					generalPrint(`Understood.`)
 				}
 				if(ans === 'q') {
-					print('Discontinuing the review process early...')
+					generalPrint('Discontinuing the review process early...')
 					break;
 				}
 			}
 			
-			print(`You have finished reviewing ${todoList.length} items!`)
-			print(`Your current most want to do is '${cmwtd}'.`);
+			generalPrint(`You have finished reviewing ${todoList.length} items!`)
+			generalPrint(`Your current most want to do is '${cmwtd}'.`);
 			
 		}
 
@@ -161,5 +161,5 @@ export const main = ():void => {
 		}
 	}
 	
-	print("Have a nice day!");
+	generalPrint("Have a nice day!");
 }
