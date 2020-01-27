@@ -90,6 +90,7 @@ export const main = ():void => {
 			
 			// following the AutoFocus algorithm
 			// step 1: dot the first item
+			// issue: Dev fixes issue where first item is perma-marked #116
 			todoList[0].state = TodoState.Marked;
 			cmwtd = todoList[0].header; // CMWTD is initialized to first item // issue: Architect decides how to manage todo items in backend #108
 			generalPrint(`Dotting first item '${cmwtd}' ...\n`)
@@ -127,9 +128,50 @@ export const main = ():void => {
 				}
 			}
 			
+			// issue: Dev removes "finished" text after list review #117
 			generalPrint(`You have finished reviewing ${todoList.length} items!`)
 			generalPrint(`Your current most want to do is '${cmwtd}'.`);
+
+			// issue: Dev prints out full list of todo items w/ marks #118
 			
+		}
+
+		// issue: Dev extracts main menu choice code #119
+		if(answer === MainMenuChoice.EnterFocus) {
+			// 1. clear the console view
+			// tslint:disable-next-line:no-console
+			console.clear();
+
+			// 2. show the current todo item
+			generalPrint(`You are working on '${cmwtd}'`);
+
+			// 3. wait for any key to continue
+			readlineSync.keyInPause();
+
+			// 4. ask the user if they have work left to do on current item
+			const makeDupTodo = promptUserForYNQ(`Do you have work left to do on this item?`);
+			// If there is work left to do on the cmwtd item, a duplicate issue is created.
+			if(makeDupTodo.toLowerCase() === 'y') {
+				const newItem: ITodoItem = constructNewTodoItem(
+					cmwtd, "")
+				todoList.push(newItem);
+			}
+
+			// 5. mark the cmwtd item as done
+			// note: since cmwtd is current saved as a string, string lookup
+			// of todo items is the way to find the cmwtd in the todoItem list
+			let searching = true;
+			let i = 0;
+			while(searching) {
+				// find an item that match the header text of the
+				// current-most-want-to-do AND hasn't been completed yet
+				if(todoList[i].header === cmwtd && todoList[i].state !== TodoState.Completed) {
+					todoList[i].state = TodoState.Completed;
+					searching = false;
+				}
+				i = i+1;
+			}
+
 		}
 
 		if(answer === MainMenuChoice.Quit) {
