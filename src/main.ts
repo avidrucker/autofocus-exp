@@ -37,8 +37,8 @@ const promptUserWithMainMenu = (): MainMenuChoice => {
 const newItemTitlePrompt = "Give your todo item a name (ie. wash the \
 dishes) then hit the ENTER key to confirm. Or, type 'Q' and hit \
 ENTER to quit: ";
-const newItemBodyPrompt = "Give your todo item a comment (ie. use \
-dishwasher for non-glass items) or hit ENTER key to skip: ";
+//// 113. const newItemBodyPrompt = "Give your todo item a comment (ie. use \
+//// dishwasher for non-glass items) or hit ENTER key to skip: ";
 
 const promptUserForYNQ = (questionString: string): string => {
 	return readlineSync.question(questionString, {limit: ['y','n','q','Y','N','Q']}).toLowerCase();
@@ -49,16 +49,16 @@ const promptUserForNewTodoItem = (): ITodoItem | null => {
 		limit: /\w+/i,
 		limitMessage: 'Sorry, $<lastInput> is not a valid todo item title'
 	}); // prevent empty input
-	let bodyText = "";
+	//// 113. let bodyText = "";
 	if(headerText.toLowerCase() === 'q') {
 		return null;
 	} else {
-		bodyText = readlineSync.question(newItemBodyPrompt);
+		//// 113. bodyText = readlineSync.question(newItemBodyPrompt);
 
 		// issue: Dev implements momentjs datetime #103
 		// issue: Dev implements ITodoItem uuid #104
 		const newItem: ITodoItem = constructNewTodoItem(
-			headerText, bodyText);
+			headerText, ""); //// 113. bodyText
 
 		generalPrint(`New todo item '${newItem.header}' successfully created!`);
 
