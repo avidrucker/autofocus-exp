@@ -19,5 +19,4 @@ export const printTodoItemCount = (list: ITodoItem[]):void => {
 
 export const printTodoItemList = (list: ITodoItem[]):void => {
 	list.map(x => printTodoItem(x));
-	generalPrint('');
 }
