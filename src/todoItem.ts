@@ -1,5 +1,3 @@
-import {generalPrint, printTodoItem} from './utility';
-
 export enum TodoState {
 	Unmarked,
 	Marked,
@@ -28,15 +26,25 @@ export const constructNewTodoItem = ( headerText:string, bodyText:string="", sta
 	return newItem;
 }
 
-export const printTodoItemCount = (list: ITodoItem[]):void => {
-	let plural = "";
-	if(list.length !== 1) {
-		plural = "s";
-	}
-	generalPrint(`You have ${list.length} todo item${plural}.`);
-}
+const MARKED = 'o';
+const NO_MARK = ' ';
+const DONE = 'x';
+const ARCHIVED = 'A';
+const ERROR = '!';
 
-export const printTodoItemList = (list: ITodoItem[]):void => {
-	list.map(x => printTodoItem(x));
-	generalPrint('');
+// issue: Dev refactors multi if blocks #125
+export const getMark = (i: ITodoItem): string => {
+	if(i.state === TodoState.Marked) {
+		return `[${MARKED}]`;
+	}
+	if(i.state === TodoState.Unmarked) {
+		return `[${NO_MARK}]`;
+	}
+	if(i.state === TodoState.Completed) {
+		return `[${DONE}]`;
+	}
+	if(i.state === TodoState.Archived) {
+		return `[${ARCHIVED}]`;
+	}
+	return `[${ERROR}]`; // error state indicator
 }
