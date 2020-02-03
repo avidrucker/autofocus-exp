@@ -28,7 +28,8 @@ const menuChoices: MainMenuChoice[] = [
 const menuPrompt = 'Please choose from the menu above:';
 
 const promptUserWithMainMenu = (): MainMenuChoice => {
-	const selection: MainMenuChoice = menuChoices[readlineSync.keyInSelect(menuChoices, menuPrompt, {cancel: false})];
+	const selection: MainMenuChoice = menuChoices[
+		readlineSync.keyInSelect(menuChoices, menuPrompt, {cancel: false})];
 	// print(`Your menu choice was: ${selection}`);
 	return selection;
 }
@@ -71,7 +72,8 @@ const setupReviewCLI = (todoList: ITodoItem[], cmwtd: string): any => {
 	// step 1: dot the first item
 	// issue: Dev fixes issue where first item is perma-marked #116
 	todoList[0].state = TodoState.Marked;
-	cmwtd = todoList[0].header; // CMWTD is initialized to first item // issue: Architect decides how to manage todo items in backend #108
+	// issue: Architect decides how to manage todo items in backend #108
+	cmwtd = todoList[0].header; // CMWTD is initialized to first item
 	generalPrint(`Dotting first item '${cmwtd}' ...\n`)
 
 	generalPrint("Your Todo List:")
@@ -88,7 +90,8 @@ const conductReviewsCLI = (todoList: ITodoItem[], cmwtd: string): any => {
 		if(ans === 'y') {
 			todoList[i+1].state = TodoState.Marked;
 			generalPrint(`Marking '${todoList[i+1].header}'...`);
-			cmwtd = todoList[i+1].header; // Architect decides how to manage todo items in backend #108
+			// Architect decides how to manage todo items in backend #108
+			cmwtd = todoList[i+1].header;
 			generalPrint(`Setting current most want to do to '${todoList[i+1].header}'.`);
 		}
 		if(ans === 'n') {
@@ -153,7 +156,7 @@ const enterFocusCLI = (todoList: ITodoItem[], cmwtd: string): any => {
 	let searching = true;
 	let i = 0;
 	while(searching) {
-		// find an item that match the header text of the
+		// find an item that matches the header text of the
 		// current-most-want-to-do AND hasn't been completed yet
 		if(todoList[i].header === cmwtd && todoList[i].state !== TodoState.Completed) {
 			todoList[i].state = TodoState.Completed;
@@ -165,10 +168,15 @@ const enterFocusCLI = (todoList: ITodoItem[], cmwtd: string): any => {
 	return [todoList, cmwtd];
 }
 
+export const addTodoToList = (todoList: ITodoItem[], newTodoItem: ITodoItem): ITodoItem[] => {
+	todoList.push(newTodoItem);
+	return todoList;
+}
+
 const addNewCLI = (todoList: ITodoItem[], cmwtd: string): any => {
 	const temp: ITodoItem | null = promptUserForNewTodoItem();
 	if(temp !== null) {
-		todoList.push(temp);
+		todoList = addTodoToList(todoList,temp);
 		// issue: Dev implements todo item store using redux pattern #106
 		printTodoItemCount(todoList);
 	}
@@ -189,20 +197,16 @@ export const main = ():void => {
 		if(answer === MainMenuChoice.AddNew) {
 			[ todoList, cmwtd ] = addNewCLI(todoList, cmwtd);
 		}
-
 		if(answer === MainMenuChoice.ReviewTodos) {
 			[ todoList, cmwtd] = reviewTodosCLI(todoList, cmwtd);
 		}
-
 		if(answer === MainMenuChoice.EnterFocus) {
 			[ todoList, cmwtd ] = enterFocusCLI(todoList, cmwtd);
 		}
-
 		// issue: Dev adds about section text print out #128
 		if(answer === MainMenuChoice.ReadAbout) {
 			generalPrint("This is stub (placeholder) text. Please check back later.");
 		}
-
 		if(answer === MainMenuChoice.Quit) {
 			running = false;
 		}
