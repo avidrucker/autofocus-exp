@@ -1,13 +1,13 @@
 # AutoFocus Todo List App Experiment
 
-## Installation
+Goal: One or more creators make a **todo list app** that follows the todo list algorithm defined here: [Mark Forster AutoFocus Time Management System](http://markforster.squarespace.com/autofocus-system/) for console command line and responsive web. They will use micro-tasking methodologies as described by [Yegor256](https://www.youtube.com/user/technoparkcorp/) in his conference talk here: [eXtremely Distributed Software Development, at DevTernity](https://www.youtube.com/watch?v=7EytYc7K5JA)
 
-1. Install project dependencies: `npm install`
-2. Build the project: `npm run-script build`
-3. Test the project: `npm test`
-4. Run the app: `npm run-script run`
-> - You can also build project & run the CLA: `npm run-script build-and-run`
-> - Or, build project & test the CLA: `npm run-script build-and-test`
+## Looking for Designers (!)
+
+Interested in contributing to this app's design? If you (or anyone you know) have any interest in typography, layout, color, mobile GUI, desktop GUI, or command line app design, please either:
+
+- email the project maintainer at avidrucker@gmail.com
+- comment on one of the currently open design issues
 
 ## FAQ
 Q: What will this app look like? A: [See the Figma design doc](https://www.figma.com/file/xLQLwhw01n12pKgAnRt8Pt/AutoFocus-Design-Doc?node-id=0%3A1)
@@ -25,20 +25,25 @@ Q: What are the unique data structures / shapes used in this app? A:
 - [Todo Item Shape](https://github.com/avidrucker/autofocus-exp/blob/master/todo_item_shape.md)
 - [Current State Enum](https://github.com/avidrucker/autofocus-exp/blob/master/current_state_enum.md)
 
+## Installation
+
+1. Install project dependencies: `npm install`
+2. Build the project: `npm run-script build`
+3. Test the project: `npm test`
+4. Run the app: `npm run-script run`
+
+> - You can also build project & run the CLA: `npm run-script build-and-run`
+> - Or, build project & test the CLA: `npm run-script build-and-test`
+
 ## Intent, Method, Team, Motivation
 
-### What:
-To make a concise todo list app that follows the todo list algorithm defined here: [Mark Forster AutoFocus Time Management System](http://markforster.squarespace.com/autofocus-system/)
-1. for console command line, and
-2. for responsive web
-
 ### How:
-- Project architecture & micro-tasking methodologies as described by [Yegor256](https://www.youtube.com/user/technoparkcorp/) in his conference talk here: [eXtremely Distributed Software Development, at DevTernity](https://www.youtube.com/watch?v=7EytYc7K5JA)
-- Source control: GitHub
+- Source control: GitHub repository
+- Project management: GitHub issues
 - Tech stack: TypeScript Back-end, (TBD) Front-end
 
-### Who:
-Solo developer, architect, designer, tester, researcher: Yours truly
+### Roles:
+Developer, architect, designer, tester, researcher, project maintainer
 
 ### Why:
 To test the viability of the methodologies of software management, architecture, & design, as espoused by creator, entrepreneur, & speaker Yegor256.
