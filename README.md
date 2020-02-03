@@ -1,44 +1,30 @@
-# AutoFocus Todo List App (Experience)
+# AutoFocus Todo List App Experiment
 
-## Getting Started
+**Goal**: One or more creators make a **todo list app** that follows the todo list steps defined here: [Mark Forster AutoFocus Time Management System](http://markforster.squarespace.com/autofocus-system/) for command line and responsive web. The project contributors will use only GitHub issues to communicate with each other, keeping the repository as the project's SSoT<sup>[1] [2]</sup>.
 
-1. Install project dependencies: `npm install`
-2. Build project & run console app in terminal window: `npm run-script build-and-run`
-3. Build project & test console app in terminal window: `npm run-script build-and-test`
-4. You may also build, test, or run individually (this will be faster) via:
-  - `npm run-script build`
-  - `npm test`
-  - `npm run-script run`
+1. See a word you don't know? [See the glossary](https://github.com/avidrucker/autofocus-exp/blob/master/docs/glossary.md)
+2. Have another question? Check out the [FAQ (Frequently Asked Questions)](https://github.com/avidrucker/autofocus-exp/blob/master/docs/faq.md)
 
-## Supplemental Docs
-- [Figma design doc](https://www.figma.com/file/xLQLwhw01n12pKgAnRt8Pt/AutoFocus-Design-Doc?node-id=0%3A1)
-- [Quick Start User Stories](https://github.com/avidrucker/autofocus-exp/blob/master/quick_start_user_stories.md)
-- [E2E Test FVP](https://github.com/avidrucker/autofocus-exp/blob/master/end-to-end-test-fvp.md)
-- [Todo Item Shape](https://github.com/avidrucker/autofocus-exp/blob/master/todo_item_shape.md)
-- [Current State Enum](https://github.com/avidrucker/autofocus-exp/blob/master/current_state_enum.md)
+## Looking for Designers!
 
-## Intent, Method, Team, Motivation
+Interested in contributing to this app's design? If you (or anyone you know) have any interest in typography, layout, color, mobile GUI, desktop GUI, or command line app design, please:
 
-### What:
-To make a concise todo list app that follows the todo list algorithm defined here: [Mark Forster AutoFocus Time Management System](http://markforster.squarespace.com/autofocus-system/)
-1. for console command line, and
-2. for responsive web
+1. see the [currently open design requests](https://github.com/avidrucker/autofocus-exp/issues?utf8=%E2%9C%93&q=is%3Aopen+is%3Aissue+label%3Adesign+)
+2. check out [the Figma design document](https://www.figma.com/file/xLQLwhw01n12pKgAnRt8Pt/AutoFocus-Design-Doc?node-id=0%3A1)
+3. ask unanswered questions you have [as a new issue](https://github.com/avidrucker/autofocus-exp/issues/new)
 
-### How:
-- Project architecture, microtasking methodologies as described by [Yegor256](https://www.youtube.com/user/technoparkcorp/) in his conference talk here: [eXtremely Distributed Software Development, at DevTernity](https://www.youtube.com/watch?v=7EytYc7K5JA)
-- Source control: GitHub
-- Tech stack: Full-stack JavaScript
+## The Docs
 
-### Who:
-Solo developer, architect, designer, tester, researcher: Yours truly
+- [Install Guide](https://github.com/avidrucker/autofocus-exp/blob/master/docs/how-to-install.md): Get the app running locally (primarily for devs)
+- [Contribute Guide](https://github.com/avidrucker/autofocus-exp/blob/master/docs/how-to-contribute.md): Come here to get info on how to contribute to this project
+- [Project About](https://github.com/avidrucker/autofocus-exp/blob/master/docs/project-about.md): Read further about this project's origins and back-story
 
-### Why:
-To test, to the best of my abilities, the viability of the methodologies of software management, architecture, & design, as espoused by creator, entrepreneur, & speaker Yegor256.
+## Inspiration:
 
-### When:
-Go as far as possible, devoting at least 1 hour per day, every day (for a minimum of 7 hours per week) for 1 month, starting yesterday: Tuesday, December 24th, 2019.
+This project's micro-tasking style is inspired by [Yegor256](https://www.youtube.com/user/technoparkcorp/)'s conference talk ([eXtremely Distributed Software Development, at DevTernity](https://www.youtube.com/watch?v=7EytYc7K5JA)).
 
-### Creator's notes:
-It is my intention to further analyze if/when issues seem consistently stuck/blocked/delayed both:
-1. how SMART (Specific, Measurable, Actionable, for which I am Responsible, and Time-bound) the issue is, and
-2. how Motivated (M=EV/ID where motivation equals expectancy times value divided by impulsiveness times delay) the dev/designer/architect is in relation to the issue
+## Contributors
+
+- [Avi Drucker](https://github.com/avidrucker)
+
+- Your name here ...
