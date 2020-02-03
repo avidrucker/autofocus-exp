@@ -5,14 +5,19 @@ import { addTodoToList } from '../src/main';
 import { constructNewTodoItem, ITodoItem } from '../src/todoItem';
 
 describe('Converting a todo item list to a string', () => {
-	it('returns an empty string when there are no list items', () => {
+	it('returns msg \'no list items to print\' when list is empty', () => {
+		const todoList: ITodoItem[] = [];
+		
+    expect(makePrintableTodoItemList(todoList)).equals("There are no todo items to print.");
+	})
+
+	it('returns correct single string output when only one list item exists', () => {
 		
 		let todoList: ITodoItem[] = [];
-		const newItem: ITodoItem = constructNewTodoItem(
-			"make this app");
+		const newItem: ITodoItem = constructNewTodoItem("make this app");
 		todoList = addTodoToList(todoList,newItem);
 		
-    expect(makePrintableTodoItemList(todoList)).equals("");
+    expect(makePrintableTodoItemList(todoList)).equals("[ ] make this app");
 	})
 
 	it('correctly generates 3 lines when there are 3 todo items', () => {

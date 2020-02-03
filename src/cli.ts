@@ -25,8 +25,9 @@ export const makePrintableTodoItemList = (list: ITodoItem[]):string => {
 	let temp: string = "";
 	if(list.length === 0) {
 		temp = "There are no todo items to print.";
+	} else {
+		temp = list.map(x => stringifyTodoItem(x)).join("\n");
 	}
-	temp += list.map(x => stringifyTodoItem(x)).join("\n");
 	return temp;
 }
 
