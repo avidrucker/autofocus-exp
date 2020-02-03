@@ -1,6 +1,6 @@
 # AutoFocus Todo List App Experiment
 
-Goal: One or more creators make a **todo list app** that follows the todo list algorithm defined here: [Mark Forster AutoFocus Time Management System](http://markforster.squarespace.com/autofocus-system/) for console command line and responsive web. They will use micro-tasking methodologies as described by [Yegor256](https://www.youtube.com/user/technoparkcorp/) in his conference talk here: [eXtremely Distributed Software Development, at DevTernity](https://www.youtube.com/watch?v=7EytYc7K5JA)
+Goal: One or more creators make a **todo list app** that follows the todo list steps defined here: [Mark Forster AutoFocus Time Management System](http://markforster.squarespace.com/autofocus-system/) for command line and responsive web. The project will use micro-tasking methods described by [Yegor256](https://www.youtube.com/user/technoparkcorp/) in his conference talk ([eXtremely Distributed Software Development, at DevTernity](https://www.youtube.com/watch?v=7EytYc7K5JA)) to keep motivation and focus high.
 
 ## Looking for Designers (!)
 
@@ -27,9 +27,10 @@ Q: What are the unique data structures / shapes used in this app? A:
 
 ## Installation
 
+0. Clone this repository
 1. Install project dependencies: `npm install`
 2. Build the project: `npm run-script build`
-3. Test the project: `npm test`
+3. (developers only) Test the project: `npm test`
 4. Run the app: `npm run-script run`
 
 > - You can also build project & run the CLA: `npm run-script build-and-run`
@@ -46,12 +47,13 @@ Q: What are the unique data structures / shapes used in this app? A:
 Developer, architect, designer, tester, researcher, project maintainer
 
 ### Why:
-To test the viability of the methodologies of software management, architecture, & design, as espoused by creator, entrepreneur, & speaker Yegor256.
+To test the viability of the methodologies of software management, architecture, & design, as espoused by creator, entrepreneur, & speaker [Yegor256](https://www.yegor256.com/).
 
-### When:
-Go as far as possible, ~~devoting at least 1 hour per day, every day (for a minimum of 7 hours per week) for 1 month~~, for 2 months starting yesterday: Tuesday, December 24th, 2019.
+### When & How Long:
+Go as far as possible for 2 months starting yesterday: Tuesday, December 24th, 2019.
 
-### Creator's notes:
-It is my intention to further analyze if/when issues seem consistently stuck/blocked/delayed both:
-1. how SMART (Specific, Measurable, Actionable, for which I am Responsible, and Time-bound) the issue is, and
-2. how Motivated (M=EV/ID where motivation equals expectancy times value divided by impulsiveness times delay) the dev/designer/architect is in relation to the issue
+## Contributors
+
+- [Avi Drucker](https://github.com/avidrucker)
+
+- Your name here ...
