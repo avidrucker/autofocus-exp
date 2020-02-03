@@ -1,6 +1,6 @@
-# AutoFocus Todo List App (Experience)
+# AutoFocus Todo List App Experiment
 
-## Getting Started
+## Installation
 
 1. Install project dependencies: `npm install`
 2. Build project & run console app in terminal window: `npm run-script build-and-run`
