@@ -163,6 +163,8 @@ const enterFocusCLI = (todoList: ITodoItem[], cmwtd: string): any => {
 			searching = false;
 		}
 		i = i+1;
+
+		// todo: reset cmwtd to the to new last marked item
 	}
 
 	return [todoList, cmwtd];
