@@ -1,6 +1,6 @@
 # AutoFocus Todo List App Experiment
 
-**Goal**: One or more creators make a **todo list app** that follows the todo list steps defined here: [Mark Forster AutoFocus Time Management System](http://markforster.squarespace.com/autofocus-system/) for command line and responsive web. The project contributors will use only GitHub issues to communicate with each other, keeping the repository as the project's SSoT<sup>[1] [2]</sup>.
+**Goal**: One or more creators make a **todo list app** that follows the todo list steps defined in [Mark Forster AutoFocus Time Management System](http://markforster.squarespace.com/autofocus-system/) for command line terminal (1st) and responsive mobile-first web (2nd). The project contributors will use only GitHub issues to communicate with each other, keeping the repository as the project's SSoT<sup>[1] [2]</sup>.
 
 **Inspiration**: This project's micro-tasking style is inspired by [Yegor256](https://www.youtube.com/user/technoparkcorp/)'s conference talk ([eXtremely Distributed Software Development, at DevTernity](https://www.youtube.com/watch?v=7EytYc7K5JA)).
 
