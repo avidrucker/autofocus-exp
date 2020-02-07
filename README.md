@@ -25,6 +25,6 @@ Interested in contributing to this app's design? If you (or anyone you know) hav
 
 ## Contributors
 
-- [Kyle Griffin](https://github.com/kaerudesigns) designer
+- [Kyle Griffin](https://github.com/kaerudesigns) designer, researcher
 - [Avi Drucker](https://github.com/avidrucker) engineer, architect, manager, researcher
 - Your name here ...
