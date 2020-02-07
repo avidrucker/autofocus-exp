@@ -11,7 +11,7 @@
 
 Interested in contributing to this app's design? If you (or anyone you know) have any interest in typography, layout, color, mobile GUI, desktop GUI, or command line app design, please:
 
-1. see the [currently open design requests](https://github.com/avidrucker/autofocus-exp/issues?utf8=%E2%9C%93&q=is%3Aopen+is%3Aissue+label%3Adesign+)
+1. see the [currently open design requests](https://github.com/avidrucker/autofocus-exp/issues?q=is%3Aopen+is%3Aissue+label%3Adesign+milestone%3Amvp-demo)
 2. check out [the Figma design document](https://www.figma.com/file/xLQLwhw01n12pKgAnRt8Pt/AutoFocus-Design-Doc?node-id=0%3A1)
 3. ask unanswered questions you have [as a new issue](https://github.com/avidrucker/autofocus-exp/issues/new)
 
@@ -23,6 +23,6 @@ Interested in contributing to this app's design? If you (or anyone you know) hav
 
 ## Contributors
 
-- [Avi Drucker](https://github.com/avidrucker)
-
+- [Kyle Griffin](https://github.com/kaerudesigns) designer
+- [Avi Drucker](https://github.com/avidrucker) engineer, architect, manager, researcher
 - Your name here ...
