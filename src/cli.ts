@@ -31,6 +31,12 @@ export const makePrintableTodoItemList = (list: ITodoItem[]):string => {
 	return temp;
 }
 
-export const printTodoItemList = (list: ITodoItem[]):void => {
+const printTodoItemList = (list: ITodoItem[]):void => {
 	generalPrint(makePrintableTodoItemList(list));
+}
+
+export const printUpdate = (todoList: ITodoItem[], cmwtd: string) => {
+	generalPrint(`Your current most want to do is '${cmwtd}'.`);
+	generalPrint("Your current Todo List:")
+	printTodoItemList(todoList);
 }
