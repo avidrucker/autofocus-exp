@@ -1,10 +1,15 @@
 import readlineSync from 'readline-sync';
 
-import {constructNewTodoItem, ITodoItem, TodoState} from './todoItem';
+import {constructNewTodoItem, getMark, ITodoItem, TodoState} from './todoItem';
 
-import {generalPrint, printTodoItemCount, printTodoItemList} from './cli';
+import {generalPrint, printTodoItemCount, printUpdate } from './cli';
 
 const APP_NAME = 'AutoFocus';
+const newItemTitlePrompt = "Give your todo item a name (ie. wash the \
+	dishes) then hit the ENTER key to confirm. Or, type 'Q' and hit \
+	ENTER to quit: ";
+//// 113. const newItemBodyPrompt = "Give your todo item a comment (ie. use \
+//// dishwasher for non-glass items) or hit ENTER key to skip: ";
 
 export const greetUser = (word: string = APP_NAME): string => {
   return `Welcome to ${APP_NAME}!`;
@@ -28,21 +33,13 @@ const menuChoices: MainMenuChoice[] = [
 const menuPrompt = 'Please choose from the menu above:';
 
 const promptUserWithMainMenu = (): MainMenuChoice => {
-	const selection: MainMenuChoice = menuChoices[
+	return menuChoices[
 		readlineSync.keyInSelect(menuChoices, menuPrompt, {cancel: false})];
-	// print(`Your menu choice was: ${selection}`);
-	return selection;
 }
 
-// issue: Dev moves all constants to top of file #102
-const newItemTitlePrompt = "Give your todo item a name (ie. wash the \
-dishes) then hit the ENTER key to confirm. Or, type 'Q' and hit \
-ENTER to quit: ";
-//// 113. const newItemBodyPrompt = "Give your todo item a comment (ie. use \
-//// dishwasher for non-glass items) or hit ENTER key to skip: ";
-
 const promptUserForYNQ = (questionString: string): string => {
-	return readlineSync.question(questionString, {limit: ['y','n','q','Y','N','Q']}).toLowerCase();
+	return readlineSync.question(questionString, 
+		{limit: ['y','n','q','Y','N','Q']}).toLowerCase();
 }
 
 const promptUserForNewTodoItem = (): ITodoItem | null => {
@@ -67,67 +64,75 @@ const promptUserForNewTodoItem = (): ITodoItem | null => {
 	}
 }
 
-const setupReviewCLI = (todoList: ITodoItem[], cmwtd: string): any => {
-	// following the AutoFocus algorithm
-	// step 1: dot the first item
-	// issue: Dev fixes issue where first item is perma-marked #116
-	todoList[0].state = TodoState.Marked;
+export const indexOfItem = (list: any[], attr: any, val: any): number => {
+	return list.map((e) => e[attr]).indexOf(val);
+}
+
+export const itemExists = (list: any[], attr: any, val: any): boolean => {
+	return indexOfItem(list, attr, val) !== -1;
+}
+
+// note: either indicies could be -1...
+export const getFirstReadyTodo = (todoList: ITodoItem[]): number => {
+	const firstUnmarkedIndex = indexOfItem(todoList, "state", TodoState.Unmarked);
+	const firstMarkedIndex = indexOfItem(todoList, "state", TodoState.Marked);
+	if (firstUnmarkedIndex === -1) {
+		return firstMarkedIndex;
+	} else if (firstMarkedIndex === -1) {
+		return firstUnmarkedIndex;
+	} else {
+		return Math.min(firstMarkedIndex, firstUnmarkedIndex)
+	}
+}
+
+export const setupReview = (todoList: ITodoItem[], cmwtd: string): any => {
+	// FVP step 1: dot the first ready todo item (the first non-complete, non-archived item)
+	const readyTodo = getFirstReadyTodo(todoList);
+	todoList[readyTodo].state = TodoState.Marked;
 	// issue: Architect decides how to manage todo items in backend #108
-	cmwtd = todoList[0].header; // CMWTD is initialized to first item
-	generalPrint(`Dotting first item '${cmwtd}' ...\n`)
-
-	generalPrint("Your Todo List:")
-	printTodoItemList(todoList);
-
+	if(cmwtd === "" || cmwtd === null) {
+		cmwtd = todoList[readyTodo].header; // CMWTD is initialized to first ready todo item if unset // issue: Dev fixes issue where first item is perma-marked #116
+	}
 	return [todoList, cmwtd];
 }
 
-const conductReviewsCLI = (todoList: ITodoItem[], cmwtd: string): any => {
+export const conductReviews = (todoList: ITodoItem[], cmwtd: string, answers: string[]): any => {
+	// FVP step 2: user story: User is asked to answer yes, no, or quit per review item #170
 	for(let i = 0; i < todoList.length - 1; i++) {
 		const next = todoList[i+1].header;
-		const ans = promptUserForYNQ(`Do you want to '${next}' more than '${cmwtd}'? (Y/N/Q) `);
-		// 'y','n','q'
+		const ans = answers[i];
 		if(ans === 'y') {
 			todoList[i+1].state = TodoState.Marked;
-			generalPrint(`Marking '${todoList[i+1].header}'...`);
-			// Architect decides how to manage todo items in backend #108
-			cmwtd = todoList[i+1].header;
-			generalPrint(`Setting current most want to do to '${todoList[i+1].header}'.`);
+			cmwtd = next; // issue: Architect decides how to manage todo items in backend #108
 		}
 		if(ans === 'n') {
-			generalPrint(`Understood.`)
+			// do nothing, and pass
 		}
 		if(ans === 'q') {
-			generalPrint('Discontinuing the review process early ...')
 			break;
 		}
 	}
 	return [todoList, cmwtd];
 }
 
-const reviewTodosCLI = (todoList: ITodoItem[], cmwtd: string): any => {
-	// issue: Dev handles for list review when there are 2 or less items #107
-	// issue: Architect designs option to always quit mid-menu #109
-	// issue: Dev implements E2E test for CLA #110
-	// issue: Dev implements todo item store using redux pattern #106
-	
-	[todoList, cmwtd] = setupReviewCLI(todoList, cmwtd);
+const getReviewAnswersCLI = (todoList: ITodoItem[], cmwtd: string): string[] => {
+	const answers: string[] = [];
 
-	// issue: Dev replaces multi-line step comments #126
-	// step 2: for each item after the first, the user is asked,
-	// do you want to do list[current index + 1] more than 
-	// list[current_index]? to which they can answer yes, no, or
-	// quit ('Y','N','Q').
-	
-	[todoList, cmwtd] = conductReviewsCLI(todoList, cmwtd);
-	
-	// issue: Dev removes "finished" text after list review #117
-	generalPrint(`You have finished reviewing ${todoList.length} items!`)
-	generalPrint(`Your current most want to do is '${cmwtd}'.`);
-	generalPrint("Your New Todo List:")
-	printTodoItemList(todoList);
-
-	return [todoList, cmwtd];
+	for(let i = 0; i < todoList.length - 1; i++) {
+		const next = todoList[i+1].header;
+		const ans = promptUserForYNQ(`Do you want to '${next}' more than '${cmwtd}'? (Y/N/Q) `);
+		if(ans === 'y') {
+			answers.push('y');
+		}
+		if(ans === 'n') {
+			answers.push('n');
+		}
+		if(ans === 'q') {
+			answers.push('q');
+			break;
+		}
+	}
+	return answers;
 }
 
 const enterFocusCLI = (todoList: ITodoItem[], cmwtd: string): any => {
@@ -164,7 +169,7 @@ const enterFocusCLI = (todoList: ITodoItem[], cmwtd: string): any => {
 		}
 		i = i+1;
 
-		// todo: reset cmwtd to the to new last marked item
+		// issue: Dev implements reset of CMWTD item #171
 	}
 
 	return [todoList, cmwtd];
@@ -186,6 +191,31 @@ const addNewCLI = (todoList: ITodoItem[], cmwtd: string): any => {
 	return [todoList, cmwtd];
 }
 
+export const readyToReview = (todoList: ITodoItem[]): boolean => {
+	const containsUnmarked = itemExists(todoList, "state", TodoState.Unmarked);
+	const containsMarked = itemExists(todoList, "state", TodoState.Marked);
+	return containsMarked || containsUnmarked;
+}
+
+const attemptReviewTodosCLI = (todoList: ITodoItem[], cmwtd: string): any => {
+	// step 0: check to see if there are any non-complete, non-archived items
+	if(readyToReview(todoList)) {
+		// issue: Dev handles for list review when there are 2 or less items #107
+		// issue: Architect designs option to always quit mid-menu #109
+		// issue: Dev implements E2E test for CLA #110
+		// issue: Dev implements todo item store using redux pattern #106
+		[ todoList, cmwtd ] = setupReview(todoList, cmwtd);
+		const answers = getReviewAnswersCLI(todoList, cmwtd);
+		[ todoList, cmwtd ] = conductReviews(todoList, cmwtd, answers);
+		printUpdate( todoList, cmwtd);
+	}
+	return [todoList, cmwtd];
+}
+
+export const listToMarks = (todoList: ITodoItem[]): string => {
+	return todoList.map(x => getMark(x)).join(" ");
+}
+
 export const main = ():void => {
 	generalPrint(greetUser());
 
@@ -200,7 +230,7 @@ export const main = ():void => {
 			[ todoList, cmwtd ] = addNewCLI(todoList, cmwtd);
 		}
 		if(answer === MainMenuChoice.ReviewTodos) {
-			[ todoList, cmwtd] = reviewTodosCLI(todoList, cmwtd);
+			[todoList, cmwtd] = attemptReviewTodosCLI(todoList, cmwtd);
 		}
 		if(answer === MainMenuChoice.EnterFocus) {
 			[ todoList, cmwtd ] = enterFocusCLI(todoList, cmwtd);
