@@ -9,10 +9,6 @@ const stringifyTodoItem = (i : ITodoItem): string => {
 	return `${getMark(i)} ${i.header}`;
 }
 
-const printTodoItem = (i: ITodoItem):void => {
-	generalPrint(stringifyTodoItem(i));
-}
-
 export const getPluralS = (n: number): string => {
 	return n !== 1 ? "s" : ""
 }
