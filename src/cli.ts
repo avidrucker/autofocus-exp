@@ -5,18 +5,34 @@ export const generalPrint = (s: string): void => {
 	console.log(s);
 }
 
-const printTodoItem = (i: ITodoItem):void => {
-	generalPrint(`${getMark(i)} ${i.header}`);
+const stringifyTodoItem = (i : ITodoItem): string => {
+	return `${getMark(i)} ${i.header}`;
+}
+
+export const getPluralS = (n: number): string => {
+	return n !== 1 ? "s" : ""
 }
 
 export const printTodoItemCount = (list: ITodoItem[]):void => {
-	let plural = "";
-	if(list.length !== 1) {
-		plural = "s";
-	}
-	generalPrint(`You have ${list.length} todo item${plural}.`);
+	generalPrint(`You have ${list.length} todo item${getPluralS(list.length)}.`);
 }
 
-export const printTodoItemList = (list: ITodoItem[]):void => {
-	list.map(x => printTodoItem(x));
+export const makePrintableTodoItemList = (list: ITodoItem[]):string => {
+	let temp: string = "";
+	if(list.length === 0) {
+		temp = "There are no todo items to print.";
+	} else {
+		temp = list.map(x => stringifyTodoItem(x)).join("\n");
+	}
+	return temp;
+}
+
+const printTodoItemList = (list: ITodoItem[]):void => {
+	generalPrint(makePrintableTodoItemList(list));
+}
+
+export const printUpdate = (todoList: ITodoItem[], cmwtd: string) => {
+	generalPrint(`Your current most want to do is '${cmwtd}'.`);
+	generalPrint("Your current Todo List:")
+	printTodoItemList(todoList);
 }
