@@ -1,6 +1,7 @@
 ## How to Contribute
 
-Please know that this project's goal is keep communication strictly to GitHub issues and comments.
+1. Please know that this project's goal is keep communication strictly to GitHub issues and comments.
+2. You can get compensated for contributing to this project! [Check out the compensation rules.](https://github.com/avidrucker/autofocus-exp/blob/master/docs/compensation_rules.md)
 
 ### Getting Started for Developers:
 
