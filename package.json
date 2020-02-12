@@ -7,19 +7,26 @@
     "test": "test"
   },
   "devDependencies": {
+    "@istanbuljs/nyc-config-typescript": "^1.0.1",
     "@types/chai": "^4.2.7",
     "@types/mocha": "^5.2.7",
     "chai": "^4.2.0",
+    "codecov": "^3.6.5",
     "cross-env": "^6.0.3",
     "husky": "^3.1.0",
     "mocha": "^6.2.2",
     "nodemon": "^2.0.2",
+    "nyc": "^15.0.0",
     "prettier": "1.19.1",
+    "source-map-support": "^0.5.16",
+    "ts-node": "^8.6.2",
     "tslint": "^5.20.1",
     "tslint-config-prettier": "^1.18.0"
   },
   "scripts": {
     "test": "mocha",
+    "coverage": "nyc npm run test",
+    "report-coverage": "nyc report --reporter=text-lcov > coverage.lcov && codecov",
     "build": "npx tsc && tslint -c tslint.json 'src/*.ts'",
     "run": "node src/index.js",
     "build-and-run": "npm run-script build && npm run-script run",
