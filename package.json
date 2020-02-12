@@ -14,12 +14,14 @@
     "husky": "^3.1.0",
     "mocha": "^6.2.2",
     "nodemon": "^2.0.2",
+    "nyc": "^15.0.0",
     "prettier": "1.19.1",
     "tslint": "^5.20.1",
     "tslint-config-prettier": "^1.18.0"
   },
   "scripts": {
-    "test": "mocha",
+		"test": "mocha",
+		"coverage": "nyc npm run test",
     "build": "npx tsc && tslint -c tslint.json 'src/*.ts'",
     "run": "node src/index.js",
     "build-and-run": "npm run-script build && npm run-script run",
