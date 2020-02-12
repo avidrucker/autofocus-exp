@@ -1,5 +1,7 @@
 # AutoFocus Todo List App Experiment
 
+[![CircleCI](https://circleci.com/gh/avidrucker/autofocus-exp/tree/master.svg?style=svg)](https://circleci.com/gh/avidrucker/autofocus-exp/tree/master)
+
 **Goal**: One or more creators make a **todo list app** that follows the todo list steps defined in [Mark Forster AutoFocus Time Management System](http://markforster.squarespace.com/autofocus-system/) for command line terminal (1st) and responsive mobile-first web (2nd). The project contributors will use only GitHub issues to communicate with each other, keeping the repository as the project's SSoT<sup>[1] [2]</sup>. This is an open source project where you can be **[paid to contribute](https://github.com/avidrucker/autofocus-exp/blob/master/docs/compensation_rules.md)**.
 
 **Inspiration**: This project's micro-tasking style is inspired by Yegor256's<sup>[3]</sup> conference talk ["eXtremely Distributed Software Development", at DevTernity](https://www.youtube.com/watch?v=7EytYc7K5JA).
