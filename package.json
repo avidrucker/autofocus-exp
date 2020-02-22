@@ -3,9 +3,6 @@
   "version": "0.0.0",
   "description": "cross platform app for todos",
   "main": "src/index.js",
-  "directories": {
-    "test": "test"
-  },
   "devDependencies": {
     "@istanbuljs/nyc-config-typescript": "^1.0.1",
     "@types/chai": "^4.2.7",
@@ -15,6 +12,7 @@
     "cross-env": "^6.0.3",
     "husky": "^3.1.0",
     "mocha": "^6.2.2",
+    "mocha-steps": "^1.3.0",
     "nodemon": "^2.0.2",
     "nyc": "^15.0.0",
     "prettier": "1.19.1",
@@ -24,13 +22,16 @@
     "tslint-config-prettier": "^1.18.0"
   },
   "scripts": {
-    "test": "mocha",
+    "test": "mocha e2e && mocha test",
+    "unit": "mocha test",
+    "e2e": "mocha e2e",
     "coverage": "nyc npm run test",
     "report-coverage": "nyc report --reporter=text-lcov > coverage.lcov && codecov",
-    "build": "npx tsc && tslint -c tslint.json 'src/*.ts'",
+    "lint": "tslint -c tslint.json 'src/*.ts'",
+    "build": "npx tsc",
     "run": "node src/index.js",
     "build-and-run": "npm run-script build && npm run-script run",
-    "build-and-test": "npm run-script build && npm test"
+    "build-lint-and-test": "npm run-script build && npm run-script lint && npm test"
   },
   "repository": {
     "type": "git",
@@ -52,7 +53,7 @@
   },
   "husky": {
     "hooks": {
-      "pre-push": "CI=true npm run-script build-and-test"
+      "pre-push": "CI=true npm run-script build-lint-and-test"
     }
   }
 }
