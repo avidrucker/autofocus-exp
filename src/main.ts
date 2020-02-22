@@ -135,27 +135,16 @@ const getReviewAnswersCLI = (todoList: ITodoItem[], cmwtd: string): string[] => 
 	return answers;
 }
 
-const enterFocusCLI = (todoList: ITodoItem[], cmwtd: string): any => {
-	// 1. clear the console view
-	// tslint:disable-next-line:no-console
-	console.clear();
-
-	// 2. show the current todo item
-	generalPrint(`You are working on '${cmwtd}'`);
-
-	// 3. wait for any key to continue
-	readlineSync.keyInPause();
-
-	// 4. ask the user if they have work left to do on current item
-	const makeDupTodo = promptUserForYNQ(`Do you have work left to do on this item?`);
-	// If there is work left to do on the cmwtd item, a duplicate issue is created.
-	if(makeDupTodo.toLowerCase() === 'y') {
-		const newItem: ITodoItem = constructNewTodoItem(
-			cmwtd, "")
-		todoList.push(newItem);
+export const conductFocus = (todoList: ITodoItem[], cmwtd: string, response: any): any => {
+	const workLeft: string = response.workLeft; // this will be either 'y' or 'n'
+	if(workLeft === 'y') {
+		[todoList, cmwtd] = duplicateCMWTD(todoList, cmwtd);
 	}
+	[todoList, cmwtd] = markCMWTDdone(todoList, cmwtd);
+	return [todoList, cmwtd];
+};
 
-	// 5. mark the cmwtd item as done
+const markCMWTDdone = (todoList: ITodoItem[], cmwtd: string): any => {
 	// note: since cmwtd is current saved as a string, string lookup
 	// of todo items is the way to find the cmwtd in the todoItem list
 	let searching = true;
@@ -171,6 +160,36 @@ const enterFocusCLI = (todoList: ITodoItem[], cmwtd: string): any => {
 
 		// issue: Dev implements reset of CMWTD item #171
 	}
+	return [todoList, cmwtd];
+}
+
+const duplicateCMWTD = (todoList: ITodoItem[], cmwtd: string): any => {
+	const newItem: ITodoItem = constructNewTodoItem(
+		cmwtd, "")
+	todoList.push(newItem);
+	return [todoList, cmwtd];
+}
+
+const enterFocusCLI = (todoList: ITodoItem[], cmwtd: string): any => {
+	// 1. clear the console view
+	// tslint:disable-next-line:no-console
+	console.clear();
+
+	// 2. show the current todo item
+	generalPrint(`You are working on '${cmwtd}'`);
+
+	// 3. wait for any key to continue
+	readlineSync.keyInPause();
+
+	// 4. ask the user if they have work left to do on current item
+	// If there is work left to do on the cmwtd item, a duplicate issue is created.
+	const response: any = { workLeft: "n"};
+	if(promptUserForYNQ(`Do you have work left to do on this item?`) === 'y') {
+		response.workLeft = 'y';
+	}
+
+	// 5. mark the cmwtd item as done
+	[todoList, cmwtd] = conductFocus(todoList, cmwtd, response);
 
 	return [todoList, cmwtd];
 }
