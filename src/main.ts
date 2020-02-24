@@ -40,7 +40,7 @@ const promptUserForYNQ = (questionString: string): string => {
 		{limit: ['y','n','q','Y','N','Q']}).toLowerCase();
 }
 
-const promptUserForNewTodoItem = (): ITodoItem | null => {
+const promptUserForNewTodoItemCLI = (): ITodoItem | null => {
 	const headerText = readlineSync.question(newItemTitlePrompt, {
 		limit: /\w+/i,
 		limitMessage: 'Sorry, $<lastInput> is not a valid todo item title'
@@ -50,7 +50,6 @@ const promptUserForNewTodoItem = (): ITodoItem | null => {
 		return null;
 	} else {
 		//// 113. bodyText = readlineSync.question(newItemBodyPrompt);
-
 		// issue: Dev implements momentjs datetime #103
 		// issue: Dev implements ITodoItem uuid #104
 		const newItem: ITodoItem = constructNewTodoItem(
@@ -116,7 +115,6 @@ export const conductReviews = (todoList: ITodoItem[], cmwtd: string, answers: st
 
 const getReviewAnswersCLI = (todoList: ITodoItem[], cmwtd: string): string[] => {
 	const answers: string[] = [];
-
 	for(let i = 0; i < todoList.length - 1; i++) {
 		const next = todoList[i+1].header;
 		const ans = promptUserForYNQ(`Do you want to '${next}' more than '${cmwtd}'? (Y/N/Q) `);
@@ -199,11 +197,10 @@ export const addTodoToList = (todoList: ITodoItem[], newTodoItem: ITodoItem): IT
 }
 
 const addNewCLI = (todoList: ITodoItem[], cmwtd: string): any => {
-	const temp: ITodoItem | null = promptUserForNewTodoItem();
+	const temp: ITodoItem | null = promptUserForNewTodoItemCLI();
 	if(temp !== null) {
 		todoList = addTodoToList(todoList,temp);
 		// issue: Dev implements todo item store using redux pattern #106
-		printTodoItemCount(todoList);
 	}
 
 	return [todoList, cmwtd];
@@ -234,7 +231,7 @@ export const listToMarks = (todoList: ITodoItem[]): string => {
 	return todoList.map(x => getMark(x)).join(" ");
 }
 
-export const main = ():void => {
+export const mainCLI = ():void => {
 	generalPrint(greetUser());
 
 	let todoList: ITodoItem[] = [];
@@ -246,6 +243,7 @@ export const main = ():void => {
 		// issue: Dev refactors multi if blocks #125
 		if(answer === MainMenuChoice.AddNew) {
 			[ todoList, cmwtd ] = addNewCLI(todoList, cmwtd);
+			printTodoItemCount(todoList);
 		}
 		if(answer === MainMenuChoice.ReviewTodos) {
 			[todoList, cmwtd] = attemptReviewTodosCLI(todoList, cmwtd);
