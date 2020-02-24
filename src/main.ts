@@ -5,11 +5,11 @@ import {constructNewTodoItem, getMark, ITodoItem, TodoState} from './todoItem';
 import {generalPrint, printTodoItemCount, printUpdate } from './cli';
 
 const APP_NAME = 'AutoFocus';
-const newItemTitlePrompt = "Give your todo item a name (ie. wash the \
-	dishes) then hit the ENTER key to confirm. Or, type 'Q' and hit \
-	ENTER to quit: ";
+const newItemTitlePrompt = `Enter todo item name \
+(ie. wash the dishes). Enter 'Q' to quit: `;
 //// 113. const newItemBodyPrompt = "Give your todo item a comment (ie. use \
 //// dishwasher for non-glass items) or hit ENTER key to skip: ";
+const menuPrompt = 'Please choose from the menu above:';
 
 export const greetUser = (word: string = APP_NAME): string => {
   return `Welcome to ${APP_NAME}!`;
@@ -29,8 +29,6 @@ const menuChoices: MainMenuChoice[] = [
 	MainMenuChoice.EnterFocus,
 	MainMenuChoice.ReadAbout,
 	MainMenuChoice.Quit];
-	
-const menuPrompt = 'Please choose from the menu above:';
 
 const promptUserWithMainMenu = (): MainMenuChoice => {
 	return menuChoices[
@@ -72,6 +70,7 @@ export const itemExists = (list: any[], attr: any, val: any): boolean => {
 	return indexOfItem(list, attr, val) !== -1;
 }
 
+// issue: Dev fixes getFirstReadyTodo bug #200
 // note: either indicies could be -1...
 export const getFirstReadyTodo = (todoList: ITodoItem[]): number => {
 	const firstUnmarkedIndex = indexOfItem(todoList, "state", TodoState.Unmarked);
@@ -157,7 +156,7 @@ const markCMWTDdone = (todoList: ITodoItem[], cmwtd: string): any => {
 			searching = false;
 		}
 		i = i+1;
-
+		// issue: Dev adds out of bounds check for markCMWTDdone #201
 		// issue: Dev implements reset of CMWTD item #171
 	}
 	return [todoList, cmwtd];
