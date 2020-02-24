@@ -5,11 +5,11 @@ import {constructNewTodoItem, getMark, ITodoItem, TodoState} from './todoItem';
 import {generalPrint, printTodoItemCount, printUpdate } from './cli';
 
 const APP_NAME = 'AutoFocus';
-const newItemTitlePrompt = "Give your todo item a name (ie. wash the \
-	dishes) then hit the ENTER key to confirm. Or, type 'Q' and hit \
-	ENTER to quit: ";
+const newItemTitlePrompt = `Enter todo item name \
+(ie. wash the dishes). Enter 'Q' to quit: `;
 //// 113. const newItemBodyPrompt = "Give your todo item a comment (ie. use \
 //// dishwasher for non-glass items) or hit ENTER key to skip: ";
+const menuPrompt = 'Please choose from the menu above:';
 
 export const greetUser = (word: string = APP_NAME): string => {
   return `Welcome to ${APP_NAME}!`;
@@ -29,8 +29,6 @@ const menuChoices: MainMenuChoice[] = [
 	MainMenuChoice.EnterFocus,
 	MainMenuChoice.ReadAbout,
 	MainMenuChoice.Quit];
-	
-const menuPrompt = 'Please choose from the menu above:';
 
 const promptUserWithMainMenu = (): MainMenuChoice => {
 	return menuChoices[
@@ -42,7 +40,7 @@ const promptUserForYNQ = (questionString: string): string => {
 		{limit: ['y','n','q','Y','N','Q']}).toLowerCase();
 }
 
-const promptUserForNewTodoItem = (): ITodoItem | null => {
+const promptUserForNewTodoItemCLI = (): ITodoItem | null => {
 	const headerText = readlineSync.question(newItemTitlePrompt, {
 		limit: /\w+/i,
 		limitMessage: 'Sorry, $<lastInput> is not a valid todo item title'
@@ -52,7 +50,6 @@ const promptUserForNewTodoItem = (): ITodoItem | null => {
 		return null;
 	} else {
 		//// 113. bodyText = readlineSync.question(newItemBodyPrompt);
-
 		// issue: Dev implements momentjs datetime #103
 		// issue: Dev implements ITodoItem uuid #104
 		const newItem: ITodoItem = constructNewTodoItem(
@@ -72,6 +69,7 @@ export const itemExists = (list: any[], attr: any, val: any): boolean => {
 	return indexOfItem(list, attr, val) !== -1;
 }
 
+// issue: Dev fixes getFirstReadyTodo bug #200
 // note: either indicies could be -1...
 export const getFirstReadyTodo = (todoList: ITodoItem[]): number => {
 	const firstUnmarkedIndex = indexOfItem(todoList, "state", TodoState.Unmarked);
@@ -117,7 +115,6 @@ export const conductReviews = (todoList: ITodoItem[], cmwtd: string, answers: st
 
 const getReviewAnswersCLI = (todoList: ITodoItem[], cmwtd: string): string[] => {
 	const answers: string[] = [];
-
 	for(let i = 0; i < todoList.length - 1; i++) {
 		const next = todoList[i+1].header;
 		const ans = promptUserForYNQ(`Do you want to '${next}' more than '${cmwtd}'? (Y/N/Q) `);
@@ -157,7 +154,7 @@ const markCMWTDdone = (todoList: ITodoItem[], cmwtd: string): any => {
 			searching = false;
 		}
 		i = i+1;
-
+		// issue: Dev adds out of bounds check for markCMWTDdone #201
 		// issue: Dev implements reset of CMWTD item #171
 	}
 	return [todoList, cmwtd];
@@ -200,11 +197,10 @@ export const addTodoToList = (todoList: ITodoItem[], newTodoItem: ITodoItem): IT
 }
 
 const addNewCLI = (todoList: ITodoItem[], cmwtd: string): any => {
-	const temp: ITodoItem | null = promptUserForNewTodoItem();
+	const temp: ITodoItem | null = promptUserForNewTodoItemCLI();
 	if(temp !== null) {
 		todoList = addTodoToList(todoList,temp);
 		// issue: Dev implements todo item store using redux pattern #106
-		printTodoItemCount(todoList);
 	}
 
 	return [todoList, cmwtd];
@@ -235,7 +231,7 @@ export const listToMarks = (todoList: ITodoItem[]): string => {
 	return todoList.map(x => getMark(x)).join(" ");
 }
 
-export const main = ():void => {
+export const mainCLI = ():void => {
 	generalPrint(greetUser());
 
 	let todoList: ITodoItem[] = [];
@@ -247,6 +243,7 @@ export const main = ():void => {
 		// issue: Dev refactors multi if blocks #125
 		if(answer === MainMenuChoice.AddNew) {
 			[ todoList, cmwtd ] = addNewCLI(todoList, cmwtd);
+			printTodoItemCount(todoList);
 		}
 		if(answer === MainMenuChoice.ReviewTodos) {
 			[todoList, cmwtd] = attemptReviewTodosCLI(todoList, cmwtd);
