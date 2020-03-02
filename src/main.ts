@@ -84,6 +84,9 @@ export const getFirstReadyTodo = (todoList: ITodoItem[]): number => {
 }
 
 export const setupReview = (todoList: ITodoItem[], cmwtd: string): any => {
+	if(todoList.length === 0) {
+		return [todoList, cmwtd];
+	}
 	// FVP step 1: dot the first ready todo item (the first non-complete, non-archived item)
 	const readyTodo = getFirstReadyTodo(todoList); // todo: Dev fixes issue where no unmarked, ready to start todo item is available to mark
 	todoList[readyTodo].state = TodoState.Marked; // issue: Dev fixes issue where first item is perma-marked #116
@@ -227,6 +230,10 @@ export const readyToReview = (todoList: ITodoItem[]): boolean => {
 }
 
 const attemptReviewTodosCLI = (todoList: ITodoItem[], cmwtd: string): any => {
+	if(todoList.length === 0) {
+		generalPrint("There are no items to review. Please enter a todo item and try again.");
+		return [todoList, cmwtd];
+	}
 	// step 0: check to see if there are any non-complete, non-archived items
 	if(readyToReview(todoList)) {
 		// issue: Dev handles for list review when there are 2 or less items #107
