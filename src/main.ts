@@ -12,7 +12,7 @@ const newItemTitlePrompt = `Enter todo item name \
 const menuPrompt = 'Please choose from the menu above:';
 
 export const greetUser = (word: string = APP_NAME): string => {
-  return `Welcome to ${APP_NAME}!`;
+  return `Welcome to ${word}!`;
 }
 
 enum MainMenuChoice {
