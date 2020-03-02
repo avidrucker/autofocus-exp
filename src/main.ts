@@ -12,7 +12,7 @@ const newItemTitlePrompt = `Enter todo item name \
 const menuPrompt = 'Please choose from the menu above:';
 
 export const greetUser = (word: string = APP_NAME): string => {
-  return `Welcome to ${APP_NAME}!`;
+  return `Welcome to ${word}!`;
 }
 
 enum MainMenuChoice {
@@ -69,14 +69,16 @@ export const itemExists = (list: any[], attr: any, val: any): boolean => {
 	return indexOfItem(list, attr, val) !== -1;
 }
 
-// issue: Dev fixes getFirstReadyTodo bug #200
 // note: either indicies could be -1...
 export const getFirstReadyTodo = (todoList: ITodoItem[]): number => {
 	const firstUnmarkedIndex = indexOfItem(todoList, "state", TodoState.Unmarked);
 	const firstMarkedIndex = indexOfItem(todoList, "state", TodoState.Marked);
-	if (firstUnmarkedIndex === -1) {
+	if (firstUnmarkedIndex === -1 && firstMarkedIndex === -1) {
+		return -1;
+	}
+	if (firstUnmarkedIndex === -1 && firstMarkedIndex !== -1) {
 		return firstMarkedIndex;
-	} else if (firstMarkedIndex === -1) {
+	} else if (firstMarkedIndex === -1 && firstUnmarkedIndex !== -1) {
 		return firstUnmarkedIndex;
 	} else {
 		return Math.min(firstMarkedIndex, firstUnmarkedIndex)
@@ -84,8 +86,12 @@ export const getFirstReadyTodo = (todoList: ITodoItem[]): number => {
 }
 
 export const setupReview = (todoList: ITodoItem[], cmwtd: string): any => {
+	const readyTodo = getFirstReadyTodo(todoList);
+	// short circuit func if there are no todos OR no ready to review todos
+	if(todoList.length === 0 || readyTodo === -1) {
+		return [todoList, cmwtd];
+	}
 	// FVP step 1: dot the first ready todo item (the first non-complete, non-archived item)
-	const readyTodo = getFirstReadyTodo(todoList); // todo: Dev fixes issue where no unmarked, ready to start todo item is available to mark
 	todoList[readyTodo].state = TodoState.Marked; // issue: Dev fixes issue where first item is perma-marked #116
 	// issue: Architect decides how to manage todo items in backend #108
 	if(cmwtd === "" || cmwtd === null) {
@@ -94,6 +100,7 @@ export const setupReview = (todoList: ITodoItem[], cmwtd: string): any => {
 	return [todoList, cmwtd];
 }
 
+// issue: Dev refactors conductReviews #215
 export const conductReviews = (todoList: ITodoItem[], cmwtd: string, answers: string[]): any => {
 	// FVP step 2: user story: User is asked to answer yes, no, or quit per review item #170
 	for(let i = 0; i < todoList.length - 1; i++) {
@@ -113,6 +120,7 @@ export const conductReviews = (todoList: ITodoItem[], cmwtd: string, answers: st
 	return [todoList, cmwtd];
 }
 
+// issue: Dev refactors getReviewAnswersCLI #216
 const getReviewAnswersCLI = (todoList: ITodoItem[], cmwtd: string): string[] => {
 	const answers: string[] = [];
 	for(let i = 0; i < todoList.length - 1; i++) {
@@ -190,7 +198,7 @@ const enterFocusCLI = (todoList: ITodoItem[], cmwtd: string): any => {
 	generalPrint(`You are working on '${cmwtd}'`);
 
 	// 3. wait for any key to continue
-	readlineSync.keyInPause(); // todo: fix ENTER key not quiting/ending focus mode
+	readlineSync.keyInPause(); // issue: Dev fixes ENTER key not quitting/ending focus mode #217
 
 	// 4. ask the user if they have work left to do on current item
 	// If there is work left to do on the cmwtd item, a duplicate issue is created.
@@ -227,6 +235,10 @@ export const readyToReview = (todoList: ITodoItem[]): boolean => {
 }
 
 const attemptReviewTodosCLI = (todoList: ITodoItem[], cmwtd: string): any => {
+	if(todoList.length === 0) {
+		generalPrint("There are no items to review. Please enter a todo item and try again.");
+		return [todoList, cmwtd];
+	}
 	// step 0: check to see if there are any non-complete, non-archived items
 	if(readyToReview(todoList)) {
 		// issue: Dev handles for list review when there are 2 or less items #107
