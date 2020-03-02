@@ -86,7 +86,7 @@ export const getFirstReadyTodo = (todoList: ITodoItem[]): number => {
 }
 
 export const setupReview = (todoList: ITodoItem[], cmwtd: string): any => {
-	const readyTodo = getFirstReadyTodo(todoList); // todo: Dev fixes issue where no unmarked, ready to start todo item is available to mark
+	const readyTodo = getFirstReadyTodo(todoList); // issue: Dev fixes bug where review mode cannot be entered #213
 	// short circuit func if there are no todos OR no ready to review todos
 	if(todoList.length === 0 || readyTodo === -1) {
 		return [todoList, cmwtd];
@@ -100,7 +100,7 @@ export const setupReview = (todoList: ITodoItem[], cmwtd: string): any => {
 	return [todoList, cmwtd];
 }
 
-// todo: Dev makes conductReviews logic more concise, rm extra vars, replace loop w/ map
+// issue: Dev refactors conductReviews #215
 export const conductReviews = (todoList: ITodoItem[], cmwtd: string, answers: string[]): any => {
 	// FVP step 2: user story: User is asked to answer yes, no, or quit per review item #170
 	for(let i = 0; i < todoList.length - 1; i++) {
@@ -120,7 +120,7 @@ export const conductReviews = (todoList: ITodoItem[], cmwtd: string, answers: st
 	return [todoList, cmwtd];
 }
 
-// todo: Dev makes getReviewAnswersCLI logic more concise, replace loop w/ map
+// issue: Dev refactors getReviewAnswersCLI #216
 const getReviewAnswersCLI = (todoList: ITodoItem[], cmwtd: string): string[] => {
 	const answers: string[] = [];
 	for(let i = 0; i < todoList.length - 1; i++) {
@@ -198,7 +198,7 @@ const enterFocusCLI = (todoList: ITodoItem[], cmwtd: string): any => {
 	generalPrint(`You are working on '${cmwtd}'`);
 
 	// 3. wait for any key to continue
-	readlineSync.keyInPause(); // todo: fix ENTER key not quiting/ending focus mode
+	readlineSync.keyInPause(); // issue: Dev fixes ENTER key not quitting/ending focus mode #217
 
 	// 4. ask the user if they have work left to do on current item
 	// If there is work left to do on the cmwtd item, a duplicate issue is created.
