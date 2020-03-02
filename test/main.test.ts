@@ -194,8 +194,8 @@ describe('Entering focus mode', ()=> {
 	})
 });
 
-describe('Entering review mode', ()=> {
-	it('when there are no todo items does not affect the todo list or cmwtd', () => {
+describe('Entering review mode,', ()=> {
+	it('when there are no todo items, does not affect the todo list or cmwtd', () => {
 		let todoList: ITodoItem[] = [];
 		let cmwtd = "";
 		[todoList, cmwtd] = setupReview(todoList, cmwtd); // "There are no todo items."
@@ -204,7 +204,7 @@ describe('Entering review mode', ()=> {
 		expect(cmwtd).equals("");
 	});
 
-	it('when there are no unmarked, ready items doesn\'t affect the todo list of cmwtd', () => {
+	it('when there are no unmarked or ready items, doesn\'t affect the todo list or cmwtd', () => {
 		let todoList: ITodoItem[] = [];
 		let cmwtd = "";
 		const item1: ITodoItem = constructNewTodoItem("apple");
