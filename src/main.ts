@@ -133,6 +133,9 @@ const getReviewAnswersCLI = (todoList: ITodoItem[], cmwtd: string): string[] => 
 }
 
 export const conductFocus = (todoList: ITodoItem[], cmwtd: string, response: any): any => {
+	if(todoList.length === 0) {
+		return [todoList, cmwtd];
+	}
 	const workLeft: string = response.workLeft; // this will be either 'y' or 'n'
 	if(workLeft === 'y') {
 		[todoList, cmwtd] = duplicateCMWTD(todoList, cmwtd);
@@ -168,6 +171,12 @@ const duplicateCMWTD = (todoList: ITodoItem[], cmwtd: string): any => {
 }
 
 const enterFocusCLI = (todoList: ITodoItem[], cmwtd: string): any => {
+	// 0. confirm that focusMode can be safely entered
+	if(todoList.length === 0) {
+		generalPrint("There are no todo items. Please enter todo items and try again.");
+		return [todoList, cmwtd];
+	}
+	
 	// 1. clear the console view
 	// tslint:disable-next-line:no-console
 	console.clear();
@@ -176,11 +185,11 @@ const enterFocusCLI = (todoList: ITodoItem[], cmwtd: string): any => {
 	generalPrint(`You are working on '${cmwtd}'`);
 
 	// 3. wait for any key to continue
-	readlineSync.keyInPause();
+	readlineSync.keyInPause(); // todo: fix ENTER key not quiting/ending focus mode
 
 	// 4. ask the user if they have work left to do on current item
 	// If there is work left to do on the cmwtd item, a duplicate issue is created.
-	const response: any = { workLeft: "n"};
+	const response: any = { workLeft: "n"}; // initialize default "no" workLeft response
 	if(promptUserForYNQ(`Do you have work left to do on this item?`) === 'y') {
 		response.workLeft = 'y';
 	}
