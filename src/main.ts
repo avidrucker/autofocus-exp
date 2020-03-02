@@ -86,11 +86,12 @@ export const getFirstReadyTodo = (todoList: ITodoItem[]): number => {
 }
 
 export const setupReview = (todoList: ITodoItem[], cmwtd: string): any => {
-	if(todoList.length === 0) {
+	const readyTodo = getFirstReadyTodo(todoList); // todo: Dev fixes issue where no unmarked, ready to start todo item is available to mark
+	// short circuit func if there are no todos OR no ready to review todos
+	if(todoList.length === 0 || readyTodo === -1) {
 		return [todoList, cmwtd];
 	}
 	// FVP step 1: dot the first ready todo item (the first non-complete, non-archived item)
-	const readyTodo = getFirstReadyTodo(todoList); // todo: Dev fixes issue where no unmarked, ready to start todo item is available to mark
 	todoList[readyTodo].state = TodoState.Marked; // issue: Dev fixes issue where first item is perma-marked #116
 	// issue: Architect decides how to manage todo items in backend #108
 	if(cmwtd === "" || cmwtd === null) {
