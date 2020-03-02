@@ -86,7 +86,7 @@ export const getFirstReadyTodo = (todoList: ITodoItem[]): number => {
 }
 
 export const setupReview = (todoList: ITodoItem[], cmwtd: string): any => {
-	const readyTodo = getFirstReadyTodo(todoList); // issue: Dev fixes bug where review mode cannot be entered #213
+	const readyTodo = getFirstReadyTodo(todoList);
 	// short circuit func if there are no todos OR no ready to review todos
 	if(todoList.length === 0 || readyTodo === -1) {
 		return [todoList, cmwtd];
