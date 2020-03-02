@@ -92,7 +92,7 @@ describe('Finding items in a list', () => {
 })
 
 describe('Finding ready todos', () => {
-	it('returns the first ready item', () => {
+	it('returns the first non-complete, non-archived item', () => {
 		let todoList: ITodoItem[] = [];
 		const item1: ITodoItem = constructNewTodoItem("apple");
 		const item2: ITodoItem = constructNewTodoItem("banana");
@@ -100,6 +100,33 @@ describe('Finding ready todos', () => {
 		todoList = addTodoToList(todoList,item2);
 		todoList[0].state = TodoState.Completed;
 		expect(getFirstReadyTodo(todoList)).equals(1);
+	})
+
+	it('returns -1 when there are no todos', () => {
+		const todoList: ITodoItem[] = [];
+		expect(getFirstReadyTodo(todoList)).equals(-1);
+	});
+
+	it('returns -1 when there are no ready todos', () => {
+		let todoList: ITodoItem[] = [];
+		const item1: ITodoItem = constructNewTodoItem("apple");
+		const item2: ITodoItem = constructNewTodoItem("banana");
+		todoList = addTodoToList(todoList,item1);
+		todoList = addTodoToList(todoList,item2);
+		todoList[0].state = TodoState.Completed;
+		todoList[1].state = TodoState.Completed;
+		expect(getFirstReadyTodo(todoList)).equals(-1);
+	});
+
+	it('when there are both marked and unmarked items, returns the first of either', () => {
+		let todoList: ITodoItem[] = [];
+		const item1: ITodoItem = constructNewTodoItem("apple");
+		const item2: ITodoItem = constructNewTodoItem("banana");
+		todoList = addTodoToList(todoList,item1);
+		todoList = addTodoToList(todoList,item2);
+		todoList[0].state = TodoState.Marked;
+		todoList[1].state = TodoState.Unmarked;
+		expect(getFirstReadyTodo(todoList)).equals(0);
 	})
 })
 
