@@ -1,11 +1,9 @@
 import { expect } from 'chai';
 
-import { addTodoToList, conductFocus, conductReviews, 
-	getFirstReadyTodo, greetUser, indexOfItem, itemExists, listToMarks, readyToReview, setupReview } from '../src/main';
+import { addTodoToList, conductReviews, getFirstReadyTodo, 
+	greetUser, indexOfItem, itemExists, listToMarks, readyToReview, setupReview } from '../src/main';
 import { constructNewTodoItem, ITodoItem, TodoState } from '../src/todoItem';
 
-// a smoke test, of sorts
-// this is to be left skipped normally
 describe.skip('Husky', () => {
   it('should prevent repo from being pushed when tests fail', () => {
 
@@ -160,21 +158,3 @@ describe('Conducting list iteration', () => {
 		expect(cmwtd).equals("cherry");
 	});
 });
-
-describe('Entering focus mode when there are no todo items', ()=> {
-	it('does not affect the todoList or cmwtd', () => {
-		let todoList: ITodoItem[] = [];
-		let cmwtd = "";
-		[todoList, cmwtd] = conductFocus(todoList, cmwtd, {workLeft: 'y'}); // "There are no todo items."
-		expect(todoList.length).equals(0);
-		expect(cmwtd).equals("");
-	})
-})
-
-/*
-describe('', ()=> {
-	it('', () => {
-		expect(listToMarks(todoList)).equals("[o] [ ] [o]");
-	})
-})
-*/
