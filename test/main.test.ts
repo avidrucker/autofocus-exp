@@ -250,6 +250,8 @@ describe('Entering review mode,', ()=> {
 	});
 });
 
+// issue: Dev resolves bug where completed todo items leave stale CMWTD #218
+
 /*
 describe('', ()=> {
 	it('', () => {
