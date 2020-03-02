@@ -100,6 +100,7 @@ export const setupReview = (todoList: ITodoItem[], cmwtd: string): any => {
 	return [todoList, cmwtd];
 }
 
+// todo: Dev makes conductReviews logic more concise, rm extra vars, replace loop w/ map
 export const conductReviews = (todoList: ITodoItem[], cmwtd: string, answers: string[]): any => {
 	// FVP step 2: user story: User is asked to answer yes, no, or quit per review item #170
 	for(let i = 0; i < todoList.length - 1; i++) {
@@ -119,6 +120,7 @@ export const conductReviews = (todoList: ITodoItem[], cmwtd: string, answers: st
 	return [todoList, cmwtd];
 }
 
+// todo: Dev makes getReviewAnswersCLI logic more concise, replace loop w/ map
 const getReviewAnswersCLI = (todoList: ITodoItem[], cmwtd: string): string[] => {
 	const answers: string[] = [];
 	for(let i = 0; i < todoList.length - 1; i++) {
