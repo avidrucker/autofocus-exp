@@ -85,11 +85,11 @@ export const getFirstReadyTodo = (todoList: ITodoItem[]): number => {
 
 export const setupReview = (todoList: ITodoItem[], cmwtd: string): any => {
 	// FVP step 1: dot the first ready todo item (the first non-complete, non-archived item)
-	const readyTodo = getFirstReadyTodo(todoList);
-	todoList[readyTodo].state = TodoState.Marked;
+	const readyTodo = getFirstReadyTodo(todoList); // todo: Dev fixes issue where no unmarked, ready to start todo item is available to mark
+	todoList[readyTodo].state = TodoState.Marked; // issue: Dev fixes issue where first item is perma-marked #116
 	// issue: Architect decides how to manage todo items in backend #108
 	if(cmwtd === "" || cmwtd === null) {
-		cmwtd = todoList[readyTodo].header; // CMWTD is initialized to first ready todo item if unset // issue: Dev fixes issue where first item is perma-marked #116
+		cmwtd = todoList[readyTodo].header; // CMWTD is initialized to first ready todo item if unset
 	}
 	return [todoList, cmwtd];
 }
@@ -133,7 +133,8 @@ const getReviewAnswersCLI = (todoList: ITodoItem[], cmwtd: string): string[] => 
 }
 
 export const conductFocus = (todoList: ITodoItem[], cmwtd: string, response: any): any => {
-	if(todoList.length === 0) {
+	// return w/o affecting state if focus mode cannot be entered
+	if(todoList.length === 0 || cmwtd === "") {
 		return [todoList, cmwtd];
 	}
 	const workLeft: string = response.workLeft; // this will be either 'y' or 'n'
@@ -174,6 +175,10 @@ const enterFocusCLI = (todoList: ITodoItem[], cmwtd: string): any => {
 	// 0. confirm that focusMode can be safely entered
 	if(todoList.length === 0) {
 		generalPrint("There are no todo items. Please enter todo items and try again.");
+		return [todoList, cmwtd];
+	}
+	if(cmwtd === "") {
+		generalPrint("There is no 'current most want to do' item. Please review your items and try again.");
 		return [todoList, cmwtd];
 	}
 	
