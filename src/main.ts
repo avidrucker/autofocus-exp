@@ -69,14 +69,16 @@ export const itemExists = (list: any[], attr: any, val: any): boolean => {
 	return indexOfItem(list, attr, val) !== -1;
 }
 
-// issue: Dev fixes getFirstReadyTodo bug #200
 // note: either indicies could be -1...
 export const getFirstReadyTodo = (todoList: ITodoItem[]): number => {
 	const firstUnmarkedIndex = indexOfItem(todoList, "state", TodoState.Unmarked);
 	const firstMarkedIndex = indexOfItem(todoList, "state", TodoState.Marked);
-	if (firstUnmarkedIndex === -1) {
+	if (firstUnmarkedIndex === -1 && firstMarkedIndex === -1) {
+		return -1;
+	}
+	if (firstUnmarkedIndex === -1 && firstMarkedIndex !== -1) {
 		return firstMarkedIndex;
-	} else if (firstMarkedIndex === -1) {
+	} else if (firstMarkedIndex === -1 && firstUnmarkedIndex !== -1) {
 		return firstUnmarkedIndex;
 	} else {
 		return Math.min(firstMarkedIndex, firstUnmarkedIndex)
