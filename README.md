@@ -2,22 +2,22 @@
 
 ![CircleCI](https://img.shields.io/circleci/build/github/avidrucker/autofocus-exp/master) ![GitHub commit activity](https://img.shields.io/github/commit-activity/m/avidrucker/autofocus-exp) ![GitHub last commit (branch)](https://img.shields.io/github/last-commit/avidrucker/autofocus-exp/master)
 
-Welcome! This open source project is an experiment in cutting-edge todo lists<sup>[[1]](#first)</sup> and innovative remote collaboration<sup>[[2]](#second)</sup>. You can [get paid to contribute to this project](https://github.com/avidrucker/autofocus-exp/blob/master/docs/compensation_rules.md).​ Click below on your preferred role to get up to speed the fastest :wink:
+Welcome! This open source project is an experiment in cutting-edge todo lists<sup>[[1]](#first)</sup> and innovative remote collaboration<sup>[[2]](#second)</sup>. You can [get paid to contribute to this project](https://github.com/avidrucker/autofocus-exp/blob/master/docs/compensation_rules.md). Click below on your preferred role to quickly get up to speed.
 
 
-## Please help us​ :handshake:
+## Please help us :handshake:
 
 I'm interested to contribute as a...
 
-### [designer](#) :paintbrush:
+### [designer](https://github.com/avidrucker/autofocus-exp/blob/master/docs/designer_readme.md) :paintbrush:
 
-### [writer/editor](#) :pencil:
+### [writer/editor](https://github.com/avidrucker/autofocus-exp/blob/master/docs/writer_readme.md) :pencil:
 
-### [programmer](#) :computer:
+### [programmer](https://github.com/avidrucker/autofocus-exp/blob/master/docs/dev_readme.md) :computer:
 
-### [something else](#) :rainbow:
+### [something else](https://github.com/avidrucker/autofocus-exp/blob/master/docs/contributor_readme.md) :rainbow:
 
-Our full list of project tasks is on our [issues board](https://github.com/avidrucker/autofocus-exp/issues).
+You can see our full list of project tasks on our [issues board](https://github.com/avidrucker/autofocus-exp/issues).
 
 
 ## Current Contributors :hammer_and_wrench:
