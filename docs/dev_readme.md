@@ -29,5 +29,5 @@ Tests can be run via `npm test`. There are some convenience scripts as well -  r
 ## Successful Pull Requests How-To
 
 - Pick an issue, create a new branch with the naming convention: `issue-789-short-title-like-this` (yours could be `issue-173-fix-spelling-mistakes`, for example)
-- Commit often, using [conventional commits](#)
+- Commit often, using [conventional commits](https://www.conventionalcommits.org/en/v1.0.0/)
 - Once your code runs **without any linting errors** & you have written **appropriate unit tests** (code coverage checks pending) for the code you have written, push to a remote branch with the same name as your local branch (eg. "`issue-173-fix-spelling-mistakes`")
