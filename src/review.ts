@@ -1,33 +1,27 @@
 import { ITodoItem, TodoState } from "./todoItem";
-import { indexOfItem, itemExists } from "./todoList";
+import { indexOfItem, itemExists, lastIndexOfItem } from "./todoList";
 
-// note: either indicies could be -1...
-export const getFirstReadyTodo = (todoList: ITodoItem[]): number => {
-	const firstUnmarkedIndex = indexOfItem(todoList, "state", TodoState.Unmarked);
-	const firstMarkedIndex = indexOfItem(todoList, "state", TodoState.Marked);
-	if (firstUnmarkedIndex === -1 && firstMarkedIndex === -1) {
-		return -1;
-	}
-	if (firstUnmarkedIndex === -1 && firstMarkedIndex !== -1) {
-		return firstMarkedIndex;
-	} else if (firstMarkedIndex === -1 && firstUnmarkedIndex !== -1) {
-		return firstUnmarkedIndex;
-	} else {
-		return Math.min(firstMarkedIndex, firstUnmarkedIndex)
-	}
+// returns -1 if there are no unmarked items
+export const getFirstUnmarked = (todoList: ITodoItem[]): number => {
+	return indexOfItem(todoList, "state", TodoState.Unmarked);
+}
+
+// returns -1 if there are no marked items
+export const getLastMarked = (todoList: ITodoItem[]): number => {
+	return lastIndexOfItem(todoList, "state", TodoState.Marked);
 }
 
 export const setupReview = (todoList: ITodoItem[], cmwtd: string): any => {
-	const readyTodo = getFirstReadyTodo(todoList);
+	const firstUnmarked = getFirstUnmarked(todoList);
 	// short circuit func if there are no todos OR no ready to review todos
-	if(todoList.length === 0 || readyTodo === -1) {
+	if(todoList.length === 0 || firstUnmarked === -1) {
 		return [todoList, cmwtd];
 	}
 	// FVP step 1: dot the first ready todo item (the first non-complete, non-archived item)
-	todoList[readyTodo].state = TodoState.Marked; // issue: Dev fixes issue where first item is perma-marked #116
+	todoList[firstUnmarked].state = TodoState.Marked; // issue: Dev fixes issue where first item is perma-marked #116
 	// issue: Architect decides how to manage todo items in backend #108
 	if(cmwtd === "" || cmwtd === null) {
-		cmwtd = todoList[readyTodo].header; // CMWTD is initialized to first ready todo item if unset
+		cmwtd = todoList[firstUnmarked].header; // CMWTD is initialized to first ready todo item if unset
 	}
 	return [todoList, cmwtd];
 }
