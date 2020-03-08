@@ -19,8 +19,6 @@ describe('Greet User', () => {
   });
 });
 
-// issue: Dev resolves bug where completed todo items leave stale CMWTD #218
-
 /*
 describe('', ()=> {
 	it('', () => {
