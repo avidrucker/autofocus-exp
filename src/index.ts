@@ -1,3 +1,3 @@
-import { mainCLI } from './main';
+import { mainCLI } from "./cli";
 
 mainCLI();

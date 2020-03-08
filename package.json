@@ -30,7 +30,8 @@
     "lint": "tslint -c tslint.json 'src/*.ts'",
     "build": "npx tsc",
     "run": "node src/index.js",
-    "build-and-run": "npm run-script build && npm run-script run",
+		"build-and-run": "npm run-script build && npm run-script run",
+		"build-and-unit": "npm run-script build && npm run-script unit",
     "build-lint-and-test": "npm run-script build && npm run-script lint && npm test"
   },
   "repository": {

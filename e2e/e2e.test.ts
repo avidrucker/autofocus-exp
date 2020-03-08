@@ -1,8 +1,10 @@
 import { expect } from 'chai';
 import { step } from 'mocha-steps';
 
-import { addTodoToList, conductFocus, conductReviews, listToMarks, setupReview } from '../src/main';
+import { conductFocus } from '../src/focus';
+import { conductReviews, setupReview } from '../src/review';
 import { constructNewTodoItem, ITodoItem, TodoState } from '../src/todoItem';
+import { addTodoToList, listToMarks } from '../src/todoList';
 
 describe('Simple E2E test', () => {
   describe('should pass each successive step', () => {
