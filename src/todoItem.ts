@@ -52,3 +52,8 @@ export const getMark = (i: ITodoItem): string => {
 export const stringifyTodoItem = (i : ITodoItem): string => {
 	return `${getMark(i)} ${i.header}`;
 }
+
+// ready for review
+export const isReady = (i: ITodoItem): boolean => {
+	return i.state === TodoState.Unmarked || i.state === TodoState.Marked;
+}
