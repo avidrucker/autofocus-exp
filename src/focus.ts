@@ -28,7 +28,7 @@ export const duplicateCMWTD = (todoList: ITodoItem[], cmwtd: string): any => {
 	return [todoList, cmwtd];
 }
 
-// issue: Dev resolves bug where completed todo items leave stale CMWTD #218
+// issue: Dev resolves bug where completed todo items leave stale CMWTD #218, needs testing
 export const updateCMWTD = (todoList: ITodoItem[], cmwtd: string): any => {
 	const lastIndex = getLastMarked(todoList);
 	if(lastIndex !== -1) {
