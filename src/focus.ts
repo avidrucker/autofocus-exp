@@ -1,5 +1,6 @@
 import { getLastMarked } from "./review";
 import { constructNewTodoItem, ITodoItem, TodoState } from "./todoItem";
+import { itemExists } from "./todoList";
 
 export const conductFocus = (todoList: ITodoItem[], cmwtd: string, response: any): any => {
 	// return w/o affecting state if focus mode cannot be entered
@@ -37,4 +38,9 @@ export const updateCMWTD = (todoList: ITodoItem[], cmwtd: string): any => {
 		cmwtd = ""; // resets CMWTD
 	}
 	return [todoList, cmwtd];
+}
+
+// todo: make use of this function in focusCLI
+export const readyToFocus = (todoList: ITodoItem[], cmwtd: string): boolean => {
+	return cmwtd !== "" && itemExists(todoList, "state", TodoState.Marked);
 }
