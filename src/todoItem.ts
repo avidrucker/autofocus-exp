@@ -48,3 +48,7 @@ export const getMark = (i: ITodoItem): string => {
 	}
 	return `[${ERROR}]`; // error state indicator
 }
+
+export const stringifyTodoItem = (i : ITodoItem): string => {
+	return `${getMark(i)} ${i.header}`;
+}
