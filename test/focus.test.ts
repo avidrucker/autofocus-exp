@@ -4,6 +4,8 @@ import { conductFocus } from '../src/focus';
 import { constructNewTodoItem, ITodoItem } from '../src/todoItem';
 import { addTodoToList } from '../src/todoList';
 
+// issue: Dev resolves bug where completed todo items leave stale CMWTD #218
+
 describe('Entering focus mode', ()=> {
 	it('when there are no todo items does not affect the todo list or cmwtd', () => {
 		let todoList: ITodoItem[] = [];
