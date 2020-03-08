@@ -18,9 +18,11 @@ const newItemTitlePrompt = `Enter todo item name \
 const menuPrompt = 'Please choose from the menu above:';
 
 enum MainMenuChoice {
-	AddNew = 'Add a New Todo',
+	AddNew = 'Add New Todo',
 	ReviewTodos = 'Review & Dot Todos',
 	EnterFocus = 'Enter Focus Mode',
+	PrintList = 'Print Todo List',
+	ClearDots = 'Clear Dots',
 	ReadAbout = 'Read About AutoFocus',
 	Quit = 'Quit Program'
 }
@@ -29,6 +31,8 @@ const menuChoices: MainMenuChoice[] = [
 	MainMenuChoice.AddNew,
 	MainMenuChoice.ReviewTodos,
 	MainMenuChoice.EnterFocus,
+	MainMenuChoice.PrintList,
+	MainMenuChoice.ClearDots,
 	MainMenuChoice.ReadAbout,
 	MainMenuChoice.Quit];
 
@@ -119,6 +123,7 @@ const attemptReviewTodosCLI = (todoList: ITodoItem[], cmwtd: string): any => {
 		generalPrint("There are no items to review. Please enter a todo item and try again.");
 		return [todoList, cmwtd];
 	}
+	
 	// step 0: check to see if there are any non-complete, non-archived items
 	if(readyToReview(todoList)) {
 		// issue: Dev handles for list review when there are 2 or less items #107
@@ -126,9 +131,11 @@ const attemptReviewTodosCLI = (todoList: ITodoItem[], cmwtd: string): any => {
 		// issue: Dev implements E2E test for CLA #110
 		// issue: Dev implements todo item store using redux pattern #106
 		[ todoList, cmwtd ] = setupReview(todoList, cmwtd);
-		const answers = getReviewAnswersCLI(todoList, cmwtd);
-		[ todoList, cmwtd ] = conductReviews(todoList, cmwtd, answers);
+		[ todoList, cmwtd ] = conductReviews(
+				todoList, cmwtd, getReviewAnswersCLI(todoList, cmwtd));
 		printUpdate( todoList, cmwtd);
+	} else {
+		generalPrint("There are no more items to mark. Add new items or clear dots first.");
 	}
 	return [todoList, cmwtd];
 }
@@ -204,6 +211,12 @@ export const mainCLI = ():void => {
 		}
 		if(answer === MainMenuChoice.EnterFocus) {
 			[ todoList, cmwtd ] = enterFocusCLI(todoList, cmwtd);
+		}
+		if(answer === MainMenuChoice.PrintList) {
+			generalPrint("This is stub (placeholder) text. Please check back later.");
+		}
+		if(answer === MainMenuChoice.ClearDots) {
+			generalPrint("This is stub (placeholder) text. Please check back later.");
 		}
 		// issue: Dev adds about section text print out #128
 		if(answer === MainMenuChoice.ReadAbout) {
