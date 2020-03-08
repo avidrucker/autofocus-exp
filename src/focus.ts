@@ -1,3 +1,4 @@
+import { getLastMarked } from "./review";
 import { constructNewTodoItem, ITodoItem, TodoState } from "./todoItem";
 
 export const conductFocus = (todoList: ITodoItem[], cmwtd: string, response: any): any => {
@@ -14,21 +15,9 @@ export const conductFocus = (todoList: ITodoItem[], cmwtd: string, response: any
 };
 
 export const markCMWTDdone = (todoList: ITodoItem[], cmwtd: string): any => {
-	// note: since cmwtd is current saved as a string, string lookup
-	// of todo items is the way to find the cmwtd in the todoItem list
-	let searching = true;
-	let i = 0;
-	while(searching) {
-		// find an item that matches the header text of the
-		// current-most-want-to-do AND hasn't been completed yet
-		if(todoList[i].header === cmwtd && todoList[i].state !== TodoState.Completed) {
-			todoList[i].state = TodoState.Completed;
-			searching = false;
-		}
-		i = i+1;
-		// issue: Dev adds out of bounds check for markCMWTDdone #201
-		// issue: Dev implements reset of CMWTD item #171
-	}
+	const lastMarked = getLastMarked(todoList); // 1. find last marked item (this should match cmwtd)
+	todoList[lastMarked].state = TodoState.Completed; // 2. set it to completed
+	[todoList, cmwtd] = updateCMWTD(todoList, cmwtd); // 3. update cmwtd
 	return [todoList, cmwtd];
 }
 
@@ -36,5 +25,16 @@ export const duplicateCMWTD = (todoList: ITodoItem[], cmwtd: string): any => {
 	const newItem: ITodoItem = constructNewTodoItem(
 		cmwtd, "")
 	todoList.push(newItem);
+	return [todoList, cmwtd];
+}
+
+// issue: Dev resolves bug where completed todo items leave stale CMWTD #218
+export const updateCMWTD = (todoList: ITodoItem[], cmwtd: string): any => {
+	const lastIndex = getLastMarked(todoList);
+	if(lastIndex !== -1) {
+		cmwtd = todoList[lastIndex].header;
+	} else {
+		cmwtd = ""; // resets CMWTD
+	}
 	return [todoList, cmwtd];
 }
