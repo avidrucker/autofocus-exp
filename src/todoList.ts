@@ -4,6 +4,10 @@ export const indexOfItem = (list: any[], attr: any, val: any): number => {
 	return list.map((e) => e[attr]).indexOf(val);
 }
 
+export const lastIndexOfItem = (list: any[], attr: any, val: any): number => {
+	return list.map((e) => e[attr]).lastIndexOf(val);
+}
+
 export const itemExists = (list: any[], attr: any, val: any): boolean => {
 	return indexOfItem(list, attr, val) !== -1;
 }
