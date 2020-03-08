@@ -65,4 +65,33 @@ describe('Focus Mode', ()=> {
 			expect(getLastMarked(todoList)).equals(0);
 		})
 	});
+
+	describe('Updating the CMWTD', () => {
+		it('updates CMWTD from something to nothing', () => {
+			let todoList: ITodoItem[] = [];
+			const item1: ITodoItem = constructNewTodoItem("apple");
+			let cmwtd = "apple";
+			todoList = addTodoToList(todoList,item1);
+			todoList[0].state = TodoState.Marked;
+			[todoList, cmwtd] = conductFocus(todoList, cmwtd, {workLeft:'n'});
+			expect(todoList[0].state).equals(TodoState.Completed);
+			expect(todoList.length).equals(1);
+			expect(cmwtd).equals("");
+		})
+
+		it('updates CMWTD from last marked item to the previous marked', () => {
+			let todoList: ITodoItem[] = [];
+			const item1: ITodoItem = constructNewTodoItem("apple");
+			const item2: ITodoItem = constructNewTodoItem("banana");
+			todoList = addTodoToList(todoList,item1);
+			todoList = addTodoToList(todoList,item2);
+			todoList[0].state = TodoState.Marked;
+			todoList[1].state = TodoState.Marked;
+			let cmwtd = "banana";
+			[todoList, cmwtd] = conductFocus(todoList, cmwtd, {workLeft:'n'});
+			expect(todoList[1].state).equals(TodoState.Completed);
+			expect(todoList.length).equals(2);
+			expect(cmwtd).equals("apple");
+		})
+	})
 });
