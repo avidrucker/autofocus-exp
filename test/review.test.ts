@@ -4,7 +4,7 @@ import { conductReviews, readyToReview, setupReview } from '../src/review';
 import { constructNewTodoItem, ITodoItem, TodoState } from '../src/todoItem';
 import { addTodoToList, getFirstUnmarked, listToMarks } from '../src/todoList';
 
-describe('Review Mode', ()=> {
+describe('REVIEW MODE TESTS', ()=> {
 	describe('Reviewing 0 item list',() => {
 		// when there are no todo items, does not affect the todo list or cmwtd
 		it('returns back empty list', () => {
