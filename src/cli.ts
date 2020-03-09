@@ -4,7 +4,7 @@ import { conductFocus } from './focus';
 import { greetUser } from './main';
 import { conductReviews, readyToReview, setupReview } from './review';
 import { constructNewTodoItem, ITodoItem } from './todoItem';
-import { addTodoToList, makePrintableTodoItemList } from './todoList';
+import { addTodoToList, firstReady, makePrintableTodoItemList } from './todoList';
 import { getPluralS } from './util';
 
 // ****************************************
@@ -89,9 +89,18 @@ const printTodoItemList = (list: ITodoItem[]):void => {
 }
 
 export const printUpdate = (todoList: ITodoItem[], cmwtd: string): void => {
-	generalPrint(`Your current most want to do is '${cmwtd}'.`);
-	generalPrint("Your current Todo List:")
-	printTodoItemList(todoList);
+	if(cmwtd === "" || cmwtd === null) {
+		generalPrint(`Your CMWTD is currently set to nothing.`);
+	} else {
+		generalPrint(`Your CMWTD is '${cmwtd}'.`);
+	}
+	
+	if(todoList.length === 0) {
+		generalPrint("Your current Todo List is empty.");
+	} else {
+		generalPrint("Your current Todo List:")
+		printTodoItemList(todoList);
+	}
 }
 
 // ****************************************
@@ -118,24 +127,33 @@ export const getReviewAnswersCLI = (todoList: ITodoItem[], cmwtd: string): strin
 	return answers;
 }
 
-const attemptReviewTodosCLI = (todoList: ITodoItem[], cmwtd: string): any => {
+const printReviewSetupMessage = (todoList: ITodoItem[]): void => {
 	if(todoList.length === 0) {
-		generalPrint("There are no items to review. Please enter a todo item and try again.");
+		generalPrint("There are no items to review. Please enter mores items and try again.");
+	} else if (firstReady(todoList) === -1) {
+		generalPrint("There are no items left to dot. Please enter more items and try again.");
+	} else {
+		generalPrint("Marking the first ready item...");
+	}
+}
+
+const attemptReviewTodosCLI = (todoList: ITodoItem[], cmwtd: string): any => {
+	printReviewSetupMessage(todoList);
+	if(todoList.length === 0) {
 		return [todoList, cmwtd];
 	}
-	
+
+	[ todoList, cmwtd ] = setupReview(todoList, cmwtd);
+
 	// step 0: check to see if there are any non-complete, non-archived items
 	if(readyToReview(todoList)) {
 		// issue: Dev handles for list review when there are 2 or less items #107
 		// issue: Architect designs option to always quit mid-menu #109
 		// issue: Dev implements E2E test for CLA #110
 		// issue: Dev implements todo item store using redux pattern #106
-		[ todoList, cmwtd ] = setupReview(todoList, cmwtd);
-		[ todoList, cmwtd ] = conductReviews(
-				todoList, cmwtd, getReviewAnswersCLI(todoList, cmwtd));
+		const answers = getReviewAnswersCLI(todoList, cmwtd);
+		[ todoList, cmwtd ] = conductReviews(todoList, cmwtd, answers);
 		printUpdate( todoList, cmwtd);
-	} else {
-		generalPrint("There are no more items to mark. Add new items or clear dots first.");
 	}
 	return [todoList, cmwtd];
 }
@@ -213,7 +231,7 @@ export const mainCLI = ():void => {
 			[ todoList, cmwtd ] = enterFocusCLI(todoList, cmwtd);
 		}
 		if(answer === MainMenuChoice.PrintList) {
-			generalPrint("This is stub (placeholder) text. Please check back later.");
+			printUpdate( todoList, cmwtd );
 		}
 		if(answer === MainMenuChoice.ClearDots) {
 			generalPrint("This is stub (placeholder) text. Please check back later.");

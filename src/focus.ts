@@ -1,6 +1,5 @@
-import { getLastMarked } from "./review";
 import { constructNewTodoItem, ITodoItem, TodoState } from "./todoItem";
-import { itemExists } from "./todoList";
+import { getLastMarked, itemExists } from "./todoList";
 
 export const conductFocus = (todoList: ITodoItem[], cmwtd: string, response: any): any => {
 	// return w/o affecting state if focus mode cannot be entered

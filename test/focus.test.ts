@@ -1,9 +1,8 @@
 import { expect } from 'chai';
 
 import { conductFocus } from '../src/focus';
-import { getLastMarked } from '../src/review';
 import { constructNewTodoItem, ITodoItem, TodoState } from '../src/todoItem';
-import { addTodoToList } from '../src/todoList';
+import { addTodoToList, getLastMarked } from '../src/todoList';
 
 // issue: Dev resolves bug where completed todo items leave stale CMWTD #218
 

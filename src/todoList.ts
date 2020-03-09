@@ -1,4 +1,4 @@
-import { getMark, ITodoItem, stringifyTodoItem } from "./todoItem";
+import { getMark, ITodoItem, stringifyTodoItem, TodoState } from "./todoItem";
 
 export const indexOfItem = (list: any[], attr: any, val: any): number => {
 	return list.map((e) => e[attr]).indexOf(val);
@@ -29,4 +29,33 @@ export const listToMarks = (todoList: ITodoItem[]): string => {
 export const addTodoToList = (todoList: ITodoItem[], newTodoItem: ITodoItem): ITodoItem[] => {
 	todoList.push(newTodoItem);
 	return todoList;
+}
+
+// returns -1 if there are no unmarked items
+export const getFirstUnmarked = (todoList: ITodoItem[]): number => {
+	return indexOfItem(todoList, "state", TodoState.Unmarked);
+}
+
+// returns -1 if there are no marked items
+export const getFirstMarked = (todoList: ITodoItem[]): number => {
+	return indexOfItem(todoList, "state", TodoState.Marked);
+}
+
+// returns -1 if there are no marked items
+export const getLastMarked = (todoList: ITodoItem[]): number => {
+	return lastIndexOfItem(todoList, "state", TodoState.Marked);
+}
+
+export const firstReady = (todoList: ITodoItem[]): number => {
+	const firstUnmarked = getFirstUnmarked(todoList);
+	const firstMarked = getFirstMarked(todoList);
+	if(firstUnmarked === -1 && firstMarked === -1 ) {
+		return -1;
+	} else if (firstUnmarked !== -1 && firstMarked === -1) {
+		return firstUnmarked;
+	} else if (firstUnmarked === -1 && firstMarked !== -1) {
+		return firstMarked;
+	} else {
+		return Math.min(firstUnmarked, firstMarked);
+	}
 }
