@@ -19,6 +19,9 @@ export const setupReview = (todoList: ITodoItem[], cmwtd: string): any => {
 
 // issue: Dev refactors conductReviews #215
 export const conductReviews = (todoList: ITodoItem[], cmwtd: string, answers: string[]): any => {
+	if(todoList.length === 0 || todoList.length === 1) {
+		return [todoList, cmwtd];
+	}
 	// FVP step 2: user story: User is asked to answer yes, no, or quit per review item #170
 	for(let i = 0; i < todoList.length - 1; i++) {
 		const next = todoList[i+1].header;
@@ -42,4 +45,5 @@ export const conductReviews = (todoList: ITodoItem[], cmwtd: string, answers: st
 // - there are multiple ready items 
 export const readyToReview = (todoList: ITodoItem[]): boolean =>
 	itemExists(todoList, "state", TodoState.Unmarked) &&
-		todoList.filter(x => isReady(x)).length > 1
+		(todoList.filter(x => isReady(x)).length > 1 || 
+		itemExists(todoList, "state", TodoState.Marked))
