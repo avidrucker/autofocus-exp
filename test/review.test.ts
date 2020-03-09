@@ -1,8 +1,8 @@
 import { expect } from 'chai';
 
-import { conductReviews, getFirstUnmarked, readyToReview, setupReview } from '../src/review';
+import { conductReviews, readyToReview, setupReview } from '../src/review';
 import { constructNewTodoItem, ITodoItem, TodoState } from '../src/todoItem';
-import { addTodoToList, listToMarks } from '../src/todoList';
+import { addTodoToList, getFirstUnmarked, listToMarks } from '../src/todoList';
 
 describe('Review Mode', ()=> {
 	describe('Reviewing 0 item list',() => {
@@ -27,8 +27,8 @@ describe('Review Mode', ()=> {
 			let cmwtd = "apple";
 			[todoList, cmwtd] = setupReview(todoList, cmwtd);
 			expect(todoList.length).equals(1);
+			expect(todoList[0].state).equals(TodoState.Marked);
 			expect(cmwtd).equals("apple");
-			
 		})
 	
 		it('returns list with unmarked item marked',()=>{
@@ -39,6 +39,7 @@ describe('Review Mode', ()=> {
 			todoList = addTodoToList(todoList,item1);
 			[todoList, cmwtd] = setupReview(todoList, cmwtd);
 			expect(todoList.length).equals(1);
+			expect(todoList[0].state).equals(TodoState.Marked);
 			expect(cmwtd).equals("apple");
 		})
 	})
@@ -63,17 +64,17 @@ describe('Review Mode', ()=> {
 		it('returns list with 0 unmarked items as-is',() => {
 			// make a list with one marked, one complete
 			let todoList: ITodoItem[] = [];
-			let cmwtd = "";
 			const item1: ITodoItem = constructNewTodoItem("apple");
 			const item2: ITodoItem = constructNewTodoItem("banana");
 			todoList = addTodoToList(todoList,item1);
 			todoList = addTodoToList(todoList,item2);
 			todoList[0].state = TodoState.Marked;
 			todoList[1].state = TodoState.Marked;
+			let cmwtd = "banana";
 			[todoList, cmwtd] = setupReview(todoList, cmwtd); // "There are no ready items."
 			[todoList, cmwtd] = conductReviews(todoList, cmwtd, []); // "There are no ready items."
 			expect(todoList.length).equals(2);
-			expect(cmwtd).equals("");
+			expect(cmwtd).equals("banana");
 		})
 	
 		// todo: use firstReady function
@@ -82,15 +83,16 @@ describe('Review Mode', ()=> {
 		it('returns list as-is when first non-complete, non-archived item is marked',()=>{
 			// returns back first non-complete, non-archived "ready" item as marked
 			let todoList: ITodoItem[] = [];
-			let cmwtd = "";
 			const item1: ITodoItem = constructNewTodoItem("apple");
 			const item2: ITodoItem = constructNewTodoItem("banana");
 			todoList = addTodoToList(todoList,item1);
 			todoList = addTodoToList(todoList,item2);
 			todoList[0].state = TodoState.Marked;
+			let cmwtd = "apple";
 			[todoList, cmwtd] = setupReview(todoList, cmwtd);
 			expect(todoList[0].state).equals(TodoState.Marked);
 			expect(todoList[1].state).equals(TodoState.Unmarked);
+			expect(cmwtd).equals("apple");
 		})
 	
 		// should result in the first item being dotted if it wasn't already
@@ -123,7 +125,15 @@ describe('Review Mode', ()=> {
 	})
 	
 	describe('Finding unmarked todos', () => {
-		it('returns the first unmarked item', () => {
+		it('when there is one item, returns the first unmarked item', () => {
+			let todoList: ITodoItem[] = [];
+			const item1: ITodoItem = constructNewTodoItem("apple");
+			todoList = addTodoToList(todoList,item1);
+			expect(todoList.length).equals(1);
+			expect(getFirstUnmarked(todoList)).equals(0);
+		})
+
+		it('when there are multiple items, returns the first unmarked item', () => {
 			let todoList: ITodoItem[] = [];
 			const item1: ITodoItem = constructNewTodoItem("apple");
 			const item2: ITodoItem = constructNewTodoItem("banana");
