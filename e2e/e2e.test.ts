@@ -92,3 +92,93 @@ describe('Long E2E test', () => {
 		});
 	});
 });
+
+describe('First mini E2E test', () => {
+  describe('should pass each successive step', () => {
+		let todoList: ITodoItem[] = [];
+		const aList = ["a"];
+		let cmwtd = "";
+
+		step('should confirm 1 item has been added', () => {
+			aList.forEach(
+				x => {
+					todoList = addTodoToList(
+					todoList,constructNewTodoItem(x))
+				});
+
+			expect(todoList.length).equals(1);
+		});
+
+		step('should confirm that the 1st item has been marked', () => {
+			[todoList, cmwtd] = setupReview(todoList, cmwtd);
+			expect(todoList[0].state).equals(TodoState.Marked);
+		})
+
+		step('should re-confirm 1 item have been marked', () => {
+			const answers001 = [''];
+			[todoList, cmwtd] = conductReviews(todoList, cmwtd, answers001);
+			expect(listToMarks(todoList)).equals("[o]");
+		});
+
+		step('should confirm that CMWTD has been updated to last marked item',() => {
+			expect(cmwtd).equals(todoList[0].header);
+		});
+
+		step('should confirm only item has been completed',() => {
+			[todoList, cmwtd] = conductFocus(todoList, cmwtd, {workLeft: "n"});
+			expect(todoList[0].state).equals(TodoState.Completed);
+		});
+
+		step('should confirm that CMWTD has been updated',() => {
+			expect(cmwtd).equals("");
+		});
+	});
+});
+
+describe('Second mini E2E test', () => {
+  describe('should pass each successive step', () => {
+		let todoList: ITodoItem[] = [];
+		const aList = ["a","b"];
+		let cmwtd = "";
+
+		step('should confirm 2 items has been added', () => {
+			aList.forEach(
+				x => {
+					todoList = addTodoToList(
+					todoList,constructNewTodoItem(x))
+				});
+
+			expect(todoList.length).equals(2);
+		});
+
+		step('should confirm that the 1st item has been marked', () => {
+			[todoList, cmwtd] = setupReview(todoList, cmwtd);
+			expect(todoList[0].state).equals(TodoState.Marked);
+		})
+
+		step('should re-confirm 1 item have been marked', () => {
+			const answers001 = ['y'];
+			[todoList, cmwtd] = conductReviews(todoList, cmwtd, answers001);
+			expect(listToMarks(todoList)).equals("[o] [o]");
+		});
+
+		step('should confirm that CMWTD has been updated to last marked item',() => {
+			expect(cmwtd).equals(todoList[1].header);
+		});
+
+		step('should confirm that reviewing does nothing now', () => {
+			[todoList, cmwtd] = setupReview(todoList, cmwtd);
+			expect(todoList[0].state).equals(TodoState.Marked);
+			expect(todoList[1].state).equals(TodoState.Marked);
+		})
+
+		step('should confirm only item has been completed',() => {
+			[todoList, cmwtd] = conductFocus(todoList, cmwtd, {workLeft: "n"});
+			expect(todoList[1].state).equals(TodoState.Completed);
+		});
+
+		step('should confirm that CMWTD has been updated',() => {
+			expect(cmwtd).equals(todoList[0].header);
+		});
+	});
+});
