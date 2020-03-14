@@ -26,7 +26,7 @@ describe('FOCUS MODE TESTS', ()=> {
 			expect(cmwtd).equals("");
 		})
 	});
-
+	
 	describe('Finding marked todos', () => {
 		it('returns the last marked item', () => {
 			let todoList: ITodoItem[] = [];
