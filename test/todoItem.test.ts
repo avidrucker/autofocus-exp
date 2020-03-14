@@ -31,7 +31,7 @@ describe('TODO ITEM TESTS', () => {
 			// make one completed item
 			let aItem: ITodoItem = constructNewTodoItem("a");
 			aItem.state = TodoState.Completed;
-			aItem = undot(aItem);// run undot()
+			aItem = undot(aItem); // run undot
 			// confirm mark is as it was initially
 			expect(aItem.state).equals(TodoState.Completed);
 		})
