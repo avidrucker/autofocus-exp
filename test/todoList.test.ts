@@ -2,7 +2,7 @@ import { expect } from 'chai';
 
 import { conductReviews, setupReview } from '../src/review';
 import { constructNewTodoItem, ITodoItem, TodoState } from '../src/todoItem';
-import { addTodoToList, indexOfItem, itemExists, listToMarks, makePrintableTodoItemList } from "../src/todoList";
+import { addTodoToList, indexOfItem, itemExists, listToMarks, makePrintableTodoItemList, undotAll } from "../src/todoList";
 
 describe('TODO LIST TESTS', () => {
 	describe('Adding a new item to the list', () => {
@@ -103,5 +103,23 @@ describe('TODO LIST TESTS', () => {
 			[todoList, cmwtd] = conductReviews(todoList, cmwtd, ['n', 'y']);
 			expect(cmwtd).equals("cherry");
 		});
+	})
+
+	describe('Undotting all items', () => {
+		it('undots list of dotted, undotted, & completed items', () => {
+			let todoList: ITodoItem[] = [];
+			const item1: ITodoItem = constructNewTodoItem("apple");
+			const item2: ITodoItem = constructNewTodoItem("banana");
+			const item3: ITodoItem = constructNewTodoItem("cherry");
+			todoList = addTodoToList(todoList,item1);
+			todoList = addTodoToList(todoList,item2);
+			todoList = addTodoToList(todoList,item3);
+			todoList[0].state = TodoState.Completed;
+			todoList[1].state = TodoState.Marked;
+			todoList = undotAll(todoList);
+			expect(todoList[0].state).equals(TodoState.Completed);
+			expect(todoList[1].state).equals(TodoState.Unmarked);
+			expect(todoList[2].state).equals(TodoState.Unmarked);
+		})
 	})
 })
