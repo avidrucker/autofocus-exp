@@ -1,4 +1,4 @@
-import { getMark, ITodoItem, stringifyTodoItem, TodoState } from "./todoItem";
+import { getMark, ITodoItem, stringifyTodoItem, TodoState, undot } from "./todoItem";
 
 export const indexOfItem = (list: any[], attr: any, val: any): number => {
 	return list.map((e) => e[attr]).indexOf(val);
@@ -58,4 +58,8 @@ export const firstReady = (todoList: ITodoItem[]): number => {
 	} else {
 		return Math.min(firstUnmarked, firstMarked);
 	}
+}
+
+export const undotAll = (todoList: ITodoItem[]): ITodoItem[] => {
+	return todoList.map(x => undot(x));
 }

@@ -93,6 +93,7 @@ describe('Long E2E test', () => {
 	});
 });
 
+// issue: Dev renames, relocates as integration tests #247 
 describe('First mini E2E test', () => {
   describe('should pass each successive step', () => {
 		let todoList: ITodoItem[] = [];
@@ -135,6 +136,7 @@ describe('First mini E2E test', () => {
 	});
 });
 
+// issue: Dev renames, relocates as integration tests #247
 describe('Second mini E2E test', () => {
   describe('should pass each successive step', () => {
 		let todoList: ITodoItem[] = [];

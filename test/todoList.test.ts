@@ -2,7 +2,7 @@ import { expect } from 'chai';
 
 import { conductReviews, setupReview } from '../src/review';
 import { constructNewTodoItem, ITodoItem, TodoState } from '../src/todoItem';
-import { addTodoToList, indexOfItem, itemExists, listToMarks, makePrintableTodoItemList } from "../src/todoList";
+import { addTodoToList, indexOfItem, itemExists, listToMarks, makePrintableTodoItemList, undotAll } from "../src/todoList";
 
 describe('TODO LIST TESTS', () => {
 	describe('Adding a new item to the list', () => {
@@ -19,6 +19,7 @@ describe('TODO LIST TESTS', () => {
 	});
 	
 	describe('Finding items in a list', () => {
+		// issue: Dev refactors WET code to be more DRY #248
 		it('should return the first unmarked item', () => {
 			let todoList: ITodoItem[] = [];
 			const item1: ITodoItem = constructNewTodoItem("apple");
@@ -40,6 +41,7 @@ describe('TODO LIST TESTS', () => {
 			todoList = addTodoToList(todoList,item1);
 			todoList = addTodoToList(todoList,item2);
 			todoList = addTodoToList(todoList,item3);
+			// todo: implement markAllAs(stateIn)
 			todoList[0].state = TodoState.Completed;
 			todoList[1].state = TodoState.Completed;
 			todoList[2].state = TodoState.Completed;
@@ -64,6 +66,7 @@ describe('TODO LIST TESTS', () => {
 			expect(makePrintableTodoItemList(todoList)).equals("[ ] make this app");
 		})
 	
+		// issue: Dev refactors WET code to be more DRY #248
 		it('correctly generates 3 lines when there are 3 todo items', () => {
 			let todoList: ITodoItem[] = [];
 			const item1: ITodoItem = constructNewTodoItem("apple");
@@ -77,6 +80,7 @@ describe('TODO LIST TESTS', () => {
 		})
 	})
 	
+	// issue: Dev renames, relocates as integration tests #247
 	describe('List to marks function', () => {
 		it('should return a list of items marked `[o] [ ]` for a given list', () => {
 			let todoList: ITodoItem[] = [];
@@ -89,6 +93,7 @@ describe('TODO LIST TESTS', () => {
 		})
 	})
 	
+	// issue: Dev renames, relocates as integration tests #247
 	describe('Conducting list iteration', () => {
 		it('should correctly update CMWTD for input `n, y` ', () => {
 			let todoList: ITodoItem[] = [];
@@ -103,5 +108,24 @@ describe('TODO LIST TESTS', () => {
 			[todoList, cmwtd] = conductReviews(todoList, cmwtd, ['n', 'y']);
 			expect(cmwtd).equals("cherry");
 		});
+	})
+
+	// issue: Dev renames, relocates as integration tests #247
+	describe('Undotting all items', () => {
+		it('undots list of dotted, undotted, & completed items', () => {
+			let todoList: ITodoItem[] = [];
+			const item1: ITodoItem = constructNewTodoItem("apple");
+			const item2: ITodoItem = constructNewTodoItem("banana");
+			const item3: ITodoItem = constructNewTodoItem("cherry");
+			todoList = addTodoToList(todoList,item1);
+			todoList = addTodoToList(todoList,item2);
+			todoList = addTodoToList(todoList,item3);
+			todoList[0].state = TodoState.Completed;
+			todoList[1].state = TodoState.Marked;
+			todoList = undotAll(todoList);
+			expect(todoList[0].state).equals(TodoState.Completed);
+			expect(todoList[1].state).equals(TodoState.Unmarked);
+			expect(todoList[2].state).equals(TodoState.Unmarked);
+		})
 	})
 })

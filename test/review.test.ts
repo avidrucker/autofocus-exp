@@ -38,12 +38,14 @@ describe('REVIEW MODE TESTS', ()=> {
 			const item1: ITodoItem = constructNewTodoItem("apple");
 			todoList = addTodoToList(todoList,item1);
 			[todoList, cmwtd] = setupReview(todoList, cmwtd);
+			// issue: Dev refactors WET code to be more DRY #248
 			expect(todoList.length).equals(1);
 			expect(todoList[0].state).equals(TodoState.Marked);
 			expect(cmwtd).equals("apple");
 		})
 	})
 	
+	// issue: Dev renames, relocates as integration tests #247
 	describe('Reviewing 2 item list',()=> {
 		it('with \'y\' answer results in two marked items & 2nd item cmwtd',() => {
 			// make a list with one marked, one complete
@@ -171,6 +173,7 @@ describe('REVIEW MODE TESTS', ()=> {
 		})
 	});
 	
+	// issue: Dev renames, relocates as integration tests #247
 	describe('Conducting reviews', ()=> {
 		it('when 0 ready items, doesn\'t affect the todo list or cmwtd', () => {
 			let todoList: ITodoItem[] = [];
@@ -218,6 +221,7 @@ describe('REVIEW MODE TESTS', ()=> {
 		});
 	});
 	
+	// issue: Dev refactors WET code to be more DRY #248
 	describe('Ready to review check', () => {
 		it('determines list `[o][o][o]` NOT ready for review', () => {
 			let todoList: ITodoItem[] = [];
@@ -276,6 +280,7 @@ describe('REVIEW MODE TESTS', ()=> {
 	})
 });
 
+// issue: Dev removes commented out code snippets #249
 // describe('',()=> {
 // 	it('',()=>{
 // 		print();
