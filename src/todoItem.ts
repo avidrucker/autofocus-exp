@@ -59,13 +59,13 @@ export const isReady = (i: ITodoItem): boolean => {
 }
 
 // todo: implement deep copy of ID, & updated modified date value
-export const makeFreshTodo = (i: ITodoItem): ITodoItem => {
-	return constructNewTodoItem(i.header); // note: this creates a NEW todo item
+export const setState = (i: ITodoItem, newState: TodoState ): ITodoItem => {
+	return constructNewTodoItem(i.header, "", newState);  // note: this creates a NEW todo item
 }
 
 export const undot = (i: ITodoItem): ITodoItem => {
 	if(i.state === TodoState.Marked) {
-		return makeFreshTodo(i);
+		return constructNewTodoItem(i.header); // note: this creates a NEW todo item
 	} else {
 		return i;
 	}
