@@ -4,7 +4,7 @@ import { conductFocus } from './focus';
 import { greetUser } from './main';
 import { conductReviews, readyToReview, setupReview } from './review';
 import { constructNewTodoItem, ITodoItem } from './todoItem';
-import { addTodoToList, firstReady, makePrintableTodoItemList } from './todoList';
+import { addTodoToList, firstReady, makePrintableTodoItemList, undotAll } from './todoList';
 import { getPluralS } from './util';
 
 // ****************************************
@@ -234,7 +234,10 @@ export const mainCLI = ():void => {
 			printUpdate( todoList, cmwtd );
 		}
 		if(answer === MainMenuChoice.ClearDots) {
-			generalPrint("This is stub (placeholder) text. Please check back later.");
+			generalPrint("Removing dots from dotted items...");
+			todoList = undotAll(todoList);
+			generalPrint("Resetting the CMWTD...");
+			cmwtd = "";
 		}
 		// issue: Dev adds about section text print out #128
 		if(answer === MainMenuChoice.ReadAbout) {
