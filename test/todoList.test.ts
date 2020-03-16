@@ -1,6 +1,6 @@
 import { expect } from 'chai';
 
-import { conductReviews, setupReview } from '../src/review';
+import { conductReviewsEpic, setupReview } from '../src/review';
 import { constructNewTodoItem, ITodoItem, TodoState } from '../src/todoItem';
 import { addTodoToList, indexOfItem, itemExists, listToMarks, makePrintableTodoItemList, undotAll } from "../src/todoList";
 import { makeNItemArray, markAllAs } from './test-util';
@@ -78,8 +78,9 @@ describe('TODO LIST TESTS', () => {
 		it('should correctly update CMWTD for input `n, y` ', () => {
 			let todoList: ITodoItem[] = makeNItemArray(3);
 			let cmwtd = "";
+			const lastDone = "";
 			[todoList, cmwtd] = setupReview(todoList, cmwtd);
-			[todoList, cmwtd] = conductReviews(todoList, cmwtd, ['n', 'y']);
+			[todoList, cmwtd] = conductReviewsEpic(todoList, cmwtd, lastDone, ['n', 'y']);
 			expect(cmwtd).equals("cherry");
 		});
 	})

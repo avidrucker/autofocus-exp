@@ -2,8 +2,8 @@ import readlineSync from 'readline-sync';
 
 import { conductFocus } from './focus';
 import { greetUser } from './main';
-import { conductReviews, readyToReview, setupReview } from './review';
-import { constructNewTodoItem, ITodoItem } from './todoItem';
+import { conductReviewsEpic, getReviewableList, readyToReview, setupReview } from './review';
+import { constructNewTodoItem, ITodoItem, TodoState } from './todoItem';
 import { addTodoToList, firstReady, makePrintableTodoItemList, undotAll } from './todoList';
 import { getPluralS } from './util';
 
@@ -107,6 +107,15 @@ export const printUpdate = (todoList: ITodoItem[], cmwtd: string): void => {
 // REVIEWING
 // ****************************************
 
+export const getReviewAnswersEpicCLI = (todoList: ITodoItem[], cmwtd: string, lastDone: string): string[] => {
+	const reviewableList = getReviewableList(todoList, cmwtd, lastDone);
+	if(reviewableList.length !== 0) {
+		return getReviewAnswersCLI(reviewableList, cmwtd);
+	} else {
+		return getReviewAnswersCLI(todoList, cmwtd);
+	}
+}
+
 // issue: Dev refactors getReviewAnswersCLI #216
 export const getReviewAnswersCLI = (todoList: ITodoItem[], cmwtd: string): string[] => {
 	const answers: string[] = [];
@@ -115,6 +124,7 @@ export const getReviewAnswersCLI = (todoList: ITodoItem[], cmwtd: string): strin
 		const ans = promptUserForYNQ(`Do you want to '${next}' more than '${cmwtd}'? (Y/N/Q) `);
 		if(ans === 'y') {
 			answers.push('y');
+			cmwtd = String(next); // todo: confirm in console that this resolved bug
 		}
 		if(ans === 'n') {
 			answers.push('n');
@@ -127,23 +137,28 @@ export const getReviewAnswersCLI = (todoList: ITodoItem[], cmwtd: string): strin
 	return answers;
 }
 
+// todo: refactor/replace this function with CLI version of epic review func
 const printReviewSetupMessage = (todoList: ITodoItem[]): void => {
 	if(todoList.length === 0) {
 		generalPrint("There are no items to review. Please enter mores items and try again.");
 	} else if (firstReady(todoList) === -1) {
 		generalPrint("There are no items left to dot. Please enter more items and try again.");
 	} else {
+		// todo: change print out for when no new marks are to be added
 		generalPrint("Marking the first ready item...");
 	}
 }
 
-const attemptReviewTodosCLI = (todoList: ITodoItem[], cmwtd: string): any => {
+const attemptReviewTodosCLI = (todoList: ITodoItem[], cmwtd: string, lastDone: string): any => {
 	printReviewSetupMessage(todoList);
 	if(todoList.length === 0) {
 		return [todoList, cmwtd];
 	}
 
-	[ todoList, cmwtd ] = setupReview(todoList, cmwtd);
+	// todo: confirm that this only marks when there are no marked items
+	if(todoList.map(x => x.state).indexOf(TodoState.Marked) === -1) {
+		[ todoList, cmwtd ] = setupReview(todoList, cmwtd);
+	}
 
 	// step 0: check to see if there are any non-complete, non-archived items
 	if(readyToReview(todoList)) {
@@ -151,8 +166,8 @@ const attemptReviewTodosCLI = (todoList: ITodoItem[], cmwtd: string): any => {
 		// issue: Architect designs option to always quit mid-menu #109
 		// issue: Dev implements E2E test for CLA #110
 		// issue: Dev implements todo item store using redux pattern #106
-		const answers = getReviewAnswersCLI(todoList, cmwtd);
-		[ todoList, cmwtd ] = conductReviews(todoList, cmwtd, answers);
+		const answers = getReviewAnswersEpicCLI(todoList, cmwtd, lastDone);
+		[ todoList, cmwtd ] = conductReviewsEpic(todoList, cmwtd, lastDone, answers);
 		printUpdate( todoList, cmwtd);
 	}
 	return [todoList, cmwtd];
@@ -162,15 +177,15 @@ const attemptReviewTodosCLI = (todoList: ITodoItem[], cmwtd: string): any => {
 // FOCUS MODE
 // ****************************************
 
-const enterFocusCLI = (todoList: ITodoItem[], cmwtd: string): any => {
+const enterFocusCLI = (todoList: ITodoItem[], cmwtd: string, lastDone: string): any => {
 	// 0. confirm that focusMode can be safely entered
 	if(todoList.length === 0) {
 		generalPrint("There are no todo items. Please enter todo items and try again.");
-		return [todoList, cmwtd];
+		return [todoList, cmwtd, lastDone];
 	}
 	if(cmwtd === "") {
 		generalPrint("There is no 'current most want to do' item. Please review your items and try again.");
-		return [todoList, cmwtd];
+		return [todoList, cmwtd, lastDone];
 	}
 	
 	// 1. clear the console view
@@ -191,9 +206,9 @@ const enterFocusCLI = (todoList: ITodoItem[], cmwtd: string): any => {
 	}
 
 	// 5. mark the cmwtd item as done
-	[todoList, cmwtd] = conductFocus(todoList, cmwtd, response);
+	[todoList, cmwtd, lastDone] = conductFocus(todoList, cmwtd, lastDone, response);
 
-	return [todoList, cmwtd];
+	return [todoList, cmwtd, lastDone];
 }
 
 const addNewCLI = (todoList: ITodoItem[], cmwtd: string): any => {
@@ -215,6 +230,7 @@ export const mainCLI = ():void => {
 
 	let todoList: ITodoItem[] = [];
 	let cmwtd: string = "";
+	let lastDone: string = "";
 
 	let running = true;
 	while(running) {
@@ -225,10 +241,10 @@ export const mainCLI = ():void => {
 			printTodoItemCount(todoList);
 		}
 		if(answer === MainMenuChoice.ReviewTodos) {
-			[todoList, cmwtd] = attemptReviewTodosCLI(todoList, cmwtd);
+			[todoList, cmwtd] = attemptReviewTodosCLI(todoList, cmwtd, lastDone);
 		}
 		if(answer === MainMenuChoice.EnterFocus) {
-			[ todoList, cmwtd ] = enterFocusCLI(todoList, cmwtd);
+			[ todoList, cmwtd, lastDone ] = enterFocusCLI(todoList, cmwtd, lastDone);
 		}
 		if(answer === MainMenuChoice.PrintList) {
 			printUpdate( todoList, cmwtd );

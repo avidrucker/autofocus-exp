@@ -32,6 +32,7 @@
     "run": "node src/index.js",
 		"build-and-run": "npm run-script build && npm run-script run",
 		"build-and-unit": "npm run-script build && npm run-script unit",
+		"build-and-e2e": "npm run-script build && npm run-script e2e",
     "build-lint-and-test": "npm run-script build && npm run-script lint && npm test"
   },
   "repository": {
