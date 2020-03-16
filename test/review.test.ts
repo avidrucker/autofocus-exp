@@ -187,6 +187,10 @@ describe('REVIEW MODE TESTS', ()=> {
 		it.skip('reviews from last marked (CMWTD) if lastDone is not set', () => {
 			expect(true).equals(false);
 		})
+
+		it.skip('reviews from first unmarked if CMWTD is not set', () => {
+			expect(true).equals(false);
+		})
 	});
 	
 	// issue: Dev refactors WET code to be more DRY #248
