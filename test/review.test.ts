@@ -171,7 +171,7 @@ describe('REVIEW MODE TESTS', ()=> {
 		});
 
 		// todo: label, relocate as integration test
-		it('reviews from lastDone if set', () => {
+		it.skip('reviews from lastDone if set', () => {
 			let todoList: ITodoItem[] = makeNItemArray(5);
 			let cmwtd: string = "";
 			let lastDone = "";
@@ -179,6 +179,7 @@ describe('REVIEW MODE TESTS', ()=> {
 			[todoList, cmwtd] = conductReviewsEpic(todoList, cmwtd, lastDone, ['n','y','n','n']);
 			[todoList, cmwtd, lastDone ] = conductFocus(todoList, cmwtd, lastDone, {workLeft: 'n'});
 			expect(listToMarks(todoList)).equals("[o] [ ] [x] [ ] [ ]");
+			// todo: complete implementation of this test
 			//// [todoList, cmwtd] = conductReviewsEpic(todoList, cmwtd, lastDone, ['n, y']);
 			//// expect(listToMarks(todoList)).equals("[o] [ ] [x] [ ] [o]");
 		})
