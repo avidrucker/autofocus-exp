@@ -1,12 +1,12 @@
 import { expect } from 'chai';
 
 import { conductFocus } from '../src/focus';
-import { conductReviewsEpic, readyToReview, setupReview } from '../src/review';
+import { conductReviewsEpic, setupReview } from '../src/review';
 import { ITodoItem, TodoState } from '../src/todoItem';
-import { getFirstUnmarked, listToMarks } from '../src/todoList';
-import { expectOneMarkedApple, FRUITS, makeNItemArray, markAllAs } from './test-util';
+import { listToMarks } from '../src/todoList';
+import { expectOneMarkedApple, FRUITS, makeNItemArray, markAllAs } from '../unit/test-util';
 
-describe('REVIEW MODE TESTS', ()=> {
+describe('REVIEW MODE INTEGRATION TESTS', ()=> {
 	describe('Reviewing 0 item list',() => {
 		// when there are no todo items, does not affect the todo list or cmwtd
 		it('returns back empty list', () => {
@@ -90,7 +90,7 @@ describe('REVIEW MODE TESTS', ()=> {
 				expect(todoList[0].state).equals(TodoState.Marked);
 		})
 	
-		// todo: use firstReady function
+		// todo: use prod intended functions to drive state transitions
 		// should marked the first non-complete, non-archived item
 		it('modifies lists where the first non-complete, non-archived item is not marked',()=>{
 			// returns back first non-complete, non-archived "ready" item as UNmarked
@@ -103,39 +103,7 @@ describe('REVIEW MODE TESTS', ()=> {
 			expect(todoList[1].state).equals(TodoState.Completed);
 		})
 	})
-	
-	describe('Finding unmarked todos', () => {
-		it('when there is one item, returns the first unmarked item', () => {
-			const todoList: ITodoItem[] = makeNItemArray(1);
-			expect(todoList.length).equals(1);
-			expect(getFirstUnmarked(todoList)).equals(0);
-		})
 
-		it('when there are multiple items, returns the first unmarked item', () => {
-			const todoList: ITodoItem[] = makeNItemArray(2);
-			todoList[0].state = TodoState.Completed;
-			expect(getFirstUnmarked(todoList)).equals(1);
-		})
-	
-		it('returns -1 when there are no todos', () => {
-			const todoList: ITodoItem[] = makeNItemArray(0);
-			expect(getFirstUnmarked(todoList)).equals(-1);
-		});
-	
-		it('returns -1 when there are no unmarked todos', () => {
-			let todoList: ITodoItem[] = makeNItemArray(2);
-			todoList = markAllAs(todoList, TodoState.Completed);
-			expect(getFirstUnmarked(todoList)).equals(-1);
-		});
-	
-		it('when there are both marked and unmarked items, returns the unmarked item', () => {
-			const todoList: ITodoItem[] = makeNItemArray(2);
-			todoList[0].state = TodoState.Marked;
-			todoList[1].state = TodoState.Unmarked;
-			expect(getFirstUnmarked(todoList)).equals(1);
-		})
-	});
-	
 	// issue: Dev renames, relocates as integration tests #247
 	describe('Conducting reviews', ()=> {
 		it('when 0 ready items, doesn\'t affect the todo list or cmwtd', () => {
@@ -203,43 +171,4 @@ describe('REVIEW MODE TESTS', ()=> {
 			expect(listToMarks(todoList)).equals("[x] [o] [o]");
 		})
 	});
-	
-	// issue: Dev refactors WET code to be more DRY #248
-	describe('Ready to review check', () => {
-		it('determines list `[o][o][o]` NOT ready for review', () => {
-			let todoList: ITodoItem[] = makeNItemArray(3);
-			todoList = markAllAs(todoList, TodoState.Marked);
-			expect(readyToReview(todoList)).equals(false);
-		})
-
-		it('determines list `[x][x][o]` NOT ready for review', () => {
-			let todoList: ITodoItem[] = makeNItemArray(3);
-			todoList = markAllAs(todoList, TodoState.Completed);
-			expect(readyToReview(todoList)).equals(false);
-		})
-
-		it('determines list `[x][o][ ]` ready for review', () => {
-			let todoList: ITodoItem[] = makeNItemArray(3);
-			let cmwtd: string = "";
-			let lastDone = "";
-			todoList[0].state = TodoState.Completed;
-			lastDone = todoList[0].header;
-			[todoList, cmwtd] = setupReview(todoList, cmwtd);
-			expect(cmwtd).equals("banana");
-			expect(readyToReview(todoList)).equals(true);
-		})
-	
-		it('determines list `[x][ ][ ]` ready for review', () => {
-			const todoList: ITodoItem[] = makeNItemArray(3);
-			todoList[0].state = TodoState.Completed;
-			expect(readyToReview(todoList)).equals(true);
-		})
-	})
 });
-
-// issue: Dev removes commented out code snippets #249
-// describe('',()=> {
-// 	it('',()=>{
-// 		print();
-// 	})
-// })
