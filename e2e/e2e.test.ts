@@ -94,7 +94,7 @@ describe('Long E2E test', () => {
 			expect(cmwtd).equals(todoList[2].header);
 		});
 
-		// todo: conduct review from the last task done / last CMWTD
+		// issue: Dev implements review always starts from last dotted item (CMWTD) #258
 		// 1. setting up reviews here should do nothing
 		step('should confirm starting new review leaves list & CMWTD alone', () => {
 			const beforeList: string = listToMarks(todoList);
