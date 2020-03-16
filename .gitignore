@@ -1,3 +1,4 @@
 node_modules/
 *.js
 .nyc_output/
+.nyc_output/processinfo/
