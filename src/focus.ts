@@ -1,24 +1,24 @@
 import { constructNewTodoItem, ITodoItem, TodoState } from "./todoItem";
 import { getLastMarked, itemExists } from "./todoList";
 
-export const conductFocus = (todoList: ITodoItem[], cmwtd: string, response: any): any => {
+export const conductFocus = (todoList: ITodoItem[], cmwtd: string, lastDone: string, response: any): any => {
 	// return w/o affecting state if focus mode cannot be entered
 	if(todoList.length === 0 || cmwtd === "") {
-		return [todoList, cmwtd];
+		return [todoList, cmwtd, lastDone];
 	}
 	const workLeft: string = response.workLeft; // this will be either 'y' or 'n'
 	if(workLeft === 'y') {
 		[todoList, cmwtd] = duplicateCMWTD(todoList, cmwtd);
 	}
-	[todoList, cmwtd] = markCMWTDdone(todoList, cmwtd);
-	return [todoList, cmwtd];
+	[todoList, cmwtd, lastDone] = markCMWTDdone(todoList, cmwtd, lastDone);
+	return [todoList, cmwtd, lastDone];
 };
 
-export const markCMWTDdone = (todoList: ITodoItem[], cmwtd: string): any => {
+export const markCMWTDdone = (todoList: ITodoItem[], cmwtd: string, lastDone: string): any => {
 	const lastMarked = getLastMarked(todoList); // 1. find last marked item (this should match cmwtd)
 	todoList[lastMarked].state = TodoState.Completed; // 2. set it to completed
-	[todoList, cmwtd] = updateCMWTD(todoList, cmwtd); // 3. update cmwtd
-	return [todoList, cmwtd];
+	[todoList, cmwtd, lastDone] = updateCMWTD(todoList, cmwtd, lastDone); // 3. update cmwtd
+	return [todoList, cmwtd, lastDone];
 }
 
 export const duplicateCMWTD = (todoList: ITodoItem[], cmwtd: string): any => {
@@ -29,14 +29,16 @@ export const duplicateCMWTD = (todoList: ITodoItem[], cmwtd: string): any => {
 }
 
 // issue: Dev resolves bug where completed todo items leave stale CMWTD #218, needs testing
-export const updateCMWTD = (todoList: ITodoItem[], cmwtd: string): any => {
+export const updateCMWTD = (todoList: ITodoItem[], cmwtd: string, lastDone: string): any => {
 	const lastIndex = getLastMarked(todoList);
 	if(lastIndex !== -1) {
+		lastDone = String(cmwtd); // todo: confrim that this is working correct - ie. test it
 		cmwtd = todoList[lastIndex].header;
 	} else {
+		lastDone = String(cmwtd); // todo: confrim that this is working correct - ie. test it
 		cmwtd = ""; // resets CMWTD
 	}
-	return [todoList, cmwtd];
+	return [todoList, cmwtd, lastDone];
 }
 
 // todo: make use of this function in focusCLI
