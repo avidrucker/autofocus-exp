@@ -171,25 +171,36 @@ describe('REVIEW MODE TESTS', ()=> {
 		});
 
 		// todo: label, relocate as integration test
-		it.skip('reviews from lastDone if set', () => {
+		it('reviews from lastDone if set', () => {
 			let todoList: ITodoItem[] = makeNItemArray(5);
 			let cmwtd: string = "";
-			let lastDone = "";
+			let lastDone: string = "";
 			[todoList, cmwtd] = setupReview(todoList, cmwtd);
 			[todoList, cmwtd] = conductReviewsEpic(todoList, cmwtd, lastDone, ['n','y','n','n']);
 			[todoList, cmwtd, lastDone ] = conductFocus(todoList, cmwtd, lastDone, {workLeft: 'n'});
-			expect(listToMarks(todoList)).equals("[o] [ ] [x] [ ] [ ]");
-			// todo: complete implementation of this test
-			//// [todoList, cmwtd] = conductReviewsEpic(todoList, cmwtd, lastDone, ['n, y']);
-			//// expect(listToMarks(todoList)).equals("[o] [ ] [x] [ ] [o]");
+			// expect(listToMarks(todoList)).equals("[o] [ ] [x] [ ] [ ]");
+			// expect(cmwtd).equals(todoList[0].header);
+			[todoList, cmwtd] = conductReviewsEpic(todoList, cmwtd, lastDone, ['n', 'y']);
+			expect(listToMarks(todoList)).equals("[o] [ ] [x] [ ] [o]");
 		})
 
-		it.skip('reviews from last marked (CMWTD) if lastDone is not set', () => {
-			expect(true).equals(false);
+		it('reviews from last marked (CMWTD) if lastDone is not set', () => {
+			let todoList: ITodoItem[] = makeNItemArray(3);
+			let cmwtd: string = "";
+			const lastDone = "";
+			[todoList, cmwtd] = setupReview(todoList, cmwtd);
+			[todoList, cmwtd] = conductReviewsEpic(todoList, cmwtd, lastDone, ['n','y']);
+			expect(listToMarks(todoList)).equals("[o] [ ] [o]");
 		})
 
-		it.skip('reviews from first unmarked if CMWTD is not set', () => {
-			expect(true).equals(false);
+		it('reviews from first unmarked if CMWTD is not set', () => {
+			let todoList: ITodoItem[] = makeNItemArray(3);
+			let cmwtd: string = "";
+			let lastDone: string = "";
+			[todoList, cmwtd] = setupReview(todoList, cmwtd);
+			[todoList, cmwtd, lastDone ] = conductFocus(todoList, cmwtd, lastDone, {workLeft: 'n'});
+			[todoList, cmwtd] = conductReviewsEpic(todoList, cmwtd, lastDone, ['y','y']);
+			expect(listToMarks(todoList)).equals("[x] [o] [o]");
 		})
 	});
 	
