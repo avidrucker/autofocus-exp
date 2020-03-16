@@ -5,7 +5,7 @@
   "main": "src/index.js",
   "devDependencies": {
     "@istanbuljs/nyc-config-typescript": "^1.0.1",
-    "@types/chai": "^4.2.7",
+    "@types/chai": "^4.2.11",
     "@types/mocha": "^5.2.7",
     "chai": "^4.2.0",
     "codecov": "^3.6.5",
@@ -23,8 +23,9 @@
     "tslint-config-prettier": "^1.18.0"
   },
   "scripts": {
-    "test": "mocha e2e && mocha test",
-    "unit": "mocha test",
+    "test": "mocha unit && mocha integration && mocha e2e",
+		"unit": "mocha unit",
+		"integration": "mocha integration",
     "e2e": "mocha e2e",
     "coverage": "nyc npm run test",
     "report-coverage": "nyc report --reporter=text-lcov > coverage.lcov && codecov",
@@ -32,8 +33,10 @@
     "build": "npx tsc",
     "run": "node src/index.js",
     "build-and-run": "npm run-script build && npm run-script run",
-    "build-and-unit": "npm run-script build && npm run-script unit",
-    "build-and-e2e": "npm run-script build && npm run-script e2e",
+		"build-and-unit": "npm run-script build && npm run-script unit",
+		"build-and-integration": "npm run-script build && npm run-script integration",
+		"build-and-e2e": "npm run-script build && npm run-script e2e",
+		"build-and-test": "npm run-script build && npm test",
     "build-lint-and-test": "npm run-script build && npm run-script lint && npm test"
   },
   "repository": {
