@@ -1,4 +1,4 @@
-import { isReady, ITodoItem, TodoState } from "./todoItem";
+import { isReady, ITodoItem, setState, TodoState } from "./todoItem";
 import { firstReady, itemExists } from "./todoList";
 
 // issue: Architect decides how to manage todo items in backend #108
@@ -78,6 +78,12 @@ export const conductReviewsEpic = (todoList: ITodoItem[], cmwtd: string, lastDon
 	return [todoList, cmwtd];
 }
 
+const markItem = (i: ITodoItem, cmwtd: string): any => {
+	i = setState(i, TodoState.Marked);  // todo: simplify
+	cmwtd = i.header; // issue: Architect decides how to manage todo items in backend #108
+	return [i, cmwtd];
+}
+
 // todo: conduct reviews function handles for mid-list items being completed (non-markable)
 // issue: Dev refactors conductReviews #215
 export const conductReviews = (	todoList: ITodoItem[], cmwtd: string, answers: string[]): any => {
@@ -86,21 +92,14 @@ export const conductReviews = (	todoList: ITodoItem[], cmwtd: string, answers: s
 	if(todoList.length === 0) {
 		return [todoList, cmwtd];
 	}
-	if(todoList.length === 1) {
-		if(answers[0] === 'y') {
-			todoList[0].state = TodoState.Marked;
-			cmwtd = todoList[0].header;
-		}
-	}
-	if(todoList.length > 1) {
-		// FVP step 2: user story: User is asked to answer yes, no, or quit per review item #170
-		for(let i = 0; i < todoList.length; i++) {
-			if(answers[i] === 'y') {
-				todoList[i].state = TodoState.Marked;  // todo: simplify
-				cmwtd = todoList[i].header; // issue: Architect decides how to manage todo items in backend #108
-			}
-		}
-	}
+
+	// FVP step 2: user story: User is asked to answer yes, no, or quit per review item #170
+	todoList
+		.map((x, i) => answers[i] === 'y' ?
+		[todoList[i], cmwtd] = markItem(x, cmwtd) :
+		[todoList[i], cmwtd] = [todoList[i], cmwtd]
+		);
+
 	return [todoList, cmwtd];
 }
 
