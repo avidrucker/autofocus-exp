@@ -15,7 +15,7 @@ describe('TODO LIST INTEGRATION TESTS', () => {
 	})
 
 	describe('Conducting list iteration', () => {
-		it('should correctly update CMWTD for input `n, y` ', () => {
+		it('should correctly update CMWTD for input `[n, y]` ', () => {
 			let todoList: ITodoItem[] = makeNItemArray(3);
 			let cmwtd = "";
 			const lastDone = "";

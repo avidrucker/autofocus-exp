@@ -3,7 +3,7 @@ import { expect } from 'chai';
 import { readyToReview, setupReview } from '../src/review';
 import { ITodoItem, TodoState } from '../src/todoItem';
 import { getFirstUnmarked } from '../src/todoList';
-import { makeNItemArray, markAllAs } from './test-util';
+import { FRUITS, makeNItemArray, markAllAs } from './test-util';
 
 describe('REVIEW MODE UNIT TESTS', ()=> {
 	describe('Finding unmarked todos', () => {
@@ -68,7 +68,7 @@ describe('REVIEW MODE UNIT TESTS', ()=> {
 			[todoList, cmwtd] = setupReview(todoList, cmwtd);
 			expect(cmwtd).equals("banana");
 			expect(readyToReview(todoList)).equals(true);
-			// todo: consider testing readyToReview w/ lastDone as param
+			expect(lastDone).equals(FRUITS[1]);
 		})
 	
 		it('determines list `[x][ ][ ]` ready for review', () => {

@@ -41,7 +41,6 @@ describe('REVIEW MODE INTEGRATION TESTS', ()=> {
 		})
 	})
 	
-	// issue: Dev renames, relocates as integration tests #247
 	describe('Reviewing 2 item list',()=> {
 		it('with \'y\' answer results in two marked items & 2nd item cmwtd',() => {
 			// make a list with one marked, one complete
@@ -68,16 +67,13 @@ describe('REVIEW MODE INTEGRATION TESTS', ()=> {
 			expect(cmwtd).equals("banana");
 		})
 	
-		// todo: use firstReady function
-		// logic: if firstReady is marked, do nothing.
-		// logic continued: if firstReady is not marked, mark it
+		// issue: Architect assess whether firstReady func is appropriate for test #288
 		it('returns list as-is when first non-complete, non-archived item is marked',()=>{
 			// returns back first non-complete, non-archived "ready" item as marked
 			let todoList: ITodoItem[] = makeNItemArray(2);
-			todoList[0].state = TodoState.Marked;
-			let cmwtd = FRUITS[0];
-			const lastDone = "";
-			[todoList, cmwtd] = setupReview(todoList, cmwtd);
+			let cmwtd = "";
+			[todoList, cmwtd] = setupReview(todoList, cmwtd); // intentional double invocation
+			[todoList, cmwtd] = setupReview(todoList, cmwtd); // intentional double invocation
 			expect(todoList[0].state).equals(TodoState.Marked);
 			expect(todoList[1].state).equals(TodoState.Unmarked);
 			expect(cmwtd).equals(FRUITS[0]);
@@ -92,21 +88,20 @@ describe('REVIEW MODE INTEGRATION TESTS', ()=> {
 				expect(todoList[0].state).equals(TodoState.Marked);
 		})
 	
-		// todo: use prod intended functions to drive state transitions
+		// issue: Dev rewrites tests to use intended functions instead of raw mutations #287
 		// should marked the first non-complete, non-archived item
 		it('modifies lists where the first non-complete, non-archived item is not marked',()=>{
 			// returns back first non-complete, non-archived "ready" item as UNmarked
 			let todoList: ITodoItem[] = makeNItemArray(2);
 			let cmwtd = "";
 			todoList[1].state = TodoState.Completed;
-			const lastDone = todoList[1].header;
+			// const lastDone = todoList[1].header;
 			[todoList, cmwtd] = setupReview(todoList, cmwtd);
 			expect(todoList[0].state).equals(TodoState.Marked);
 			expect(todoList[1].state).equals(TodoState.Completed);
 		})
 	})
 
-	// issue: Dev renames, relocates as integration tests #247
 	describe('Conducting reviews', ()=> {
 		it('when 0 ready items, doesn\'t affect the todo list or cmwtd', () => {
 			let todoList: ITodoItem[] = makeNItemArray(2);
@@ -140,7 +135,6 @@ describe('REVIEW MODE INTEGRATION TESTS', ()=> {
 			expect(listToMarks(todoList)).equals("[o] [ ] [ ]");
 		});
 
-		// todo: label, relocate as integration test
 		it('reviews from lastDone if set', () => {
 			let todoList: ITodoItem[] = makeNItemArray(5);
 			let cmwtd: string = "";

@@ -5,7 +5,7 @@ import { conductFocus } from '../src/focus';
 import { conductReviewsEpic, setupReview } from '../src/review';
 import { constructNewTodoItem, ITodoItem, TodoState } from '../src/todoItem';
 import { addTodoToList, getLastMarked, listToMarks } from '../src/todoList';
-import { makeNItemArray, markAllAs } from '../unit/test-util';
+import { FRUITS, makeNItemArray, markAllAs } from '../unit/test-util';
 
 describe('FOCUS MODE INTEGRATION TESTS', ()=> {
 	describe('Entering focus mode', ()=> {
@@ -29,7 +29,7 @@ describe('FOCUS MODE INTEGRATION TESTS', ()=> {
 		})
 	});
 
-	// todo: test creation of duplicate todos from answering yes to workLeft
+	// issue: Dev writes test to confirm duplication behavior from positive workLeft #272
 	
 	describe('Finding marked todos', () => {
 		it('returns the last marked item', () => {
@@ -59,14 +59,14 @@ describe('FOCUS MODE INTEGRATION TESTS', ()=> {
 	describe('Updating the CMWTD', () => {
 		it('updates CMWTD from something to nothing', () => {
 			let todoList: ITodoItem[] = makeNItemArray(1);
-			let cmwtd = "apple";
+			let cmwtd = "";
 			let lastDone = "";
-			todoList[0].state = TodoState.Marked;
+			[todoList, cmwtd] = setupReview(todoList, cmwtd);
 			[todoList, cmwtd, lastDone] = conductFocus(todoList, cmwtd, lastDone, {workLeft:'n'});
 			expect(todoList[0].state).equals(TodoState.Completed);
 			expect(todoList.length).equals(1);
 			expect(cmwtd).equals("");
-			expect(lastDone).equals("apple");
+			expect(lastDone).equals(FRUITS[0]);
 		})
 
 		it('updates CMWTD from last marked item to the previous marked', () => {
@@ -77,8 +77,8 @@ describe('FOCUS MODE INTEGRATION TESTS', ()=> {
 			[todoList, cmwtd, lastDone] = conductFocus(todoList, cmwtd, lastDone, {workLeft:'n'});
 			expect(todoList[1].state).equals(TodoState.Completed);
 			expect(todoList.length).equals(2);
-			expect(cmwtd).equals("apple");
-			expect(lastDone).equals("banana");
+			expect(cmwtd).equals(FRUITS[0]);
+			expect(lastDone).equals(FRUITS[1]);
 		})
 	})
 

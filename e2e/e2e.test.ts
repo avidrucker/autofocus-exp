@@ -132,9 +132,9 @@ describe('Long E2E test', () => {
 
 		// "You already know that you want to do Email more than In-tray, so you start
 		// scanning from the first task after the task you have just done (Voicemail)."
-		// todo: confirm that reviews filter out completed items
+		// issue: Dev implements the filtering out of completed items during review #270
+		// issue: Dev writes passing e2e test step for review which skips filtered items #271
 		// review items, saying yes only to last item (in this review it will be the 5th)
-		// todo: complete this test, revert back to `step()` instead of `it()`
 		it.skip('should confirm 2 specific items have been marked', () => {
 			const answers003 = ['n','n','y','n','n'];
 			[todoList, cmwtd] = conductReviewsEpic(todoList, cmwtd, lastDone, answers003);

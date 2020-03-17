@@ -128,7 +128,7 @@ export const getReviewAnswersCLI = (todoList: ITodoItem[], cmwtd: string): strin
 		const ans = getAnswer(x.header, midCmwtd);
 		if(ans === 'y') {
 			answers.push('y');
-			midCmwtd = String(x.header); // todo: confirm in console that this resolved bug
+			midCmwtd = String(x.header);
 		}
 		if(ans === 'n') {
 			answers.push('n');
@@ -141,14 +141,13 @@ export const getReviewAnswersCLI = (todoList: ITodoItem[], cmwtd: string): strin
 	return answers;
 }
 
-// todo: refactor/replace this function with CLI version of epic review func
+// issue: Dev refactors printReviewSetupMessage to be atomic #273
 const printReviewSetupMessage = (todoList: ITodoItem[]): void => {
 	if(todoList.length === 0) {
 		generalPrint("There are no items to review. Please enter mores items and try again.");
 	} else if (firstReady(todoList) === -1) {
 		generalPrint("There are no items left to dot. Please enter more items and try again.");
 	} else {
-		// todo: change print out for when no new marks are to be added
 		generalPrint("Marking the first ready item...");
 	}
 }
@@ -159,7 +158,7 @@ const attemptReviewTodosCLI = (todoList: ITodoItem[], cmwtd: string, lastDone: s
 		return [todoList, cmwtd];
 	}
 
-	// todo: confirm that this only marks when there are no marked items
+	// issue: Dev extracts atomic section of function, tests #274
 	if(todoList.map(x => x.state).indexOf(TodoState.Marked) === -1) {
 		[ todoList, cmwtd ] = setupReview(todoList, cmwtd);
 	}
