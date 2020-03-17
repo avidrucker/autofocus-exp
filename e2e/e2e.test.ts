@@ -130,6 +130,8 @@ describe('Long E2E test', () => {
 				expect(lastDone).equals(todoList[2].header);
 		});
 
+		// "You already know that you want to do Email more than In-tray, so you start
+		// scanning from the first task after the task you have just done (Voicemail)."
 		// todo: confirm that reviews filter out completed items
 		// review items, saying yes only to last item (in this review it will be the 5th)
 		// todo: complete this test, revert back to `step()` instead of `it()`
