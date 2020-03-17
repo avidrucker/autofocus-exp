@@ -84,6 +84,15 @@ const markItem = (i: ITodoItem, cmwtd: string): any => {
 	return [i, cmwtd];
 }
 
+export const applyAnswers = (todoList: ITodoItem[], cmwtd: string, answers: string[]): any => {
+	todoList
+		.map((x, i) => answers[i] === 'y' ?
+		[todoList[i], cmwtd] = markItem(x, cmwtd) :
+		[todoList[i], cmwtd] = [todoList[i], cmwtd]);
+
+	return [todoList, cmwtd];
+}
+
 // todo: conduct reviews function handles for mid-list items being completed (non-markable)
 // issue: Dev refactors conductReviews #215
 export const conductReviews = (	todoList: ITodoItem[], cmwtd: string, answers: string[]): any => {
@@ -94,11 +103,7 @@ export const conductReviews = (	todoList: ITodoItem[], cmwtd: string, answers: s
 	}
 
 	// FVP step 2: user story: User is asked to answer yes, no, or quit per review item #170
-	todoList
-		.map((x, i) => answers[i] === 'y' ?
-		[todoList[i], cmwtd] = markItem(x, cmwtd) :
-		[todoList[i], cmwtd] = [todoList[i], cmwtd]
-		);
+	[todoList, cmwtd] = applyAnswers(todoList, cmwtd, answers);
 
 	return [todoList, cmwtd];
 }
