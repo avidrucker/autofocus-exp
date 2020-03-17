@@ -113,5 +113,31 @@ describe('Long E2E test', () => {
 			expect(listToMarks(todoList)).equals(
 				"[o] [ ] [o] [ ] [x] [ ] [ ] [ ] [ ] [o]");
 		});
+
+		step('should confirm last item has been done', () => {
+			[todoList, cmwtd, lastDone] = conductFocus(
+				todoList, cmwtd, lastDone, {workLeft:'n'});
+				expect(listToMarks(todoList)).equals(
+					"[o] [ ] [o] [ ] [x] [ ] [ ] [ ] [ ] [x]");
+				expect(lastDone).equals(todoList[9].header);
+		});
+
+		step('should last marked item is done next', () => {
+			[todoList, cmwtd, lastDone] = conductFocus(
+				todoList, cmwtd, lastDone, {workLeft:'n'});
+				expect(listToMarks(todoList)).equals(
+					"[o] [ ] [x] [ ] [x] [ ] [ ] [ ] [ ] [x]");
+				expect(lastDone).equals(todoList[2].header);
+		});
+
+		// todo: confirm that reviews filter out completed items
+		// review items, saying yes only to last item (in this review it will be the 5th)
+		// todo: complete this test, revert back to `step()` instead of `it()`
+		it.skip('should confirm 2 specific items have been marked', () => {
+			const answers003 = ['n','n','y','n','n'];
+			[todoList, cmwtd] = conductReviewsEpic(todoList, cmwtd, lastDone, answers003);
+			expect(listToMarks(todoList)).equals(
+				"[o] [ ] [x] [ ] [x] [ ] [o] [ ] [ ] [x]");
+		});
 	}); 
 });
