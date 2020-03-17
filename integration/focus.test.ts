@@ -69,6 +69,7 @@ describe('FOCUS MODE INTEGRATION TESTS', ()=> {
 			expect(lastDone).equals(FRUITS[0]);
 		})
 
+		// issue: Dev rewrites tests to use intended functions instead of raw mutations #287
 		it('updates CMWTD from last marked item to the previous marked', () => {
 			let todoList: ITodoItem[] = makeNItemArray(2);
 			todoList = markAllAs(todoList, TodoState.Marked);
