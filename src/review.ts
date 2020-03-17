@@ -1,5 +1,6 @@
 import { isReady, ITodoItem, setState, TodoState } from "./todoItem";
 import { firstReady, itemExists } from "./todoList";
+import { isUndefined } from "./util";
 
 // issue: Architect decides how to manage todo items in backend #108
 // todo: refactor to be modular, atomic, & composed
@@ -29,11 +30,11 @@ export const setupReview = (todoList: ITodoItem[], cmwtd: string): any => {
 // otherwise from the first unmarked item"
 export const getReviewableList = (todoList: ITodoItem[], cmwtd: string, lastDone: string): ITodoItem[] => {
 	let firstIndex = 0;
-	if(lastDone !== "" && lastDone !== null) {
+	if(isUndefined(lastDone)) {
 		// todo: implement UUID to ensure correct item validation (rather than looking up by
 		// non-unique strings)
 		firstIndex = todoList.map(x => x.header).indexOf(lastDone); // todo: confirm that unique todos (via UUID) work as expected
-	} else if (cmwtd !== "" && cmwtd !== null) {
+	} else if (isUndefined(cmwtd)) {
 		firstIndex = todoList.map(x => x.header).indexOf(cmwtd); // todo: confirm that unique todos (via UUID) work as expected
 	} else {
 		firstIndex = todoList.map(x => x.state).indexOf(TodoState.Unmarked);
@@ -46,11 +47,11 @@ export const getReviewableList = (todoList: ITodoItem[], cmwtd: string, lastDone
 
 export const getNonReviewableList = (todoList: ITodoItem[], cmwtd: string, lastDone: string): ITodoItem[] => {
 	let firstIndex = 0;
-	if(lastDone !== "" && lastDone !== null) {
+	if(isUndefined(lastDone)) {
 		// todo: implement UUID to ensure correct item validation (rather than looking up by
 		// non-unique strings)
 		firstIndex = todoList.map(x => x.header).indexOf(lastDone);
-	} else if (cmwtd !== "" && cmwtd !== null) {
+	} else if (isUndefined(cmwtd)) {
 		firstIndex = todoList.map(x => x.header).indexOf(cmwtd);
 	} else {
 		firstIndex = todoList.map(x => x.state).indexOf(TodoState.Unmarked);
