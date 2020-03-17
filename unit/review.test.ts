@@ -66,9 +66,9 @@ describe('REVIEW MODE UNIT TESTS', ()=> {
 			todoList[0].state = TodoState.Completed;
 			lastDone = todoList[0].header;
 			[todoList, cmwtd] = setupReview(todoList, cmwtd);
-			expect(cmwtd).equals("banana");
+			expect(cmwtd).equals(FRUITS[1]);
 			expect(readyToReview(todoList)).equals(true);
-			expect(lastDone).equals(FRUITS[1]);
+			expect(lastDone).equals(FRUITS[0]);
 		})
 	
 		it('determines list `[x][ ][ ]` ready for review', () => {
