@@ -116,15 +116,19 @@ export const getReviewAnswersEpicCLI = (todoList: ITodoItem[], cmwtd: string, la
 	}
 }
 
+export const getAnswer = (x: string, y: string) => {
+	return promptUserForYNQ(`Do you want to '${x}' more than '${y}'? (Y/N/Q) `);
+}
+
 // issue: Dev refactors getReviewAnswersCLI #216
 export const getReviewAnswersCLI = (todoList: ITodoItem[], cmwtd: string): string[] => {
 	const answers: string[] = [];
-	for(let i = 0; i < todoList.length - 1; i++) {
-		const next = todoList[i+1].header;
-		const ans = promptUserForYNQ(`Do you want to '${next}' more than '${cmwtd}'? (Y/N/Q) `);
+	let midCmwtd = String(cmwtd);
+	for(const x of todoList) {
+		const ans = getAnswer(x.header, midCmwtd);
 		if(ans === 'y') {
 			answers.push('y');
-			cmwtd = String(next); // todo: confirm in console that this resolved bug
+			midCmwtd = String(x.header); // todo: confirm in console that this resolved bug
 		}
 		if(ans === 'n') {
 			answers.push('n');
