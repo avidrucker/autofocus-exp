@@ -1,10 +1,12 @@
 import { expect } from 'chai';
+import { step } from 'mocha-steps';
 
 import { conductFocus } from '../src/focus';
 import { conductReviewsEpic, setupReview } from '../src/review';
-import { ITodoItem, TodoState } from '../src/todoItem';
-import { listToMarks } from '../src/todoList';
+import { constructNewTodoItem, ITodoItem, TodoState } from '../src/todoItem';
+import { addTodoToList, listToMarks } from '../src/todoList';
 import { expectOneMarkedApple, FRUITS, makeNItemArray, markAllAs } from '../unit/test-util';
+
 
 describe('REVIEW MODE INTEGRATION TESTS', ()=> {
 	describe('Reviewing 0 item list',() => {
@@ -170,5 +172,55 @@ describe('REVIEW MODE INTEGRATION TESTS', ()=> {
 			[todoList, cmwtd] = conductReviewsEpic(todoList, cmwtd, lastDone, ['y','y']);
 			expect(listToMarks(todoList)).equals("[x] [o] [o]");
 		})
+	});
+
+	// formerly "Second mini E2E test"
+	describe('integration test of review completion', () => {
+		describe('should lead to no reviewable items', () => {
+			let todoList: ITodoItem[] = [];
+			const aList = ["a","b"];
+			let cmwtd = "";
+			let lastDone = "";
+
+			step('should confirm 2 items has been added', () => {
+				aList.forEach(
+					x => {
+						todoList = addTodoToList(
+						todoList, constructNewTodoItem(x))
+					});
+
+				expect(todoList.length).equals(2);
+			});
+
+			step('should confirm that the 1st item has been marked', () => {
+				[todoList, cmwtd] = setupReview(todoList, cmwtd);
+				expect(todoList[0].state).equals(TodoState.Marked);
+			})
+
+			step('should re-confirm 1 item have been marked', () => {
+				const answers001 = ['y'];
+				[todoList, cmwtd] = conductReviewsEpic(todoList, cmwtd, lastDone, answers001);
+				expect(listToMarks(todoList)).equals("[o] [o]");
+			});
+
+			step('should confirm that CMWTD has been updated to last marked item',() => {
+				expect(cmwtd).equals(todoList[1].header);
+			});
+
+			step('should confirm that reviewing does nothing now', () => {
+				[todoList, cmwtd] = setupReview(todoList, cmwtd);
+				expect(todoList[0].state).equals(TodoState.Marked);
+				expect(todoList[1].state).equals(TodoState.Marked);
+			})
+
+			step('should confirm only item has been completed',() => {
+				[todoList, cmwtd, lastDone] = conductFocus(todoList, cmwtd, lastDone, {workLeft: "n"});
+				expect(todoList[1].state).equals(TodoState.Completed);
+			});
+
+			step('should confirm that CMWTD has been updated',() => {
+				expect(cmwtd).equals(todoList[0].header);
+			});
+		});
 	});
 });
