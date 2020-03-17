@@ -32,16 +32,18 @@ export const duplicateCMWTD = (todoList: ITodoItem[], cmwtd: string): any => {
 export const updateCMWTD = (todoList: ITodoItem[], cmwtd: string, lastDone: string): any => {
 	const lastIndex = getLastMarked(todoList);
 	if(lastIndex !== -1) {
-		lastDone = String(cmwtd); // todo: confrim that this is working correct - ie. test it
+		// issue: Dev refactors code to be more DRY #286
+		lastDone = String(cmwtd);
 		cmwtd = todoList[lastIndex].header;
 	} else {
-		lastDone = String(cmwtd); // todo: confrim that this is working correct - ie. test it
+		// issue: Dev refactors code to be more DRY #286
+		lastDone = String(cmwtd);
 		cmwtd = ""; // resets CMWTD
 	}
 	return [todoList, cmwtd, lastDone];
 }
 
-// todo: make use of this function in focusCLI
+// issue: Architect determines whether to use readyToFocus() #275
 export const readyToFocus = (todoList: ITodoItem[], cmwtd: string): boolean => {
 	return cmwtd !== "" && itemExists(todoList, "state", TodoState.Marked);
 }

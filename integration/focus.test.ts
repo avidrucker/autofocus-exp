@@ -1,9 +1,11 @@
 import { expect } from 'chai';
+import { step } from 'mocha-steps';
 
 import { conductFocus } from '../src/focus';
-import { ITodoItem, TodoState } from '../src/todoItem';
-import { getLastMarked } from '../src/todoList';
-import { makeNItemArray, markAllAs } from '../unit/test-util';
+import { conductReviewsEpic, setupReview } from '../src/review';
+import { constructNewTodoItem, ITodoItem, TodoState } from '../src/todoItem';
+import { addTodoToList, getLastMarked, listToMarks } from '../src/todoList';
+import { FRUITS, makeNItemArray, markAllAs } from '../unit/test-util';
 
 describe('FOCUS MODE INTEGRATION TESTS', ()=> {
 	describe('Entering focus mode', ()=> {
@@ -27,7 +29,7 @@ describe('FOCUS MODE INTEGRATION TESTS', ()=> {
 		})
 	});
 
-	// todo: test creation of duplicate todos from answering yes to workLeft
+	// issue: Dev writes test to confirm duplication behavior from positive workLeft #272
 	
 	describe('Finding marked todos', () => {
 		it('returns the last marked item', () => {
@@ -57,16 +59,17 @@ describe('FOCUS MODE INTEGRATION TESTS', ()=> {
 	describe('Updating the CMWTD', () => {
 		it('updates CMWTD from something to nothing', () => {
 			let todoList: ITodoItem[] = makeNItemArray(1);
-			let cmwtd = "apple";
+			let cmwtd = "";
 			let lastDone = "";
-			todoList[0].state = TodoState.Marked;
+			[todoList, cmwtd] = setupReview(todoList, cmwtd);
 			[todoList, cmwtd, lastDone] = conductFocus(todoList, cmwtd, lastDone, {workLeft:'n'});
 			expect(todoList[0].state).equals(TodoState.Completed);
 			expect(todoList.length).equals(1);
 			expect(cmwtd).equals("");
-			expect(lastDone).equals("apple");
+			expect(lastDone).equals(FRUITS[0]);
 		})
 
+		// issue: Dev rewrites tests to use intended functions instead of raw mutations #287
 		it('updates CMWTD from last marked item to the previous marked', () => {
 			let todoList: ITodoItem[] = makeNItemArray(2);
 			todoList = markAllAs(todoList, TodoState.Marked);
@@ -75,8 +78,52 @@ describe('FOCUS MODE INTEGRATION TESTS', ()=> {
 			[todoList, cmwtd, lastDone] = conductFocus(todoList, cmwtd, lastDone, {workLeft:'n'});
 			expect(todoList[1].state).equals(TodoState.Completed);
 			expect(todoList.length).equals(2);
-			expect(cmwtd).equals("apple");
-			expect(lastDone).equals("banana");
+			expect(cmwtd).equals(FRUITS[0]);
+			expect(lastDone).equals(FRUITS[1]);
 		})
 	})
+
+	// formerly "First mini E2E test"
+	describe('integration test of list completion', () => {
+		describe('should lead to CMWTD of empty string', () => {
+			let todoList: ITodoItem[] = [];
+			const aList = ["a"];
+			let cmwtd = "";
+			let lastDone = "";
+
+			step('should confirm 1 item has been added', () => {
+				aList.forEach(
+					x => {
+						todoList = addTodoToList(
+						todoList, constructNewTodoItem(x))
+					});
+
+				expect(todoList.length).equals(1);
+			});
+
+			step('should confirm that the 1st item has been marked', () => {
+				[todoList, cmwtd] = setupReview(todoList, cmwtd);
+				expect(todoList[0].state).equals(TodoState.Marked);
+			})
+
+			step('should re-confirm 1 item have been marked', () => {
+				const answers001 = [''];
+				[todoList, cmwtd] = conductReviewsEpic(todoList, cmwtd, lastDone, answers001);
+				expect(listToMarks(todoList)).equals("[o]");
+			});
+
+			step('should confirm that CMWTD has been updated to last marked item',() => {
+				expect(cmwtd).equals(todoList[0].header);
+			});
+
+			step('should confirm only item has been completed',() => {
+				[todoList, cmwtd, lastDone] = conductFocus(todoList, cmwtd, lastDone, {workLeft: "n"});
+				expect(todoList[0].state).equals(TodoState.Completed);
+			});
+
+			step('should confirm that CMWTD has been updated',() => {
+				expect(cmwtd).equals("");
+			});
+		});
+	});
 });

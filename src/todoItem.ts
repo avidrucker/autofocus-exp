@@ -58,7 +58,7 @@ export const isReady = (i: ITodoItem): boolean => {
 	return i.state === TodoState.Unmarked || i.state === TodoState.Marked;
 }
 
-// todo: implement deep copy of ID, & updated modified date value
+// issue: Dev implements deep copy of UUID, & updated modified date value #283
 export const setState = (i: ITodoItem, newState: TodoState ): ITodoItem => {
 	return constructNewTodoItem(i.header, "", newState);  // note: this creates a NEW todo item
 }
