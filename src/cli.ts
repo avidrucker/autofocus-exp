@@ -4,7 +4,7 @@ import { conductFocus } from './focus';
 import { greetUser } from './main';
 import { conductReviewsEpic, getReviewableList, readyToReview, setupReview } from './review';
 import { constructNewTodoItem, ITodoItem, TodoState } from './todoItem';
-import { addTodoToList, firstReady, makePrintableTodoItemList, undotAll } from './todoList';
+import { addTodoToList, firstReady, makePrintableTodoItemList, numListToTodoList, undotAll } from './todoList';
 import { getPluralS } from './util';
 
 // ****************************************
@@ -110,9 +110,9 @@ export const printUpdate = (todoList: ITodoItem[], cmwtd: string): void => {
 export const getReviewAnswersEpicCLI = (todoList: ITodoItem[], cmwtd: string, lastDone: string): string[] => {
 	const reviewableList = getReviewableList(todoList, cmwtd, lastDone);
 	if(reviewableList.length !== 0) {
-		return getReviewAnswersCLI(reviewableList, cmwtd);
+		return getReviewAnswersCLI(numListToTodoList(reviewableList), cmwtd);
 	} else {
-		return getReviewAnswersCLI(todoList, cmwtd);
+		return getReviewAnswersCLI(todoList, cmwtd); // todo: inspect output here, this may be an empty string result
 	}
 }
 

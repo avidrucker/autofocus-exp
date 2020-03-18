@@ -1,5 +1,5 @@
-import { isReady, ITodoItem, setState, TodoState } from "./todoItem";
-import { firstReady, itemExists } from "./todoList";
+import { constructNewTodoItem, isReady, ITodoItem, setState, TodoState } from "./todoItem";
+import { firstReady, itemExists, numListToTodoList } from "./todoList";
 import { isUndefined } from "./util";
 
 // issue: Architect decides how to manage todo items in backend #108
@@ -24,23 +24,44 @@ export const setupReview = (todoList: ITodoItem[], cmwtd: string): any => {
 	return [todoList, cmwtd];
 }
 
+export interface INumberedItem {
+	item: ITodoItem;
+	index: number;
+}
+
+// add original index, chop off at reviewable
+// section, & filter out completed items
+export const enhanceSliceFilter = (todoList: ITodoItem[], start: number): INumberedItem[] => {
+	return todoList.map((x, i) => ({item: x, index: i}))
+		.slice(start)
+		.filter(y => y.item.state !== TodoState.Completed);
+}
+
+// issue: Dev writes test cases for getReviewableList #281
 // issue: Dev writes test to confirm where reviewable lists start #280
-export const getReviewableList = (todoList: ITodoItem[], cmwtd: string, lastDone: string): ITodoItem[] => {
+export const getReviewableList = (todoList: ITodoItem[], cmwtd: string, lastDone: string): INumberedItem[] => {
 	let firstIndex = 0;
 	if(isUndefined(lastDone)) {
 		// issue: Dev implements UUID #279
 		firstIndex = todoList.map(x => x.header).indexOf(lastDone); // issue: Dev writes tests to confirm that unique todos (via UUID) work as expected #285
+		// tslint:disable-next-line:no-console
+		// console.log(`First Index is LASTDONE '${firstIndex}'`);
 	} else if (isUndefined(cmwtd)) {
 		firstIndex = todoList.map(x => x.header).indexOf(cmwtd); // issue: Dev writes tests to confirm that unique todos (via UUID) work as expected #285
+		// tslint:disable-next-line:no-console
+		// console.log(`First Index is CMWTD '${firstIndex}'`);
 	} else {
 		firstIndex = todoList.map(x => x.state).indexOf(TodoState.Unmarked);
+		// tslint:disable-next-line:no-console
+		// console.log(`First Index is UNMARKED '${firstIndex}'`);
 	}
 	if(firstIndex === -1) {
 		return [];
 	}
-	return todoList.slice(firstIndex + 1);
+	return enhanceSliceFilter(todoList, firstIndex + 1); // add original index here & also filter out any completed items
 }
 
+// todo: remove this function as it can be derived from getReviewableList(), length(), & slice() invocation
 export const getNonReviewableList = (todoList: ITodoItem[], cmwtd: string, lastDone: string): ITodoItem[] => {
 	let firstIndex = 0;
 	if(isUndefined(lastDone)) {
@@ -57,21 +78,43 @@ export const getNonReviewableList = (todoList: ITodoItem[], cmwtd: string, lastD
 	return todoList.slice(0, firstIndex + 1);
 }
 
+export const reviewAndRebuild = (todoList: ITodoItem[], cmwtd: string, lastDone: string, answers: string[]): any => {
+	const reviewableList = getReviewableList(todoList, cmwtd, lastDone);
+	const nonReviewableList = getNonReviewableList(todoList, cmwtd, lastDone); // todo: refactor w/ reviewableList.length and slice
+	let tempReviewedList = [];
+	let tempCmwtd = "";
+	[tempReviewedList, tempCmwtd] = conductReviews(numListToTodoList(reviewableList), cmwtd, answers);
+	const reviewedListReverse: ITodoItem[] = (JSON.parse(JSON.stringify(tempReviewedList))).reverse();
+	let newList: ITodoItem[] = [];
+	newList = newList.concat(nonReviewableList);
+	for(let i = nonReviewableList.length; i < todoList.length; i++) {
+		if(todoList[i].state === TodoState.Completed) {
+			// console.log(`${todoList[i].header} is COMPLETE, leaving as is`);
+			newList.push(constructNewTodoItem(
+				todoList[i].header,"",TodoState.Completed)); // todo: use dup todo func instead to preserve state
+		} else {
+			// console.log(`rebuilding at index ${i}: '${todoList[i].header}'`);
+			newList.push(reviewedListReverse.pop()!);
+		}
+	}
+	[todoList, cmwtd] = [JSON.parse(JSON.stringify(newList)), tempCmwtd];
+	return [todoList, cmwtd];
+}
+
 // breaks down functionality of conduct reviews epic (working title)
 // to review only the sections of lists that are reviewable, & then
 // to stitch back up the entire todo item list after reviewing
 export const conductReviewsEpic = (todoList: ITodoItem[], cmwtd: string, lastDone: string, answers: string[]): any => {
-	// issue: Dev writes test cases for getReviewableList #281
 	const reviewableList = getReviewableList(todoList, cmwtd, lastDone);
-	if(reviewableList.length !== 0) {
-		const nonReviewableList = getNonReviewableList(todoList, cmwtd, lastDone);
-		[todoList, cmwtd] = conductReviews(reviewableList, cmwtd, answers);
-		const reviewedList = JSON.parse(JSON.stringify(todoList));
-		todoList = nonReviewableList.concat(reviewedList);
-	} else {
-		[todoList, cmwtd] = conductReviews(todoList, cmwtd, answers);
+	if(todoList.length === 0 && reviewableList.length === 0) {
+		return [todoList, cmwtd]; // short circuit when no items are reviewable
 	}
-	return [todoList, cmwtd];
+	if(reviewableList.length !== 0) {
+		return reviewAndRebuild(todoList, cmwtd, lastDone, answers);
+	}
+	if(todoList.length !== 0) {
+		return conductReviews(todoList, cmwtd, answers);
+	}
 }
 
 const markItem = (i: ITodoItem, cmwtd: string): any => {
