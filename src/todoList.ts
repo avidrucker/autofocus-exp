@@ -1,5 +1,6 @@
 import { INumberedItem } from "./numberedItem";
 import { getMark, ITodoItem, stringifyTodoItem, TodoState, undot } from "./todoItem";
+import { getMinFrom0Up } from "./util";
 
 export const indexOfItem = (list: any[], attr: any, val: any): number => {
 	return list.map((e) => e[attr]).indexOf(val);
@@ -58,15 +59,7 @@ export const getLastMarked = (todoList: ITodoItem[]): number => {
 export const firstReady = (todoList: ITodoItem[]): number => {
 	const firstUnmarked = getFirstUnmarked(todoList);
 	const firstMarked = getFirstMarked(todoList);
-	if(firstUnmarked === -1 && firstMarked === -1 ) {
-		return -1;
-	} else if (firstUnmarked !== -1 && firstMarked === -1) {
-		return firstUnmarked;
-	} else if (firstUnmarked === -1 && firstMarked !== -1) {
-		return firstMarked;
-	} else {
-		return Math.min(firstUnmarked, firstMarked);
-	}
+	return getMinFrom0Up(firstUnmarked, firstMarked);
 }
 
 export const undotAll = (todoList: ITodoItem[]): ITodoItem[] => {
