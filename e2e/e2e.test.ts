@@ -106,6 +106,13 @@ describe('Long E2E test', () => {
 			expect(beforeCMWTD).equals(afterCMWTD);
 		})
 
+		step('should confirm review-then-quit leaves list as-is', () => {
+			const answer = ['q']; // immediately quitting, w/ no 'y' or 'n' answers
+			[todoList, cmwtd] = conductReviewsEpic(todoList, cmwtd, lastDone, answer);
+			expect(listToMarks(todoList)).equals(
+				"[o] [ ] [o] [ ] [x] [ ] [ ] [ ] [ ] [ ]");
+		});
+
 		// review items, saying yes only to last item (in this review it will be the 5th)
 		step('should confirm 3 specific items have been marked', () => {
 			const answers002 = ['n','n','n','n','y'];

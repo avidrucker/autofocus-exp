@@ -7,7 +7,6 @@ import { constructNewTodoItem, ITodoItem, TodoState } from '../src/todoItem';
 import { addTodoToList, listToMarks } from '../src/todoList';
 import { expectOneMarkedApple, FRUITS, makeNItemArray, markAllAs } from '../unit/test-util';
 
-
 describe('REVIEW MODE INTEGRATION TESTS', ()=> {
 	describe('Reviewing 0 item list',() => {
 		// when there are no todo items, does not affect the todo list or cmwtd
@@ -23,6 +22,7 @@ describe('REVIEW MODE INTEGRATION TESTS', ()=> {
 	})
 	
 	describe('Setting up review for 1 item list',()=> {
+		// with no dottable items returns back the items as is
 		it('returns list with marked item as-is',() => {
 			// make a list with one marked item
 			let todoList: ITodoItem[] = makeNItemArray(1);
@@ -32,6 +32,7 @@ describe('REVIEW MODE INTEGRATION TESTS', ()=> {
 			expectOneMarkedApple(todoList, cmwtd);
 		})
 	
+		// with only one dottable item returns a dotted item
 		it('returns list with unmarked item marked',()=>{
 			// make a list with one unmarked item
 			let todoList: ITodoItem[] = makeNItemArray(1);
@@ -50,21 +51,21 @@ describe('REVIEW MODE INTEGRATION TESTS', ()=> {
 			[todoList, cmwtd] = setupReview(todoList, cmwtd); // "There are no ready items."
 			[todoList, cmwtd ] = conductReviewsEpic(todoList, cmwtd, lastDone, ['y']); // "There are no ready items."
 			expect(todoList.length).equals(2);
-			expect(cmwtd).equals("banana");
+			expect(cmwtd).equals(FRUITS[1]);
 		})
 
-
+		// with no dottable items returns back the items as is
 		// doesn't affect the list if all items are dotted to begin with
 		it('returns list with 0 unmarked items as-is',() => {
 			// make a list with one marked, one complete
 			let todoList: ITodoItem[] = makeNItemArray(2);
 			todoList = markAllAs(todoList, TodoState.Marked);
-			let cmwtd = "banana";
+			let cmwtd = FRUITS[1];
 			const lastDone = "";
 			[todoList, cmwtd] = setupReview(todoList, cmwtd); // "There are no ready items."
 			[todoList, cmwtd] = conductReviewsEpic(todoList, cmwtd, lastDone, []); // "There are no ready items."
 			expect(todoList.length).equals(2);
-			expect(cmwtd).equals("banana");
+			expect(cmwtd).equals(FRUITS[1]);
 		})
 	
 		// issue: Architect assess whether firstReady func is appropriate for test #288
@@ -103,6 +104,7 @@ describe('REVIEW MODE INTEGRATION TESTS', ()=> {
 	})
 
 	describe('Conducting reviews', ()=> {
+		// with no dottable items returns back the items as is
 		it('when 0 ready items, doesn\'t affect the todo list or cmwtd', () => {
 			let todoList: ITodoItem[] = makeNItemArray(2);
 			let cmwtd = "";
@@ -115,17 +117,17 @@ describe('REVIEW MODE INTEGRATION TESTS', ()=> {
 			expect(cmwtd).equals("");
 		});
 	
-		it('should return a list of items marked `[o] [ ] [o]` for input `n, y` ', () => {
+		it('should return a list of items marked `[o] [ ] [o]` for input [`n`, `y`] ', () => {
 			let todoList: ITodoItem[] = makeNItemArray(3);
 			let cmwtd = "";
 			const lastDone = "";
 			[todoList, cmwtd] = setupReview(todoList, cmwtd);
 			[todoList, cmwtd] = conductReviewsEpic(todoList, cmwtd, lastDone, ['n', 'y']);
-			expect(cmwtd).equals("cherry");
+			expect(cmwtd).equals(FRUITS[2]);
 			expect(listToMarks(todoList)).equals("[o] [ ] [o]");
 		});
 
-		it('should return a list of items marked `[o] [ ] [ ]` for input `n, n` ', () => {
+		it('should return a list of items marked `[o] [ ] [ ]` for input [`n`, `n`]', () => {
 			let todoList: ITodoItem[] = makeNItemArray(3);
 			let cmwtd: string = "";
 			const lastDone = "";
@@ -135,6 +137,7 @@ describe('REVIEW MODE INTEGRATION TESTS', ()=> {
 			expect(listToMarks(todoList)).equals("[o] [ ] [ ]");
 		});
 
+		// issue: Dev refactors "review from lastDone if set" case into suite #290
 		it('reviews from lastDone if set', () => {
 			let todoList: ITodoItem[] = makeNItemArray(5);
 			let cmwtd: string = "";
