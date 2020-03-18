@@ -112,7 +112,8 @@ export const getReviewAnswersEpicCLI = (todoList: ITodoItem[], cmwtd: string, la
 	if(reviewableList.length !== 0) {
 		return getReviewAnswersCLI(numListToTodoList(reviewableList), cmwtd);
 	} else {
-		return getReviewAnswersCLI(todoList, cmwtd); // todo: inspect output here, this may be an empty string result
+		// issue: Dev inspects getReviewAnswersEpicCLI for empty string result #294
+		return getReviewAnswersCLI(todoList, cmwtd);
 	}
 }
 

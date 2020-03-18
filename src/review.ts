@@ -1,3 +1,4 @@
+import { INumberedItem } from "./numberedItem";
 import { constructNewTodoItem, isReady, ITodoItem, setState, TodoState } from "./todoItem";
 import { firstReady, itemExists, numListToTodoList } from "./todoList";
 import { isUndefined } from "./util";
@@ -10,9 +11,8 @@ export const setupReview = (todoList: ITodoItem[], cmwtd: string): any => {
 	if(todoList.length === 0 || readyTodo === -1) {
 		return [todoList, cmwtd];
 	}
-
 	// issue: Dev confirms via test that setupReview doesn't increase dots on already dotted lists #276
-	if(firstReady(todoList) !== -1) {
+	if(readyTodo !== -1) {
 		// FVP step 1: dot the first ready todo item (the first non-complete, non-archived item)
 		todoList[readyTodo].state = TodoState.Marked;
 
@@ -22,11 +22,6 @@ export const setupReview = (todoList: ITodoItem[], cmwtd: string): any => {
 		}
 	}
 	return [todoList, cmwtd];
-}
-
-export interface INumberedItem {
-	item: ITodoItem;
-	index: number;
 }
 
 // add original index, chop off at reviewable
@@ -61,7 +56,7 @@ export const getReviewableList = (todoList: ITodoItem[], cmwtd: string, lastDone
 	return enhanceSliceFilter(todoList, firstIndex + 1); // add original index here & also filter out any completed items
 }
 
-// todo: remove this function as it can be derived from getReviewableList(), length(), & slice() invocation
+// issue: Dev refactors to remove getNonReviewableList #295
 export const getNonReviewableList = (todoList: ITodoItem[], cmwtd: string, lastDone: string): ITodoItem[] => {
 	let firstIndex = 0;
 	if(isUndefined(lastDone)) {
@@ -78,9 +73,10 @@ export const getNonReviewableList = (todoList: ITodoItem[], cmwtd: string, lastD
 	return todoList.slice(0, firstIndex + 1);
 }
 
+// issue: Dev assess reviewAndRebuild to refactor, make DRY, SOLID #297
 export const reviewAndRebuild = (todoList: ITodoItem[], cmwtd: string, lastDone: string, answers: string[]): any => {
 	const reviewableList = getReviewableList(todoList, cmwtd, lastDone);
-	const nonReviewableList = getNonReviewableList(todoList, cmwtd, lastDone); // todo: refactor w/ reviewableList.length and slice
+	const nonReviewableList = getNonReviewableList(todoList, cmwtd, lastDone); // issue: Dev refactors to remove getNonReviewableList #295
 	let tempReviewedList = [];
 	let tempCmwtd = "";
 	[tempReviewedList, tempCmwtd] = conductReviews(numListToTodoList(reviewableList), cmwtd, answers);
@@ -91,7 +87,7 @@ export const reviewAndRebuild = (todoList: ITodoItem[], cmwtd: string, lastDone:
 		if(todoList[i].state === TodoState.Completed) {
 			// console.log(`${todoList[i].header} is COMPLETE, leaving as is`);
 			newList.push(constructNewTodoItem(
-				todoList[i].header,"",TodoState.Completed)); // todo: use dup todo func instead to preserve state
+				todoList[i].header,"",TodoState.Completed)); // issue: Dev implements dup todo item func that preserves state #296
 		} else {
 			// console.log(`rebuilding at index ${i}: '${todoList[i].header}'`);
 			newList.push(reviewedListReverse.pop()!);
