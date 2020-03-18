@@ -1,7 +1,7 @@
 import { INumberedItem } from "./numberedItem";
 import { constructNewTodoItem, isReady, ITodoItem, setState, TodoState } from "./todoItem";
 import { firstReady, itemExists, numListToTodoList } from "./todoList";
-import { isUndefined } from "./util";
+import { isDefinedString } from "./util";
 
 // issue: Architect decides how to manage todo items in backend #108
 // issue: Dev refactors setupReview to be modular, atomic #278
@@ -36,19 +36,13 @@ export const enhanceSliceFilter = (todoList: ITodoItem[], start: number): INumbe
 // issue: Dev writes test to confirm where reviewable lists start #280
 export const getReviewableList = (todoList: ITodoItem[], cmwtd: string, lastDone: string): INumberedItem[] => {
 	let firstIndex = 0;
-	if(isUndefined(lastDone)) {
+	if(isDefinedString(lastDone)) {
 		// issue: Dev implements UUID #279
 		firstIndex = todoList.map(x => x.header).indexOf(lastDone); // issue: Dev writes tests to confirm that unique todos (via UUID) work as expected #285
-		// tslint:disable-next-line:no-console
-		// console.log(`First Index is LASTDONE '${firstIndex}'`);
-	} else if (isUndefined(cmwtd)) {
+	} else if (isDefinedString(cmwtd)) {
 		firstIndex = todoList.map(x => x.header).indexOf(cmwtd); // issue: Dev writes tests to confirm that unique todos (via UUID) work as expected #285
-		// tslint:disable-next-line:no-console
-		// console.log(`First Index is CMWTD '${firstIndex}'`);
 	} else {
 		firstIndex = todoList.map(x => x.state).indexOf(TodoState.Unmarked);
-		// tslint:disable-next-line:no-console
-		// console.log(`First Index is UNMARKED '${firstIndex}'`);
 	}
 	if(firstIndex === -1) {
 		return [];
@@ -59,10 +53,10 @@ export const getReviewableList = (todoList: ITodoItem[], cmwtd: string, lastDone
 // issue: Dev refactors to remove getNonReviewableList #295
 export const getNonReviewableList = (todoList: ITodoItem[], cmwtd: string, lastDone: string): ITodoItem[] => {
 	let firstIndex = 0;
-	if(isUndefined(lastDone)) {
+	if(isDefinedString(lastDone)) {
 		// issue: Dev implements UUID #279
 		firstIndex = todoList.map(x => x.header).indexOf(lastDone);
-	} else if (isUndefined(cmwtd)) {
+	} else if (isDefinedString(cmwtd)) {
 		firstIndex = todoList.map(x => x.header).indexOf(cmwtd);
 	} else {
 		firstIndex = todoList.map(x => x.state).indexOf(TodoState.Unmarked);
