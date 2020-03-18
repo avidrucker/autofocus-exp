@@ -220,4 +220,18 @@ describe('REVIEW MODE INTEGRATION TESTS', ()=> {
 			});
 		});
 	});
+
+	describe('Reviewing lists with completed items',()=>{
+		it('works only on reviewable subset of list',()=>{
+			let todoList: ITodoItem[] = makeNItemArray(5);
+			let cmwtd = "";
+			const lastDone = "";
+			todoList[0].state = TodoState.Completed;
+			todoList[2].state = TodoState.Completed;
+			todoList[4].state = TodoState.Completed;
+			[todoList, cmwtd] = setupReview(todoList, cmwtd);
+			[todoList, cmwtd] = conductReviewsEpic(todoList, cmwtd, lastDone, ['y']);
+			expect(listToMarks(todoList)).equals("[x] [o] [x] [o] [x]");
+		});
+	});
 });
