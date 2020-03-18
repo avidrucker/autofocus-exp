@@ -1,5 +1,6 @@
 import { INumberedItem } from "./numberedItem";
 import { getMark, ITodoItem, stringifyTodoItem, TodoState, undot } from "./todoItem";
+import { getMinFrom0Up, isEmpty } from "./util";
 
 export const indexOfItem = (list: any[], attr: any, val: any): number => {
 	return list.map((e) => e[attr]).indexOf(val);
@@ -13,22 +14,22 @@ export const itemExists = (list: any[], attr: any, val: any): boolean => {
 	return indexOfItem(list, attr, val) !== -1;
 }
 
-export const makePrintableTodoItemList = (list: ITodoItem[]):string => {
+export const makePrintableTodoItemList = (todoList: ITodoItem[]):string => {
 	let temp: string = "";
-	if(list.length === 0) {
+	if(isEmpty(todoList)) {
 		temp = "There are no todo items to print.";
 	} else {
-		temp = list.map(x => stringifyTodoItem(x)).join("\n");
+		temp = todoList.map(x => stringifyTodoItem(x)).join("\n");
 	}
 	return temp;
 }
 
 export const listToMarks = (todoList: ITodoItem[]): string => {
-	return todoList.map(x => getMark(x)).join(" ");
+	return todoList.map(x => getMark[x.state]()).join(" ");
 }
 
 export const numListToMarks = (todoList: INumberedItem[]): string => {
-	return todoList.map((x, i) => `[${i}: ${getMark(x.item)}]`).join(" ");
+	return todoList.map((x, i) => `[${i}: ${getMark[x.item.state]()}]`).join(" ");
 }
 
 export const numListToTodoList = (todoList: INumberedItem[]): ITodoItem[] => {
@@ -58,15 +59,7 @@ export const getLastMarked = (todoList: ITodoItem[]): number => {
 export const firstReady = (todoList: ITodoItem[]): number => {
 	const firstUnmarked = getFirstUnmarked(todoList);
 	const firstMarked = getFirstMarked(todoList);
-	if(firstUnmarked === -1 && firstMarked === -1 ) {
-		return -1;
-	} else if (firstUnmarked !== -1 && firstMarked === -1) {
-		return firstUnmarked;
-	} else if (firstUnmarked === -1 && firstMarked !== -1) {
-		return firstMarked;
-	} else {
-		return Math.min(firstUnmarked, firstMarked);
-	}
+	return getMinFrom0Up(firstUnmarked, firstMarked);
 }
 
 export const undotAll = (todoList: ITodoItem[]): ITodoItem[] => {

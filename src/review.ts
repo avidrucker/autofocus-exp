@@ -1,14 +1,15 @@
 import { INumberedItem } from "./numberedItem";
 import { constructNewTodoItem, isReady, ITodoItem, setState, TodoState } from "./todoItem";
 import { firstReady, itemExists, numListToTodoList } from "./todoList";
-import { isUndefined } from "./util";
+import { isDefinedString, isEmpty } from "./util";
 
 // issue: Architect decides how to manage todo items in backend #108
 // issue: Dev refactors setupReview to be modular, atomic #278
+// issue: Architect reviews for opportunity to make DRY, SOLID #299
 export const setupReview = (todoList: ITodoItem[], cmwtd: string): any => {
 	let readyTodo = -1;
 	readyTodo = firstReady(todoList); // short circuit func if 0 todos OR not ready to review
-	if(todoList.length === 0 || readyTodo === -1) {
+	if(isEmpty(todoList) || readyTodo === -1) {
 		return [todoList, cmwtd];
 	}
 	// issue: Dev confirms via test that setupReview doesn't increase dots on already dotted lists #276
@@ -34,21 +35,16 @@ export const enhanceSliceFilter = (todoList: ITodoItem[], start: number): INumbe
 
 // issue: Dev writes test cases for getReviewableList #281
 // issue: Dev writes test to confirm where reviewable lists start #280
+// issue: Architect reviews for opportunity to make DRY, SOLID #299
 export const getReviewableList = (todoList: ITodoItem[], cmwtd: string, lastDone: string): INumberedItem[] => {
 	let firstIndex = 0;
-	if(isUndefined(lastDone)) {
+	if(isDefinedString(lastDone)) {
 		// issue: Dev implements UUID #279
 		firstIndex = todoList.map(x => x.header).indexOf(lastDone); // issue: Dev writes tests to confirm that unique todos (via UUID) work as expected #285
-		// tslint:disable-next-line:no-console
-		// console.log(`First Index is LASTDONE '${firstIndex}'`);
-	} else if (isUndefined(cmwtd)) {
+	} else if (isDefinedString(cmwtd)) {
 		firstIndex = todoList.map(x => x.header).indexOf(cmwtd); // issue: Dev writes tests to confirm that unique todos (via UUID) work as expected #285
-		// tslint:disable-next-line:no-console
-		// console.log(`First Index is CMWTD '${firstIndex}'`);
 	} else {
 		firstIndex = todoList.map(x => x.state).indexOf(TodoState.Unmarked);
-		// tslint:disable-next-line:no-console
-		// console.log(`First Index is UNMARKED '${firstIndex}'`);
 	}
 	if(firstIndex === -1) {
 		return [];
@@ -59,10 +55,10 @@ export const getReviewableList = (todoList: ITodoItem[], cmwtd: string, lastDone
 // issue: Dev refactors to remove getNonReviewableList #295
 export const getNonReviewableList = (todoList: ITodoItem[], cmwtd: string, lastDone: string): ITodoItem[] => {
 	let firstIndex = 0;
-	if(isUndefined(lastDone)) {
+	if(isDefinedString(lastDone)) {
 		// issue: Dev implements UUID #279
 		firstIndex = todoList.map(x => x.header).indexOf(lastDone);
-	} else if (isUndefined(cmwtd)) {
+	} else if (isDefinedString(cmwtd)) {
 		firstIndex = todoList.map(x => x.header).indexOf(cmwtd);
 	} else {
 		firstIndex = todoList.map(x => x.state).indexOf(TodoState.Unmarked);
@@ -73,6 +69,7 @@ export const getNonReviewableList = (todoList: ITodoItem[], cmwtd: string, lastD
 	return todoList.slice(0, firstIndex + 1);
 }
 
+// issue: Architect reviews for opportunity to make DRY, SOLID #299
 // issue: Dev assess reviewAndRebuild to refactor, make DRY, SOLID #297
 export const reviewAndRebuild = (todoList: ITodoItem[], cmwtd: string, lastDone: string, answers: string[]): any => {
 	const reviewableList = getReviewableList(todoList, cmwtd, lastDone);
@@ -102,13 +99,13 @@ export const reviewAndRebuild = (todoList: ITodoItem[], cmwtd: string, lastDone:
 // to stitch back up the entire todo item list after reviewing
 export const conductReviewsEpic = (todoList: ITodoItem[], cmwtd: string, lastDone: string, answers: string[]): any => {
 	const reviewableList = getReviewableList(todoList, cmwtd, lastDone);
-	if(todoList.length === 0 && reviewableList.length === 0) {
+	if(isEmpty(todoList) || isEmpty(reviewableList)) {
 		return [todoList, cmwtd]; // short circuit when no items are reviewable
 	}
-	if(reviewableList.length !== 0) {
+	if(!isEmpty(reviewableList)) {
 		return reviewAndRebuild(todoList, cmwtd, lastDone, answers);
 	}
-	if(todoList.length !== 0) {
+	if(!isEmpty(todoList)) {
 		return conductReviews(todoList, cmwtd, answers);
 	}
 }
@@ -131,7 +128,7 @@ export const applyAnswers = (todoList: ITodoItem[], cmwtd: string, answers: stri
 // issue: Dev writes test cases for conductReviews #282
 // issue: Dev refactors conductReviews #215
 export const conductReviews = (	todoList: ITodoItem[], cmwtd: string, answers: string[]): any => {
-	if(todoList.length === 0) {
+	if(isEmpty(todoList)) {
 		return [todoList, cmwtd];
 	}
 
