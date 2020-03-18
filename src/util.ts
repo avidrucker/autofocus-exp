@@ -19,3 +19,7 @@ export const getMinFrom0Up = (x: number, y: number): number => {
 			isNeg1(x) && !isNeg1(y) ? y :
 			Math.min(x, y);
 }
+
+export const isEmpty = (arrIn: any[]): boolean => {
+	return arrIn.length === 0;
+}
