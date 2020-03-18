@@ -229,6 +229,39 @@ const addNewCLI = (todoList: ITodoItem[], cmwtd: string): any => {
 // MAIN PROGRAM LOOP
 // ****************************************
 
+const menuActions: any = {
+	[MainMenuChoice.AddNew] : (todoList: ITodoItem[], cmwtd: string, lastDone: string): any => {
+		[ todoList, cmwtd ] = addNewCLI(todoList, cmwtd);
+		printTodoItemCount(todoList);
+		return [todoList, cmwtd, lastDone, true];
+	},
+	[MainMenuChoice.ReviewTodos] : (todoList: ITodoItem[], cmwtd: string, lastDone: string): any => {
+		[todoList, cmwtd] = attemptReviewTodosCLI(todoList, cmwtd, lastDone);
+		return [todoList, cmwtd, lastDone, true];
+	},
+	[MainMenuChoice.EnterFocus] : (todoList: ITodoItem[], cmwtd: string, lastDone: string): any => {
+		[ todoList, cmwtd, lastDone ] = enterFocusCLI(todoList, cmwtd, lastDone);
+		return [todoList, cmwtd, lastDone, true];
+	},
+	[MainMenuChoice.PrintList] : (todoList: ITodoItem[], cmwtd: string, lastDone: string): any => {
+		printUpdate( todoList, cmwtd );
+		return [todoList, cmwtd, lastDone, true];
+	},
+	[MainMenuChoice.ClearDots] : (todoList: ITodoItem[], cmwtd: string, lastDone: string): any => {
+		generalPrint("Removing dots from dotted items...");
+		generalPrint("Resetting the CMWTD...");
+		return [undotAll(todoList), "", lastDone, true];
+	},
+	[MainMenuChoice.ReadAbout] : (todoList: ITodoItem[], cmwtd: string, lastDone: string): any => {
+		// issue: Dev adds about section text print out #128
+		generalPrint("This is stub (placeholder) text. Please check back later.");
+		return [todoList, cmwtd, lastDone, true];
+	},
+	[MainMenuChoice.Quit] : (todoList: ITodoItem[], cmwtd: string, lastDone: string): any => {
+		return [todoList, cmwtd, lastDone, false];
+	}
+}
+
 export const mainCLI = ():void => {
 	generalPrint(greetUser());
 
@@ -240,32 +273,7 @@ export const mainCLI = ():void => {
 	while(running) {
 		const answer = promptUserWithMainMenu();
 		// issue: Dev refactors multi if blocks #125
-		if(answer === MainMenuChoice.AddNew) {
-			[ todoList, cmwtd ] = addNewCLI(todoList, cmwtd);
-			printTodoItemCount(todoList);
-		}
-		if(answer === MainMenuChoice.ReviewTodos) {
-			[todoList, cmwtd] = attemptReviewTodosCLI(todoList, cmwtd, lastDone);
-		}
-		if(answer === MainMenuChoice.EnterFocus) {
-			[ todoList, cmwtd, lastDone ] = enterFocusCLI(todoList, cmwtd, lastDone);
-		}
-		if(answer === MainMenuChoice.PrintList) {
-			printUpdate( todoList, cmwtd );
-		}
-		if(answer === MainMenuChoice.ClearDots) {
-			generalPrint("Removing dots from dotted items...");
-			todoList = undotAll(todoList);
-			generalPrint("Resetting the CMWTD...");
-			cmwtd = "";
-		}
-		// issue: Dev adds about section text print out #128
-		if(answer === MainMenuChoice.ReadAbout) {
-			generalPrint("This is stub (placeholder) text. Please check back later.");
-		}
-		if(answer === MainMenuChoice.Quit) {
-			running = false;
-		}
+		[todoList, cmwtd, lastDone, running] = menuActions[answer](todoList, cmwtd, lastDone);
 	}
 	
 	generalPrint("Have a nice day!");
