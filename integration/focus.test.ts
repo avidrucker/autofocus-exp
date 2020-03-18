@@ -19,7 +19,7 @@ describe('FOCUS MODE INTEGRATION TESTS', ()=> {
 			expect(lastDone).equals("");
 		});
 
-		it('when there are no marked items doesn\'t affect the todo list of cmwtd', () => {
+		it('when no marked items exist, leaves todo list & cmwtd as-is', () => {
 			let todoList: ITodoItem[] = makeNItemArray(1);
 			let cmwtd = "";
 			let lastDone = "";
