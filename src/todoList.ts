@@ -1,4 +1,4 @@
-import { INumberedItem } from "./review"; // todo: move INumberedItem to its own file
+import { INumberedItem } from "./numberedItem";
 import { getMark, ITodoItem, stringifyTodoItem, TodoState, undot } from "./todoItem";
 
 export const indexOfItem = (list: any[], attr: any, val: any): number => {
@@ -27,7 +27,7 @@ export const listToMarks = (todoList: ITodoItem[]): string => {
 	return todoList.map(x => getMark(x)).join(" ");
 }
 
-export const numberedListToMarks = (todoList: INumberedItem[]): string => {
+export const numListToMarks = (todoList: INumberedItem[]): string => {
 	return todoList.map((x, i) => `[${i}: ${getMark(x.item)}]`).join(" ");
 }
 
