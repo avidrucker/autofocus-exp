@@ -51,7 +51,6 @@ describe('FOCUS MODE INTEGRATION TESTS', ()=> {
 		it('when there are both marked and unmarked items, returns the marked item', () => {
 			const todoList: ITodoItem[] = makeNItemArray(2);
 			todoList[0].state = TodoState.Marked;
-			todoList[1].state = TodoState.Unmarked;
 			expect(getLastMarked(todoList)).equals(0);
 		})
 	});
@@ -73,7 +72,7 @@ describe('FOCUS MODE INTEGRATION TESTS', ()=> {
 		it('updates CMWTD from last marked item to the previous marked', () => {
 			let todoList: ITodoItem[] = makeNItemArray(2);
 			todoList = markAllAs(todoList, TodoState.Marked);
-			let cmwtd = "banana";
+			let cmwtd = FRUITS[1];
 			let lastDone = "";
 			[todoList, cmwtd, lastDone] = conductFocus(todoList, cmwtd, lastDone, {workLeft:'n'});
 			expect(todoList[1].state).equals(TodoState.Completed);
