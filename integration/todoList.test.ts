@@ -3,7 +3,7 @@ import { expect } from 'chai';
 import { conductReviewsEpic, setupReview } from '../src/review';
 import { ITodoItem, TodoState } from '../src/todoItem';
 import { listToMarks, undotAll } from '../src/todoList';
-import { makeNItemArray } from '../unit/test-util';
+import { FRUITS, makeNItemArray } from '../unit/test-util';
 
 describe('TODO LIST INTEGRATION TESTS', () => {
 	describe('List to marks function', () => {
@@ -21,7 +21,7 @@ describe('TODO LIST INTEGRATION TESTS', () => {
 			const lastDone = "";
 			[todoList, cmwtd] = setupReview(todoList, cmwtd);
 			[todoList, cmwtd] = conductReviewsEpic(todoList, cmwtd, lastDone, ['n', 'y']);
-			expect(cmwtd).equals("cherry");
+			expect(cmwtd).equals(FRUITS[2]);
 		});
 	})
 
