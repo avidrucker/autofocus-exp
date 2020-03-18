@@ -20,13 +20,3 @@ describe('MAIN TESTS', () => {
 		});
 	});
 })
-
-
-// issue: Dev removes commented out code snippets #249
-/*
-describe('', ()=> {
-	it('', () => {
-		expect(listToMarks(todoList)).equals("[o] [ ] [o]");
-	})
-})
-*/
