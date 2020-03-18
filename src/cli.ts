@@ -5,7 +5,7 @@ import { greetUser } from './main';
 import { conductReviewsEpic, getReviewableList, readyToReview, setupReview } from './review';
 import { constructNewTodoItem, ITodoItem, TodoState } from './todoItem';
 import { addTodoToList, firstReady, makePrintableTodoItemList, numListToTodoList, undotAll } from './todoList';
-import { getPluralS } from './util';
+import { getPluralS, isEmpty } from './util';
 
 // ****************************************
 // PROMPTS
@@ -46,6 +46,7 @@ export const promptUserForYNQ = (questionString: string): string => {
 		{limit: ['y','n','q','Y','N','Q']}).toLowerCase();
 }
 
+// issue: Architect reviews for opportunity to make DRY, SOLID #299
 export const promptUserForNewTodoItemCLI = (): ITodoItem | null => {
 	const headerText = readlineSync.question(newItemTitlePrompt, {
 		limit: /\w+/i,
@@ -88,6 +89,7 @@ const printTodoItemList = (list: ITodoItem[]):void => {
 	generalPrint(makePrintableTodoItemList(list));
 }
 
+// issue: Architect reviews for opportunity to make DRY, SOLID #299
 export const printUpdate = (todoList: ITodoItem[], cmwtd: string): void => {
 	if(cmwtd === "" || cmwtd === null) {
 		generalPrint(`Your CMWTD is currently set to nothing.`);
@@ -95,7 +97,7 @@ export const printUpdate = (todoList: ITodoItem[], cmwtd: string): void => {
 		generalPrint(`Your CMWTD is '${cmwtd}'.`);
 	}
 	
-	if(todoList.length === 0) {
+	if(isEmpty(todoList)) {
 		generalPrint("Your current Todo List is empty.");
 	} else {
 		generalPrint("Your current Todo List:")
@@ -109,7 +111,7 @@ export const printUpdate = (todoList: ITodoItem[], cmwtd: string): void => {
 
 export const getReviewAnswersEpicCLI = (todoList: ITodoItem[], cmwtd: string, lastDone: string): string[] => {
 	const reviewableList = getReviewableList(todoList, cmwtd, lastDone);
-	if(reviewableList.length !== 0) {
+	if(!isEmpty(reviewableList)) {
 		return getReviewAnswersCLI(numListToTodoList(reviewableList), cmwtd);
 	} else {
 		// issue: Dev inspects getReviewAnswersEpicCLI for empty string result #294
@@ -121,6 +123,7 @@ export const getAnswer = (x: string, y: string) => {
 	return promptUserForYNQ(`Do you want to '${x}' more than '${y}'? (Y/N/Q) `);
 }
 
+// issue: Architect reviews for opportunity to make DRY, SOLID #299
 // issue: Dev refactors getReviewAnswersCLI #216
 export const getReviewAnswersCLI = (todoList: ITodoItem[], cmwtd: string): string[] => {
 	const answers: string[] = [];
@@ -144,7 +147,7 @@ export const getReviewAnswersCLI = (todoList: ITodoItem[], cmwtd: string): strin
 
 // issue: Dev refactors printReviewSetupMessage to be atomic #273
 const printReviewSetupMessage = (todoList: ITodoItem[]): void => {
-	if(todoList.length === 0) {
+	if(isEmpty(todoList)) {
 		generalPrint("There are no items to review. Please enter mores items and try again.");
 	} else if (firstReady(todoList) === -1) {
 		generalPrint("There are no items left to dot. Please enter more items and try again.");
@@ -153,9 +156,10 @@ const printReviewSetupMessage = (todoList: ITodoItem[]): void => {
 	}
 }
 
+// issue: Architect reviews for opportunity to make DRY, SOLID #299
 const attemptReviewTodosCLI = (todoList: ITodoItem[], cmwtd: string, lastDone: string): any => {
 	printReviewSetupMessage(todoList);
-	if(todoList.length === 0) {
+	if(isEmpty(todoList)) {
 		return [todoList, cmwtd];
 	}
 
@@ -181,9 +185,10 @@ const attemptReviewTodosCLI = (todoList: ITodoItem[], cmwtd: string, lastDone: s
 // FOCUS MODE
 // ****************************************
 
+// issue: Architect reviews for opportunity to make DRY, SOLID #299
 const enterFocusCLI = (todoList: ITodoItem[], cmwtd: string, lastDone: string): any => {
 	// 0. confirm that focusMode can be safely entered
-	if(todoList.length === 0) {
+	if(isEmpty(todoList)) {
 		generalPrint("There are no todo items. Please enter todo items and try again.");
 		return [todoList, cmwtd, lastDone];
 	}
@@ -229,6 +234,7 @@ const addNewCLI = (todoList: ITodoItem[], cmwtd: string): any => {
 // MAIN PROGRAM LOOP
 // ****************************************
 
+// issue: Architect reviews for opportunity to make DRY, SOLID #299
 const menuActions: any = {
 	[MainMenuChoice.AddNew] : (todoList: ITodoItem[], cmwtd: string, lastDone: string): any => {
 		[ todoList, cmwtd ] = addNewCLI(todoList, cmwtd);
@@ -265,14 +271,15 @@ const menuActions: any = {
 export const mainCLI = ():void => {
 	generalPrint(greetUser());
 
+	// initialize program variables
 	let todoList: ITodoItem[] = [];
 	let cmwtd: string = "";
 	let lastDone: string = "";
 
+	// start main program loop
 	let running = true;
 	while(running) {
 		const answer = promptUserWithMainMenu();
-		// issue: Dev refactors multi if blocks #125
 		[todoList, cmwtd, lastDone, running] = menuActions[answer](todoList, cmwtd, lastDone);
 	}
 	
