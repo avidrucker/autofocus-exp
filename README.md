@@ -17,7 +17,7 @@ I'm interested to contribute as a...
 
 ### [programmer](https://github.com/avidrucker/autofocus-exp/blob/master/docs/dev_readme.md) :computer::keyboard:
 
-### [data scientist](#) :bar_chart::chart_with_upwards_trend:
+### [data scientist](https://github.com/avidrucker/autofocus-exp/blob/master/docs/scientist_readme.md) :bar_chart::chart_with_upwards_trend:
 
 ### [something else](https://github.com/avidrucker/autofocus-exp/blob/master/docs/contributor_readme.md) :rainbow::unicorn:
 
