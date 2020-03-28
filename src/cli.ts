@@ -285,3 +285,24 @@ export const mainCLI = ():void => {
 	
 	generalPrint("Have a nice day!");
 }
+
+const sampleOutput: string = `Welcome to AutoFocus!
+
+[1] Add New Todo
+[2] Review & Dot Todos
+[3] Enter Focus Mode
+[4] Print Todo List
+[5] Clear Dots
+[6] Read About AutoFocus
+[7] Quit Program
+
+Please choose from the menu above [1...7]: 1
+Enter todo item name (ie. wash the dishes).
+Enter 'Q' to quit: Make cup of coffee
+New todo item 'Make cup of coffee' created!
+Your list now has 1 todo item.
+`;
+
+export const printSampleOutput = () => {
+	generalPrint(sampleOutput);
+}
