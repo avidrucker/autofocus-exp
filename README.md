@@ -4,7 +4,7 @@
 
 Hi! This project tests the limits of remote team-work<sup>[[1]](#first)</sup> and to-do lists<sup>[[2]](#second)</sup>. You can [get paid](https://github.com/avidrucker/autofocus-exp/blob/master/docs/compensation_rules.md) to work on this project! Click on a role below to learn more about how you can help.
 
-![Command Line App Making First Item](assets/cla_screenshot_1.png)
+![Command Line App Making First Item](assets/cla_screenshot_2.png)
 
 
 ## Please help us :sos::wave:
