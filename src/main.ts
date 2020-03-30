@@ -1,5 +1,5 @@
-const APP_NAME = 'AutoFocus';
+const APP_NAME = "AutoFocus";
 
 export const greetUser = (word: string = APP_NAME): string => {
-	return `Welcome to ${word}!`;
-}
+  return `Welcome to ${word}!`;
+};
