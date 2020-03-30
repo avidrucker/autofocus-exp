@@ -1,6 +1,6 @@
 import { ITodoItem } from "./todoItem";
 
 export interface INumberedItem {
-	item: ITodoItem;
-	index: number;
+  item: ITodoItem;
+  index: number;
 }
