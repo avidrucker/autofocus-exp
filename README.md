@@ -27,7 +27,8 @@ You can see our full list of project tasks on our [issues board](https://github.
 ## Current Contributors :hammer_and_wrench:
 
 - [Kyle Griffin](https://github.com/kaerudesigns) designer, researcher
-- [Avi Drucker](https://github.com/avidrucker) engineer, architect, manager, researcher
+- [Ethan Weibman](http://github.com/themadarchitect) software engineer 
+- [Avi Drucker](https://github.com/avidrucker) software engineer, architect, manager, researcher
 - Your name here ...
 
 
