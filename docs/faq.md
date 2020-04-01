@@ -6,7 +6,7 @@ Q: What does CLA stand for? A: [See the glossary](https://github.com/avidrucker/
 
 Q: What is the AutoFocus algorithm? A: [See the FVP algorithm summary](https://github.com/avidrucker/autofocus-exp/blob/master/docs/algorithm.md)
 
-Q: What are the general user stories for the app? A: [See the "Quick Start" User Stories](https://github.com/avidrucker/autofocus-exp/blob/master/quick_start_user_stories.md)
+Q: What are the general user stories for the app? A: [See the User Stories List](https://github.com/avidrucker/autofocus-exp/blob/master/user_story_issues.md)
 
 Q: Is there a full example of the algorithm used in the wild? A: [Yes: See an "E2E Test" of FVP](https://github.com/avidrucker/autofocus-exp/blob/master/end-to-end-test-fvp.md)
 
