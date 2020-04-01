@@ -18,3 +18,5 @@ SSoT === Single Source of Truth
 CLA === Command Line App
 
 CLI === Command Line Interface
+
+QoL === Quality of Life
