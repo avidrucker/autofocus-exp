@@ -122,6 +122,7 @@ export const printUpdate = (todoList: ITodoItem[], cmwtd: string): void => {
 // REVIEWING
 // ****************************************
 
+// issue: Dev fixes bug where review question count & content are correct #344
 export const getReviewAnswersEpicCLI = (
   todoList: ITodoItem[],
   cmwtd: string,
@@ -129,9 +130,11 @@ export const getReviewAnswersEpicCLI = (
 ): string[] => {
   const reviewableList = getReviewableList(todoList, cmwtd, lastDone);
   if (!isEmpty(reviewableList)) {
+		// console.log('Getting numbered list...');
     return getReviewAnswersCLI(numListToTodoList(reviewableList), cmwtd);
   } else {
-    // issue: Dev inspects getReviewAnswersEpicCLI for empty string result #294
+		// issue: Dev inspects getReviewAnswersEpicCLI for empty string result #294
+		// console.log('Getting NON-numbered list...');
     return getReviewAnswersCLI(todoList, cmwtd);
   }
 };
@@ -191,10 +194,10 @@ const attemptReviewTodosCLI = (
     return [todoList, cmwtd];
   }
 
-  // issue: Dev extracts atomic section of function, tests #274
-  if (todoList.map(x => x.state).indexOf(TodoState.Marked) === -1) {
-    [todoList, cmwtd] = setupReview(todoList, cmwtd);
-  }
+  
+  //if (todoList.map(x => x.state).indexOf(TodoState.Marked) === -1) {
+  [todoList, cmwtd] = setupReview(todoList, cmwtd);
+  //}
 
   // step 0: check to see if there are any non-complete, non-archived items
   if (readyToReview(todoList)) {

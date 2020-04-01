@@ -65,6 +65,11 @@ export const getLastMarked = (todoList: ITodoItem[]): number => {
   return lastIndexOfItem(todoList, "state", TodoState.Marked);
 };
 
+// returns -1 if there are no unmarked items
+export const getLastUnmarked = (todoList: ITodoItem[]): number => {
+  return lastIndexOfItem(todoList, "state", TodoState.Unmarked);
+};
+
 export const firstReady = (todoList: ITodoItem[]): number => {
   const firstUnmarked = getFirstUnmarked(todoList);
   const firstMarked = getFirstMarked(todoList);

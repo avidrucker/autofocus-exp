@@ -21,6 +21,7 @@ describe('Simple E2E test', () => {
 				});
 
 			expect(todoList.length).equals(3);
+			expect(listToMarks(todoList)).equals("[ ] [ ] [ ]");
 		});
 
 		step('should confirm that the 1st item has been marked', () => {

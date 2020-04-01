@@ -6,28 +6,28 @@ import {
   setState,
   TodoState
 } from "./todoItem";
-import { firstReady, itemExists, numListToTodoList } from "./todoList";
+import { firstReady, itemExists, numListToTodoList, getLastMarked, getLastUnmarked, getFirstUnmarked } from "./todoList";
 import { isDefinedString, isEmpty } from "./util";
 
+export const markFirstUnmarkedIfExists = (todoList: ITodoItem[], cmwtd: string): any => {
+	if(itemExists(todoList, "state", TodoState.Unmarked) && !itemExists(todoList, "state", TodoState.Marked)) {
+		const i = getFirstUnmarked(todoList);
+		[todoList[i], cmwtd] = markItem(todoList[i], cmwtd);
+	}
+	return [todoList, cmwtd];
+}
+
 // issue: Architect decides how to manage todo items in backend #108
-// issue: Dev refactors setupReview to be modular, atomic #278
 // issue: Architect reviews for opportunity to make DRY, SOLID #299
 export const setupReview = (todoList: ITodoItem[], cmwtd: string): any => {
-  let readyTodo = -1;
-  readyTodo = firstReady(todoList); // short circuit func if 0 todos OR not ready to review
-  if (isEmpty(todoList) || readyTodo === -1) {
+	// short-circuit if the list is empty OR if there are marked items already
+  if (isEmpty(todoList) || itemExists(todoList, "state", TodoState.Marked)) {
     return [todoList, cmwtd];
   }
-  // issue: Dev confirms via test that setupReview doesn't increase dots on already dotted lists #276
-  if (readyTodo !== -1) {
-    // FVP step 1: dot the first ready todo item (the first non-complete, non-archived item)
-    todoList[readyTodo].state = TodoState.Marked;
-
-    if (cmwtd === "" || cmwtd === null) {
-      // issue: Dev confirms via test that CMWTD is initialized to last marked item #277
-      cmwtd = todoList[readyTodo].header; // CMWTD is initialized to first ready todo item if unset
-    }
-  }
+	
+	// if there are no marked items AND any unmarked items, the first unmarked item becomes marked
+	[todoList, cmwtd] = markFirstUnmarkedIfExists(todoList, cmwtd);
+  
   return [todoList, cmwtd];
 };
 
@@ -46,6 +46,7 @@ export const enhanceSliceFilter = (
 // issue: Dev writes test cases for getReviewableList #281
 // issue: Dev writes test to confirm where reviewable lists start #280
 // issue: Architect reviews for opportunity to make DRY, SOLID #299
+// issue: Dev fixes bug where review question count & content are correct #344
 export const getReviewableList = (
   todoList: ITodoItem[],
   cmwtd: string,
@@ -183,9 +184,10 @@ export const conductReviews = (
 };
 
 // ready to review (for a list) means that:
-// - there is at least 1 unmarked item AND
-// - there are multiple ready items
+// 1. there is at least 1 unmarked item AND
+// ~~there are multiple ready items~~ <-- this by itself is wrong
+// 2. If there are any marked items,
+// the list has more unmarked after the last marked item
 export const readyToReview = (todoList: ITodoItem[]): boolean =>
-  itemExists(todoList, "state", TodoState.Unmarked) &&
-  (todoList.filter(x => isReady(x)).length > 1 ||
-    itemExists(todoList, "state", TodoState.Marked));
+	itemExists(todoList, "state", TodoState.Unmarked) &&
+	!(itemExists(todoList, "state", TodoState.Marked) && getLastMarked(todoList) > getLastUnmarked(todoList));
