@@ -4,7 +4,11 @@
 
 ## Tech
 
-This app is written in the TypeScript language and is to be released as a (1) website, (2) a phone app, and (3) a command line, text-only app.
+This app is written in the TypeScript language and is to be released as:
+1. a command line, text-only app
+2. a desktop, electron app
+3. a website and web app
+4. a collaborative data science project to help people better understand their productivity
 
 ## Setup
 
