@@ -1,8 +1,8 @@
-# AutoFocus Todo List App
+# AutoFocus: A Todo-List App
 
 ![CircleCI](https://img.shields.io/circleci/build/github/avidrucker/autofocus-exp/master) ![GitHub commit activity](https://img.shields.io/github/commit-activity/m/avidrucker/autofocus-exp) ![GitHub last commit (branch)](https://img.shields.io/github/last-commit/avidrucker/autofocus-exp/master)
 
-Hi! This project tests the limits of remote team-work<sup>[[1]](#first)</sup> and to-do lists<sup>[[2]](#second)</sup>. You can [get paid](https://github.com/avidrucker/autofocus-exp/blob/master/docs/compensation_rules.md) to work on this project! Click on a role below to learn more about how you can help.
+Hi, we're building a todo list app! This project tests the limits of remote team-work<sup>[[1]](#first)</sup> and to-do lists<sup>[[2]](#second)</sup>. You can [get paid](https://github.com/avidrucker/autofocus-exp/blob/master/docs/compensation_rules.md) to work on this project. Click on a role below to learn more about how you can help.
 
 ![Command Line App Making First Item](assets/cla_screenshot_2.png)
 
