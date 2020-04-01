@@ -7,4 +7,4 @@
 5. body text (optional)
 6. and a current state enumerator*
 
-*see current state enumerator supplemental document: [link pending]
+*see [current state enumerator supplemental document](https://github.com/avidrucker/autofocus-exp/blob/master/docs/current_state_enum.md)

@@ -1,4 +1,4 @@
-This document highlights both the [original description](http://markforster.squarespace.com/autofocus-system/) of the AutoFocus algorithm (see "Quick Start") as well as the software architect's breakdown of the formula (see "Technical Manual").
+This document highlights both the [original description](http://markforster.squarespace.com/autofocus-system/) of the AutoFocus "FVP" algorithm (see "Quick Start") as well as the software architect's breakdown of the formula (see "Technical Manual").
 
 ## Quick Start (high level overview)
 
