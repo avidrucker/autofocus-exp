@@ -12,7 +12,12 @@ export const indexOfItem = (list: any[], attr: any, val: any): number => {
   return list.map(e => e[attr]).indexOf(val);
 };
 
-export const indexOfItemAfter = (list: any[], attr: any, val: any, from: number): number => {
+export const indexOfItemAfter = (
+  list: any[],
+  attr: any,
+  val: any,
+  from: number
+): number => {
   return list.map(e => e[attr]).indexOf(val, from);
 };
 

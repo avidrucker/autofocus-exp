@@ -14,7 +14,7 @@ export const conductFocus = (
   const workLeft: string = response.workLeft; // this will be either 'y' or 'n'
   if (workLeft === "y") {
     todoList = duplicateLastMarked(todoList);
-	}
+  }
   [todoList, lastDone] = markLastMarkedComplete(todoList, lastDone);
   return [todoList, lastDone];
 };
@@ -25,7 +25,7 @@ export const markLastMarkedComplete = (
 ): any => {
   lastDone = getCMWTD(todoList); // 1. update last done
   todoList[getLastMarked(todoList)].state = TodoState.Completed; // 2. set it to completed
-	return [todoList, lastDone];
+  return [todoList, lastDone];
 };
 
 export const duplicateLastMarked = (todoList: ITodoItem[]): any => {

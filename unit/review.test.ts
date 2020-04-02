@@ -67,7 +67,7 @@ describe("REVIEW MODE UNIT TESTS", () => {
       let todoList: ITodoItem[] = makeNItemArray(3);
       let lastDone = "";
       todoList[0].state = TodoState.Completed;
-			lastDone = todoList[0].header;
+      lastDone = todoList[0].header;
       todoList = setupReview(todoList);
       expect(getCMWTD(todoList)).equals(FRUITS[1]);
       expect(listToMarks(todoList)).equals("[x] [o] [ ]");
@@ -105,16 +105,18 @@ describe("REVIEW MODE UNIT TESTS", () => {
       expect(listToMarks(todoList)).equals("[x] [o] [ ]");
       expect(readyToReview(todoList)).equals(true);
     });
-	});
-	
-	describe('Determining the last done index', () => {
-		it('gets the correct index as last done', () => {
-			let todoList: ITodoItem[] = makeNItemArray(3);
-			let lastDone = "";
-			todoList = setupReview(todoList);
-			[todoList, lastDone] = conductFocus(todoList, lastDone, {workLeft:'n'});
-			expect(getLastDoneIndex(todoList, lastDone)).equals(0);
-			expect(listToMarks(todoList)).equals("[x] [ ] [ ]");
-		})
-	})
+  });
+
+  describe("Determining the last done index", () => {
+    it("gets the correct index as last done", () => {
+      let todoList: ITodoItem[] = makeNItemArray(3);
+      let lastDone = "";
+      todoList = setupReview(todoList);
+      [todoList, lastDone] = conductFocus(todoList, lastDone, {
+        workLeft: "n"
+      });
+      expect(getLastDoneIndex(todoList, lastDone)).equals(0);
+      expect(listToMarks(todoList)).equals("[x] [ ] [ ]");
+    });
+  });
 });

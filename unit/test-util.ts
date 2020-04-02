@@ -9,7 +9,13 @@ import {
 import { addTodoToList, getCMWTD } from "../src/todoList";
 
 // test constants
-export const FRUITS = ["apple", "banana", "cherry", "dragonfruit", "elderberry"];
+export const FRUITS = [
+  "apple",
+  "banana",
+  "cherry",
+  "dragonfruit",
+  "elderberry"
+];
 
 export const expectOneMarkedApple = (todoList: ITodoItem[]): void => {
   expect(todoList.length).equals(1);

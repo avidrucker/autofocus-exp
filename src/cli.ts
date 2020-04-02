@@ -5,9 +5,9 @@ import { greetUser } from "./main";
 import {
   readyToReview,
   setupReview,
-	determineReviewStart,
-	numberAndSlice,
-	conductReviewNum
+  determineReviewStart,
+  numberAndSlice,
+  conductReviewNum
 } from "./review";
 import { constructNewTodoItem, ITodoItem, TodoState } from "./todoItem";
 import {
@@ -124,13 +124,19 @@ export const printUpdate = (todoList: ITodoItem[]): void => {
 // REVIEWING
 // ****************************************
 
-export const conductAllReviewsCLI = (todoList: ITodoItem[], lastDone: string): any => {
-	const reviewStart = determineReviewStart(todoList, lastDone);
-	let subsetList: INumberedItem[] = numberAndSlice(todoList, reviewStart);
-	let reviewables = subsetList.filter(x => 
-		x['item']['state'] === TodoState.Unmarked);
-	let cmwtd = getCMWTD(todoList);
-	reviewables = reviewables.map((x) => conductReviewNum(x, getAnswer(cmwtd, x.item.header)));
+export const conductAllReviewsCLI = (
+  todoList: ITodoItem[],
+  lastDone: string
+): any => {
+  const reviewStart = determineReviewStart(todoList, lastDone);
+  let subsetList: INumberedItem[] = numberAndSlice(todoList, reviewStart);
+  let reviewables = subsetList.filter(
+    x => x["item"]["state"] === TodoState.Unmarked
+  );
+  let cmwtd = getCMWTD(todoList);
+  reviewables = reviewables.map(x =>
+    conductReviewNum(x, getAnswer(cmwtd, x.item.header))
+  );
 };
 
 export const getAnswer = (a: string, b: string): string => {
@@ -143,7 +149,7 @@ const printReviewSetupMessage = (todoList: ITodoItem[]): void => {
     generalPrint(
       "There are no items to review. Please enter mores items and try again."
     );
-  } else if (!itemExists(todoList, 'state', TodoState.Unmarked)) {
+  } else if (!itemExists(todoList, "state", TodoState.Unmarked)) {
     generalPrint(
       "There are no items left to dot. Please enter more items and try again."
     );
@@ -153,12 +159,15 @@ const printReviewSetupMessage = (todoList: ITodoItem[]): void => {
 };
 
 // issue: Architect reviews for opportunity to make DRY, SOLID #299
-const attemptReviewTodosCLI = (todoList: ITodoItem[],lastDone: string): any => {
+const attemptReviewTodosCLI = (
+  todoList: ITodoItem[],
+  lastDone: string
+): any => {
   if (isEmpty(todoList)) {
     return todoList;
-	}
+  }
   todoList = setupReview(todoList);
-	printReviewSetupMessage(todoList);
+  printReviewSetupMessage(todoList);
 
   // step 0: check to see if there are any non-complete, non-archived items
   if (readyToReview(todoList)) {
