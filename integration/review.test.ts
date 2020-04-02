@@ -2,7 +2,7 @@ import { expect } from 'chai';
 import { step } from 'mocha-steps';
 
 import { conductFocus } from '../src/focus';
-import { conductReviewsEpic, setupReview } from '../src/review';
+import { setupReview, conductAllReviews } from '../src/review';
 import { constructNewTodoItem, ITodoItem, TodoState } from '../src/todoItem';
 import { addTodoToList, listToMarks, getCMWTD } from '../src/todoList';
 import { expectOneMarkedApple, FRUITS, makeNItemArray, markAllAs } from '../unit/test-util';
@@ -14,7 +14,7 @@ describe('REVIEW MODE INTEGRATION TESTS', ()=> {
 			let todoList: ITodoItem[] = [];
 			const lastDone = "";
 			todoList = setupReview(todoList); // "There are no todo items."
-			todoList = conductReviewsEpic(todoList, lastDone, []); // "There are no todo items."
+			todoList = conductAllReviews(todoList, lastDone, []); // "There are no todo items."
 			expect(todoList.length).equals(0);
 			expect(getCMWTD(todoList)).equals("");
 		})
@@ -34,7 +34,6 @@ describe('REVIEW MODE INTEGRATION TESTS', ()=> {
 		it('returns list with unmarked item marked',()=>{
 			// make a list with one unmarked item
 			let todoList: ITodoItem[] = makeNItemArray(1);
-			
 			todoList = setupReview(todoList);
 			expectOneMarkedApple(todoList);
 		})
@@ -47,7 +46,7 @@ describe('REVIEW MODE INTEGRATION TESTS', ()=> {
 			
 			const lastDone = "";
 			todoList = setupReview(todoList); // "There are no ready items."
-			todoList = conductReviewsEpic(todoList, lastDone, ['y']); // "There are no ready items."
+			todoList = conductAllReviews(todoList, lastDone, ['y']); // "There are no ready items."
 			expect(todoList.length).equals(2);
 			expect(getCMWTD(todoList)).equals(FRUITS[1]);
 		})
@@ -60,7 +59,7 @@ describe('REVIEW MODE INTEGRATION TESTS', ()=> {
 			todoList = markAllAs(todoList, TodoState.Marked);
 			const lastDone = "";
 			todoList = setupReview(todoList); // "There are no ready items."
-			todoList = conductReviewsEpic(todoList, lastDone, []); // "There are no ready items."
+			todoList = conductAllReviews(todoList, lastDone, []); // "There are no ready items."
 			expect(todoList.length).equals(2);
 			expect(getCMWTD(todoList)).equals(FRUITS[1]);
 		})
@@ -69,7 +68,6 @@ describe('REVIEW MODE INTEGRATION TESTS', ()=> {
 		it('returns list as-is when first non-complete, non-archived item is marked',()=>{
 			// returns back first non-complete, non-archived "ready" item as marked
 			let todoList: ITodoItem[] = makeNItemArray(2);
-			
 			todoList = setupReview(todoList); // intentional double invocation
 			todoList = setupReview(todoList); // intentional double invocation
 			expect(todoList[0].state).equals(TodoState.Marked);
@@ -109,7 +107,7 @@ describe('REVIEW MODE INTEGRATION TESTS', ()=> {
 			todoList[0].state = TodoState.Completed;
 			todoList[1].state = TodoState.Completed;
 			todoList = setupReview(todoList); // "There are no ready items."
-			todoList = conductReviewsEpic(todoList, lastDone, []); // "There are no ready items."
+			todoList = conductAllReviews(todoList, lastDone, []); // "There are no ready items."
 			expect(todoList.length).equals(2);
 			expect(getCMWTD(todoList)).equals("");
 		});
@@ -119,7 +117,7 @@ describe('REVIEW MODE INTEGRATION TESTS', ()=> {
 			
 			const lastDone = "";
 			todoList = setupReview(todoList);
-			todoList = conductReviewsEpic(todoList, lastDone, ['n', 'y']);
+			todoList = conductAllReviews(todoList, lastDone, ['n', 'y']);
 			expect(getCMWTD(todoList)).equals(FRUITS[2]);
 			expect(listToMarks(todoList)).equals("[o] [ ] [o]");
 		});
@@ -128,43 +126,47 @@ describe('REVIEW MODE INTEGRATION TESTS', ()=> {
 			let todoList: ITodoItem[] = makeNItemArray(3);
 			const lastDone = "";
 			todoList = setupReview(todoList);
-			todoList = conductReviewsEpic(todoList, lastDone, ['n', 'n']);
+			todoList = conductAllReviews(todoList, lastDone, ['n', 'n']);
 			expect(getCMWTD(todoList)).equals(FRUITS[0]);
 			expect(listToMarks(todoList)).equals("[o] [ ] [ ]");
 		});
 
-		// issue: Dev refactors "review from lastDone if set" case into suite #290
-		it('reviews from lastDone if set', () => {
-			let todoList: ITodoItem[] = makeNItemArray(5);
-			let lastDone: string = "";
-			todoList = setupReview(todoList);
-			todoList = conductReviewsEpic(todoList, lastDone, ['n','y','n','n']);
-			[todoList, lastDone ] = conductFocus(todoList, lastDone, {workLeft: 'n'});
-			// expect(listToMarks(todoList)).equals("[o] [ ] [x] [ ] [ ]");
-			// expect(getCMWTD(todoList)).equals(todoList[0].header);
-			todoList = conductReviewsEpic(todoList, lastDone, ['n', 'y']);
-			expect(listToMarks(todoList)).equals("[o] [ ] [x] [ ] [o]");
-		})
-
 		it('reviews from last marked (CMWTD) if lastDone is not set', () => {
 			let todoList: ITodoItem[] = makeNItemArray(3);
-			
 			const lastDone = "";
 			todoList = setupReview(todoList);
-			todoList = conductReviewsEpic(todoList, lastDone, ['n','y']);
+			todoList = conductAllReviews(todoList, lastDone, ['n','y']);
 			expect(listToMarks(todoList)).equals("[o] [ ] [o]");
 		})
 
 		it('reviews from first unmarked if CMWTD is not set', () => {
 			let todoList: ITodoItem[] = makeNItemArray(3);
-			
 			let lastDone: string = "";
 			todoList = setupReview(todoList);
 			[todoList, lastDone ] = conductFocus(todoList, lastDone, {workLeft: 'n'});
-			todoList = conductReviewsEpic(todoList, lastDone, ['y','y']);
+			todoList = setupReview(todoList);
+			todoList = conductAllReviews(todoList, lastDone, ['y']);
 			expect(listToMarks(todoList)).equals("[x] [o] [o]");
 		})
 	});
+
+	// issue: Dev refactors "review from lastDone if set" case into suite #290
+	describe('reviews from lastDone if set', () => {
+		let todoList: ITodoItem[] = makeNItemArray(5);
+		let lastDone: string = "";
+		step('should allow correct first review and focus', () => {
+			todoList = setupReview(todoList);
+			todoList = conductAllReviews(todoList, lastDone, ['n','y','n','n']);
+			[todoList, lastDone ] = conductFocus(todoList, lastDone, {workLeft: 'n'});
+			expect(listToMarks(todoList)).equals("[o] [ ] [x] [ ] [ ]");
+			expect(getCMWTD(todoList)).equals(todoList[0].header);
+		})
+		
+		step('should allow correct 2nd review', () => {
+			todoList = conductAllReviews(todoList, lastDone, ['n', 'y']);
+			expect(listToMarks(todoList)).equals("[o] [ ] [x] [ ] [o]");
+		})
+	})
 
 	// formerly "Second mini E2E test"
 	describe('integration test of review completion', () => {
@@ -191,7 +193,7 @@ describe('REVIEW MODE INTEGRATION TESTS', ()=> {
 
 			step('should re-confirm 1 item have been marked', () => {
 				const answers001 = ['y'];
-				todoList = conductReviewsEpic(todoList, lastDone, answers001);
+				todoList = conductAllReviews(todoList, lastDone, answers001);
 				expect(listToMarks(todoList)).equals("[o] [o]");
 			});
 
@@ -224,7 +226,7 @@ describe('REVIEW MODE INTEGRATION TESTS', ()=> {
 			todoList[2].state = TodoState.Completed;
 			todoList[4].state = TodoState.Completed;
 			todoList = setupReview(todoList);
-			todoList = conductReviewsEpic(todoList, lastDone, ['y']);
+			todoList = conductAllReviews(todoList, lastDone, ['y']);
 			expect(listToMarks(todoList)).equals("[x] [o] [x] [o] [x]");
 		});
 	});

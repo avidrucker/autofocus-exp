@@ -2,7 +2,7 @@ import { expect } from 'chai';
 import { step } from 'mocha-steps';
 
 import { conductFocus } from '../src/focus';
-import { conductReviewsEpic, setupReview } from '../src/review';
+import { setupReview, conductAllReviews } from '../src/review';
 import { constructNewTodoItem, ITodoItem, TodoState } from '../src/todoItem';
 import { addTodoToList, listToMarks, getCMWTD } from '../src/todoList';
 
@@ -30,7 +30,7 @@ describe('Simple E2E test', () => {
 
 		step('should confirm 3 items have been marked', () => {
 			const answers001 = ['y','y'];
-			todoList = conductReviewsEpic(todoList, lastDone, answers001);
+			todoList = conductAllReviews(todoList, lastDone, answers001);
 			expect(listToMarks(todoList)).equals("[o] [o] [o]");
 		});
 
@@ -82,7 +82,7 @@ describe('Long E2E test', () => {
 		// review items, saying yes only for 3rd & 5th items
 		step('should confirm 3 items have been marked', () => {
 			const answers001 = ['n','y','n','y','q'];
-			todoList = conductReviewsEpic(todoList, lastDone, answers001);
+			todoList = conductAllReviews(todoList, lastDone, answers001);
 			expect(listToMarks(todoList)).equals(
 				"[o] [ ] [o] [ ] [o] [ ] [ ] [ ] [ ] [ ]");
 		});
@@ -118,7 +118,7 @@ describe('Long E2E test', () => {
 		// but, still, it is useful to test in situations such as this
 		step('should confirm review-then-quit leaves list as-is', () => {
 			const answer = ['q']; // immediately quitting, w/ no 'y' or 'n' answers
-			todoList = conductReviewsEpic(todoList, lastDone, answer);
+			todoList = conductAllReviews(todoList, lastDone, answer);
 			expect(listToMarks(todoList)).equals(
 				"[o] [ ] [o] [ ] [x] [ ] [ ] [ ] [ ] [ ]");
 		});
@@ -129,7 +129,7 @@ describe('Long E2E test', () => {
 		// review items, saying yes only to last item (in this review it will be the 5th)
 		step('should confirm 3 specific items have been marked', () => {
 			const answers002 = ['n','n','n','n','y'];
-			todoList = conductReviewsEpic(todoList, lastDone, answers002);
+			todoList = conductAllReviews(todoList, lastDone, answers002);
 			expect(listToMarks(todoList)).equals(
 				"[o] [ ] [o] [ ] [x] [ ] [ ] [ ] [ ] [o]");
 		});
@@ -159,7 +159,7 @@ describe('Long E2E test', () => {
 		// "You decide you want to do Make Dental Appointment"
 		step('should confirm 3 specific items have been marked', () => {
 			const answers003 = ['n','n','y','n','y'];
-			todoList = conductReviewsEpic(todoList, lastDone, answers003);
+			todoList = conductAllReviews(todoList, lastDone, answers003);
 			expect(listToMarks(todoList)).equals(
 				"[o] [ ] [x] [ ] [x] [ ] [o] [ ] [o] [x]");
 		});

@@ -2,7 +2,7 @@ import { expect } from 'chai';
 import { step } from 'mocha-steps';
 
 import { conductFocus } from '../src/focus';
-import { conductReviewsEpic, setupReview } from '../src/review';
+import { setupReview, conductAllReviews } from '../src/review';
 import { constructNewTodoItem, ITodoItem, TodoState } from '../src/todoItem';
 import { addTodoToList, getLastMarked, listToMarks, getCMWTD } from '../src/todoList';
 import { FRUITS, makeNItemArray, markAllAs } from '../unit/test-util';
@@ -105,7 +105,7 @@ describe('FOCUS MODE INTEGRATION TESTS', ()=> {
 
 			step('should re-confirm 1 item have been marked', () => {
 				const answers001 = [''];
-				todoList = conductReviewsEpic(todoList, lastDone, answers001);
+				todoList = conductAllReviews(todoList, lastDone, answers001);
 				expect(listToMarks(todoList)).equals("[o]");
 			});
 
