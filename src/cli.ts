@@ -16,7 +16,7 @@ import {
   undotAll,
   itemExists,
   getCMWTD,
-	indexOfItem
+  indexOfItem
 } from "./todoList";
 import { getPluralS, isEmpty } from "./util";
 import { INumberedItem } from "./numberedItem";
@@ -135,13 +135,13 @@ export const conductAllReviewsCLI = (
     x => x["item"]["state"] === TodoState.Unmarked
   );
   let cmwtd = getCMWTD(todoList);
-	
-	// CLI SPECIFIC CONDUCTING REVIEWS
-	reviewables = reviewables.map(x =>
+
+  // CLI SPECIFIC CONDUCTING REVIEWS
+  reviewables = reviewables.map(x =>
     conductReviewNum(x, getAnswer(cmwtd, x.item.header))
-	);
-	
-	for (let i = 0; i < reviewables.length; i++) {
+  );
+
+  for (let i = 0; i < reviewables.length; i++) {
     // find item with index of  in subset list
     // if(indexOfItem(subsetList, 'index', reviewables[i].index) !== -1) // guard in-case
     subsetList[indexOfItem(subsetList, "index", reviewables[i].index)] =
