@@ -60,7 +60,8 @@
   },
   "husky": {
     "hooks": {
-      "pre-push": "CI=true npm run-script build-lint-and-test"
+			"pre-push": "CI=true npm run-script build-lint-and-test",
+			"pre-commit": "CI=true npm run-script lint"
     }
   }
 }
