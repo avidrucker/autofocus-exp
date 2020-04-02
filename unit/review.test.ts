@@ -1,6 +1,11 @@
 import { expect } from "chai";
 
-import { readyToReview, setupReview, getLastDoneIndex } from "../src/review";
+import {
+  readyToReview,
+  setupReview,
+  getLastDoneIndex,
+  determineReviewStart
+} from "../src/review";
 import { ITodoItem, TodoState } from "../src/todoItem";
 import { getFirstUnmarked, listToMarks, getCMWTD } from "../src/todoList";
 import { FRUITS, makeNItemArray, markAllAs } from "./test-util";
@@ -117,6 +122,21 @@ describe("REVIEW MODE UNIT TESTS", () => {
       });
       expect(getLastDoneIndex(todoList, lastDone)).equals(0);
       expect(listToMarks(todoList)).equals("[x] [ ] [ ]");
+    });
+  });
+
+  describe("Determining where reviews start", () => {
+    it("should return index 2 on list with `[x] [o] [ ]` state", () => {
+      let todoList: ITodoItem[] = makeNItemArray(3);
+      let lastDone: string = "";
+      todoList = setupReview(todoList); // mark the first item
+      // todoList = conductAllReviews(todoList, lastDone, ['q']); // effectively not necessary for this test, but left in for demo purposes
+      [todoList, lastDone] = conductFocus(todoList, lastDone, {
+        workLeft: "n"
+      });
+      todoList = setupReview(todoList); // mark the second item now
+      expect(determineReviewStart(todoList, lastDone)).equals(2);
+      expect(listToMarks(todoList)).equals("[x] [o] [ ]");
     });
   });
 });

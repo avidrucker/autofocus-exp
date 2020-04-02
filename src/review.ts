@@ -72,6 +72,7 @@ const getNextItemOfStateAfterIndex = (
   return indexOfItemAfter(todoList, "state", state, i);
 };
 
+// currently this code is declarative/imperative, todo: let's make it into FP style
 export const determineReviewStart = (
   todoList: ITodoItem[],
   lastDone: string
@@ -110,6 +111,7 @@ export const numberAndSlice = (
   return todoList.map((x, i) => ({ item: x, index: i })).slice(reviewStart);
 };
 
+// todo: consider a sample list `[x] [o] [ ]`
 export const conductAllReviews = (
   todoList: ITodoItem[],
   lastDone: string,
