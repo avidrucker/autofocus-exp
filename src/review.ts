@@ -6,29 +6,29 @@ import {
   setState,
   TodoState
 } from "./todoItem";
-import { firstReady, itemExists, numListToTodoList, getLastMarked, getLastUnmarked, getFirstUnmarked } from "./todoList";
+import { itemExists, numListToTodoList, getLastMarked, getLastUnmarked, getFirstUnmarked } from "./todoList";
 import { isDefinedString, isEmpty } from "./util";
 
-export const markFirstUnmarkedIfExists = (todoList: ITodoItem[], cmwtd: string): any => {
+export const markFirstUnmarkedIfExists = (todoList: ITodoItem[]): any => {
 	if(itemExists(todoList, "state", TodoState.Unmarked) && !itemExists(todoList, "state", TodoState.Marked)) {
 		const i = getFirstUnmarked(todoList);
-		[todoList[i], cmwtd] = markItem(todoList[i], cmwtd);
+		todoList[i] = markItem(todoList[i]);
 	}
-	return [todoList, cmwtd];
+	return todoList;
 }
 
 // issue: Architect decides how to manage todo items in backend #108
 // issue: Architect reviews for opportunity to make DRY, SOLID #299
-export const setupReview = (todoList: ITodoItem[], cmwtd: string): any => {
+export const setupReview = (todoList: ITodoItem[]): any => {
 	// short-circuit if the list is empty OR if there are marked items already
   if (isEmpty(todoList) || itemExists(todoList, "state", TodoState.Marked)) {
-    return [todoList, cmwtd];
+    return todoList;
   }
 	
 	// if there are no marked items AND any unmarked items, the first unmarked item becomes marked
-	[todoList, cmwtd] = markFirstUnmarkedIfExists(todoList, cmwtd);
+	todoList = markFirstUnmarkedIfExists(todoList);
   
-  return [todoList, cmwtd];
+  return todoList;
 };
 
 // add original index, chop off at reviewable
@@ -49,15 +49,14 @@ export const enhanceSliceFilter = (
 // issue: Dev fixes bug where review question count & content are correct #344
 export const getReviewableList = (
   todoList: ITodoItem[],
-  cmwtd: string,
   lastDone: string
 ): INumberedItem[] => {
   let firstIndex = 0;
   if (isDefinedString(lastDone)) {
     // issue: Dev implements UUID #279
     firstIndex = todoList.map(x => x.header).indexOf(lastDone); // issue: Dev writes tests to confirm that unique todos (via UUID) work as expected #285
-  } else if (isDefinedString(cmwtd)) {
-    firstIndex = todoList.map(x => x.header).indexOf(cmwtd); // issue: Dev writes tests to confirm that unique todos (via UUID) work as expected #285
+  } else if (itemExists(todoList, "state", TodoState.Marked)) {
+    firstIndex = getLastMarked(todoList); // issue: Dev writes tests to confirm that unique todos (via UUID) work as expected #285
   } else {
     firstIndex = todoList.map(x => x.state).indexOf(TodoState.Unmarked);
   }
@@ -70,15 +69,14 @@ export const getReviewableList = (
 // issue: Dev refactors to remove getNonReviewableList #295
 export const getNonReviewableList = (
   todoList: ITodoItem[],
-  cmwtd: string,
   lastDone: string
 ): ITodoItem[] => {
   let firstIndex = 0;
   if (isDefinedString(lastDone)) {
     // issue: Dev implements UUID #279
     firstIndex = todoList.map(x => x.header).indexOf(lastDone);
-  } else if (isDefinedString(cmwtd)) {
-    firstIndex = todoList.map(x => x.header).indexOf(cmwtd);
+  } else if (itemExists(todoList, "state", TodoState.Marked)) {
+    firstIndex = getLastMarked(todoList);
   } else {
     firstIndex = todoList.map(x => x.state).indexOf(TodoState.Unmarked);
   }
@@ -92,24 +90,22 @@ export const getNonReviewableList = (
 // issue: Dev assess reviewAndRebuild to refactor, make DRY, SOLID #297
 export const reviewAndRebuild = (
   todoList: ITodoItem[],
-  cmwtd: string,
   lastDone: string,
   answers: string[]
 ): any => {
-  const reviewableList = getReviewableList(todoList, cmwtd, lastDone);
-  const nonReviewableList = getNonReviewableList(todoList, cmwtd, lastDone); // issue: Dev refactors to remove getNonReviewableList #295
+  const reviewableList = getReviewableList(todoList, lastDone);
+  const nonReviewableList = getNonReviewableList(todoList, lastDone); // issue: Dev refactors to remove getNonReviewableList #295
   let tempReviewedList = [];
-  let tempCmwtd = "";
-  [tempReviewedList, tempCmwtd] = conductReviews(
+  tempReviewedList = conductReviews(
     numListToTodoList(reviewableList),
-    cmwtd,
     answers
   );
   const reviewedListReverse: ITodoItem[] = JSON.parse(
     JSON.stringify(tempReviewedList)
   ).reverse();
   let newList: ITodoItem[] = [];
-  newList = newList.concat(nonReviewableList);
+	newList = newList.concat(nonReviewableList);
+	// todo: refactor out for loop
   for (let i = nonReviewableList.length; i < todoList.length; i++) {
     if (todoList[i].state === TodoState.Completed) {
       // console.log(`${todoList[i].header} is COMPLETE, leaving as is`);
@@ -121,8 +117,8 @@ export const reviewAndRebuild = (
       newList.push(reviewedListReverse.pop()!);
     }
   }
-  [todoList, cmwtd] = [JSON.parse(JSON.stringify(newList)), tempCmwtd];
-  return [todoList, cmwtd];
+  todoList = JSON.parse(JSON.stringify(newList));
+  return todoList;
 };
 
 // breaks down functionality of conduct reviews epic (working title)
@@ -130,57 +126,55 @@ export const reviewAndRebuild = (
 // to stitch back up the entire todo item list after reviewing
 export const conductReviewsEpic = (
   todoList: ITodoItem[],
-  cmwtd: string,
   lastDone: string,
   answers: string[]
 ): any => {
-  const reviewableList = getReviewableList(todoList, cmwtd, lastDone);
+  const reviewableList = getReviewableList(todoList, lastDone);
   if (isEmpty(todoList) || isEmpty(reviewableList)) {
-    return [todoList, cmwtd]; // short circuit when no items are reviewable
+    return todoList; // short circuit when no items are reviewable
   }
   if (!isEmpty(reviewableList)) {
-    return reviewAndRebuild(todoList, cmwtd, lastDone, answers);
+    return reviewAndRebuild(todoList, lastDone, answers);
   }
   if (!isEmpty(todoList)) {
-    return conductReviews(todoList, cmwtd, answers);
+    return conductReviews(todoList, answers);
   }
 };
 
-const markItem = (i: ITodoItem, cmwtd: string): any => {
+// issue: Architect decides how to manage todo items in backend #108
+const markItem = (i: ITodoItem): ITodoItem => {
   i = setState(i, TodoState.Marked);
-  cmwtd = i.header; // issue: Architect decides how to manage todo items in backend #108
-  return [i, cmwtd];
+  return i;
 };
 
+// todo: refactor to increase readability, consider FP approach
 export const applyAnswers = (
   todoList: ITodoItem[],
-  cmwtd: string,
   answers: string[]
 ): any => {
   todoList.map((x, i) =>
     answers[i] === "y"
-      ? ([todoList[i], cmwtd] = markItem(x, cmwtd))
-      : ([todoList[i], cmwtd] = [todoList[i], cmwtd])
+      ? (todoList[i] = markItem(x))
+      : (todoList[i] = todoList[i])
   );
 
-  return [todoList, cmwtd];
+  return todoList;
 };
 
 // issue: Dev writes test cases for conductReviews #282
 // issue: Dev refactors conductReviews #215
 export const conductReviews = (
   todoList: ITodoItem[],
-  cmwtd: string,
   answers: string[]
 ): any => {
   if (isEmpty(todoList)) {
-    return [todoList, cmwtd];
+    return todoList;
   }
 
   // FVP step 2: user story: User is asked to answer yes, no, or quit per review item #170
-  [todoList, cmwtd] = applyAnswers(todoList, cmwtd, answers);
+  todoList = applyAnswers(todoList, answers);
 
-  return [todoList, cmwtd];
+  return todoList;
 };
 
 // ready to review (for a list) means that:

@@ -1,62 +1,49 @@
 import { constructNewTodoItem, ITodoItem, TodoState } from "./todoItem";
-import { getLastMarked, itemExists } from "./todoList";
+import { getLastMarked, itemExists, getCMWTD } from "./todoList";
 import { isEmpty } from "./util";
 
 export const conductFocus = (
   todoList: ITodoItem[],
-  cmwtd: string,
   lastDone: string,
   response: any
 ): any => {
   // return w/o affecting state if focus mode cannot be entered
-  if (isEmpty(todoList) || cmwtd === "") {
-    return [todoList, cmwtd, lastDone];
+  if (isEmpty(todoList) || !itemExists(todoList, "state", TodoState.Marked)) {
+    return [todoList, lastDone];
   }
   const workLeft: string = response.workLeft; // this will be either 'y' or 'n'
   if (workLeft === "y") {
-    [todoList, cmwtd] = duplicateCMWTD(todoList, cmwtd);
+    todoList = duplicateLastMarked(todoList);
   }
-  [todoList, cmwtd, lastDone] = markCMWTDdone(todoList, cmwtd, lastDone);
-  return [todoList, cmwtd, lastDone];
+  [todoList, lastDone] = markLastMarkedComplete(todoList, lastDone);
+  return [todoList, lastDone];
 };
 
-export const markCMWTDdone = (
+export const markLastMarkedComplete = (
   todoList: ITodoItem[],
-  cmwtd: string,
   lastDone: string
 ): any => {
-  const lastMarked = getLastMarked(todoList); // 1. find last marked item (this should match cmwtd)
-  todoList[lastMarked].state = TodoState.Completed; // 2. set it to completed
-  [todoList, cmwtd, lastDone] = updateCMWTD(todoList, cmwtd, lastDone); // 3. update cmwtd
-  return [todoList, cmwtd, lastDone];
+	[todoList, lastDone] = updateLastDone(todoList, lastDone); // 2. update last done
+  todoList[getLastMarked(todoList)].state = TodoState.Completed; // 3. set it to completed
+  return [todoList, lastDone];
 };
 
-export const duplicateCMWTD = (todoList: ITodoItem[], cmwtd: string): any => {
-  const newItem: ITodoItem = constructNewTodoItem(cmwtd, "");
+export const duplicateLastMarked = (todoList: ITodoItem[]): any => {
+  const newItem: ITodoItem = constructNewTodoItem(getCMWTD(todoList), "");
   todoList.push(newItem);
-  return [todoList, cmwtd];
+  return todoList;
 };
 
-// issue: Dev resolves bug where completed todo items leave stale CMWTD #218, needs testing
-export const updateCMWTD = (
+// todo: merge back into parent function, since it is only use in one place
+export const updateLastDone = (
   todoList: ITodoItem[],
-  cmwtd: string,
   lastDone: string
 ): any => {
-  const lastIndex = getLastMarked(todoList);
-  if (lastIndex !== -1) {
-    // issue: Dev refactors code to be more DRY #286
-    lastDone = String(cmwtd);
-    cmwtd = todoList[lastIndex].header;
-  } else {
-    // issue: Dev refactors code to be more DRY #286
-    lastDone = String(cmwtd);
-    cmwtd = ""; // resets CMWTD
-  }
-  return [todoList, cmwtd, lastDone];
+  lastDone = getCMWTD(todoList);
+  return [todoList, lastDone];
 };
 
 // issue: Architect determines whether to use readyToFocus() #275
-export const readyToFocus = (todoList: ITodoItem[], cmwtd: string): boolean => {
-  return cmwtd !== "" && itemExists(todoList, "state", TodoState.Marked);
+export const readyToFocus = (todoList: ITodoItem[]): boolean => {
+  return itemExists(todoList, "state", TodoState.Marked);
 };

@@ -14,7 +14,10 @@ import {
   firstReady,
   makePrintableTodoItemList,
   numListToTodoList,
-  undotAll
+  undotAll,
+	itemExists,
+	getLastMarked,
+	getCMWTD
 } from "./todoList";
 import { getPluralS, isEmpty } from "./util";
 
@@ -103,11 +106,11 @@ const printTodoItemList = (list: ITodoItem[]): void => {
 };
 
 // issue: Architect reviews for opportunity to make DRY, SOLID #299
-export const printUpdate = (todoList: ITodoItem[], cmwtd: string): void => {
-  if (cmwtd === "" || cmwtd === null) {
+export const printUpdate = (todoList: ITodoItem[]): void => {
+  if (!itemExists(todoList, "state", TodoState.Marked)) {
     generalPrint(`Your CMWTD is currently set to nothing.`);
   } else {
-    generalPrint(`Your CMWTD is '${cmwtd}'.`);
+    generalPrint(`Your CMWTD is '${getLastMarked(todoList)}'.`);
   }
 
   if (isEmpty(todoList)) {
@@ -125,17 +128,16 @@ export const printUpdate = (todoList: ITodoItem[], cmwtd: string): void => {
 // issue: Dev fixes bug where review question count & content are correct #344
 export const getReviewAnswersEpicCLI = (
   todoList: ITodoItem[],
-  cmwtd: string,
   lastDone: string
 ): string[] => {
-  const reviewableList = getReviewableList(todoList, cmwtd, lastDone);
+  const reviewableList = getReviewableList(todoList, lastDone);
   if (!isEmpty(reviewableList)) {
 		// console.log('Getting numbered list...');
-    return getReviewAnswersCLI(numListToTodoList(reviewableList), cmwtd);
+    return getReviewAnswersCLI(numListToTodoList(reviewableList));
   } else {
 		// issue: Dev inspects getReviewAnswersEpicCLI for empty string result #294
 		// console.log('Getting NON-numbered list...');
-    return getReviewAnswersCLI(todoList, cmwtd);
+    return getReviewAnswersCLI(todoList);
   }
 };
 
@@ -144,18 +146,15 @@ export const getAnswer = (x: string, y: string) => {
 };
 
 // issue: Architect reviews for opportunity to make DRY, SOLID #299
-// issue: Dev refactors getReviewAnswersCLI #216
+// issue: Dev refactors getReviewAnswersCLI #216 // todo: modify issue #216 to use FP approach 
 export const getReviewAnswersCLI = (
-  todoList: ITodoItem[],
-  cmwtd: string
+  todoList: ITodoItem[]
 ): string[] => {
   const answers: string[] = [];
-  let midCmwtd = String(cmwtd);
   for (const x of todoList) {
-    const ans = getAnswer(x.header, midCmwtd);
+    const ans = getAnswer(x.header, getCMWTD(todoList));
     if (ans === "y") {
       answers.push("y");
-      midCmwtd = String(x.header);
     }
     if (ans === "n") {
       answers.push("n");
@@ -186,17 +185,16 @@ const printReviewSetupMessage = (todoList: ITodoItem[]): void => {
 // issue: Architect reviews for opportunity to make DRY, SOLID #299
 const attemptReviewTodosCLI = (
   todoList: ITodoItem[],
-  cmwtd: string,
   lastDone: string
 ): any => {
   printReviewSetupMessage(todoList);
   if (isEmpty(todoList)) {
-    return [todoList, cmwtd];
+    return todoList;
   }
 
   
   //if (todoList.map(x => x.state).indexOf(TodoState.Marked) === -1) {
-  [todoList, cmwtd] = setupReview(todoList, cmwtd);
+  todoList = setupReview(todoList);
   //}
 
   // step 0: check to see if there are any non-complete, non-archived items
@@ -205,11 +203,11 @@ const attemptReviewTodosCLI = (
     // issue: Architect designs option to always quit mid-menu #109
     // issue: Dev implements E2E test for CLA #110
     // issue: Dev implements todo item store using redux pattern #106
-    const answers = getReviewAnswersEpicCLI(todoList, cmwtd, lastDone);
-    [todoList, cmwtd] = conductReviewsEpic(todoList, cmwtd, lastDone, answers);
-    printUpdate(todoList, cmwtd);
+    const answers = getReviewAnswersEpicCLI(todoList, lastDone);
+    todoList = conductReviewsEpic(todoList, lastDone, answers);
+    printUpdate(todoList);
   }
-  return [todoList, cmwtd];
+  return todoList;
 };
 
 // ****************************************
@@ -219,7 +217,6 @@ const attemptReviewTodosCLI = (
 // issue: Architect reviews for opportunity to make DRY, SOLID #299
 const enterFocusCLI = (
   todoList: ITodoItem[],
-  cmwtd: string,
   lastDone: string
 ): any => {
   // 0. confirm that focusMode can be safely entered
@@ -227,13 +224,13 @@ const enterFocusCLI = (
     generalPrint(
       "There are no todo items. Please enter todo items and try again."
     );
-    return [todoList, cmwtd, lastDone];
+    return [todoList, lastDone];
   }
-  if (cmwtd === "") {
+  if (!itemExists(todoList, "state", TodoState.Marked)) {
     generalPrint(
       "There is no 'current most want to do' item. Please review your items and try again."
     );
-    return [todoList, cmwtd, lastDone];
+    return [todoList, lastDone];
   }
 
   // 1. clear the console view
@@ -241,7 +238,7 @@ const enterFocusCLI = (
   console.clear();
 
   // 2. show the current todo item
-  generalPrint(`You are working on '${cmwtd}'`);
+  generalPrint(`You are working on '${getCMWTD(todoList)}'`);
 
   // 3. wait for any key to continue
   waitForKeyPress();
@@ -254,24 +251,23 @@ const enterFocusCLI = (
   }
 
   // 5. mark the cmwtd item as done
-  [todoList, cmwtd, lastDone] = conductFocus(
+  [todoList, lastDone] = conductFocus(
     todoList,
-    cmwtd,
     lastDone,
     response
   );
 
-  return [todoList, cmwtd, lastDone];
+  return [todoList, lastDone];
 };
 
-const addNewCLI = (todoList: ITodoItem[], cmwtd: string): any => {
+const addNewCLI = (todoList: ITodoItem[]): any => {
   const temp: ITodoItem | null = promptUserForNewTodoItemCLI();
   if (temp !== null) {
     todoList = addTodoToList(todoList, temp);
     // issue: Dev implements todo item store using redux pattern #106
   }
 
-  return [todoList, cmwtd];
+  return todoList;
 };
 
 // ****************************************
@@ -282,61 +278,54 @@ const addNewCLI = (todoList: ITodoItem[], cmwtd: string): any => {
 const menuActions: any = {
   [MainMenuChoice.AddNew]: (
     todoList: ITodoItem[],
-    cmwtd: string,
     lastDone: string
   ): any => {
-    [todoList, cmwtd] = addNewCLI(todoList, cmwtd);
+    todoList = addNewCLI(todoList);
     printTodoItemCount(todoList);
-    return [todoList, cmwtd, lastDone, true];
+    return [todoList, lastDone, true];
   },
   [MainMenuChoice.ReviewTodos]: (
     todoList: ITodoItem[],
-    cmwtd: string,
     lastDone: string
   ): any => {
-    [todoList, cmwtd] = attemptReviewTodosCLI(todoList, cmwtd, lastDone);
-    return [todoList, cmwtd, lastDone, true];
+    todoList = attemptReviewTodosCLI(todoList, lastDone);
+    return [todoList, lastDone, true];
   },
   [MainMenuChoice.EnterFocus]: (
     todoList: ITodoItem[],
-    cmwtd: string,
     lastDone: string
   ): any => {
-    [todoList, cmwtd, lastDone] = enterFocusCLI(todoList, cmwtd, lastDone);
-    return [todoList, cmwtd, lastDone, true];
+    [todoList, lastDone] = enterFocusCLI(todoList, lastDone);
+    return [todoList, lastDone, true];
   },
   [MainMenuChoice.PrintList]: (
     todoList: ITodoItem[],
-    cmwtd: string,
     lastDone: string
   ): any => {
-    printUpdate(todoList, cmwtd);
-    return [todoList, cmwtd, lastDone, true];
+    printUpdate(todoList);
+    return [todoList, lastDone, true];
   },
   [MainMenuChoice.ClearDots]: (
     todoList: ITodoItem[],
-    cmwtd: string,
     lastDone: string
   ): any => {
     generalPrint("Removing dots from dotted items...");
     generalPrint("Resetting the CMWTD...");
-    return [undotAll(todoList), "", lastDone, true];
+    return [undotAll(todoList), lastDone, true];
   },
   [MainMenuChoice.ReadAbout]: (
     todoList: ITodoItem[],
-    cmwtd: string,
     lastDone: string
   ): any => {
     // issue: Dev adds about section text print out #128
     generalPrint("This is stub (placeholder) text. Please check back later.");
-    return [todoList, cmwtd, lastDone, true];
+    return [todoList, lastDone, true];
   },
   [MainMenuChoice.Quit]: (
     todoList: ITodoItem[],
-    cmwtd: string,
     lastDone: string
   ): any => {
-    return [todoList, cmwtd, lastDone, false];
+    return [todoList, lastDone, false];
   }
 };
 
@@ -345,16 +334,14 @@ export const mainCLI = (): void => {
 
   // initialize program variables
   let todoList: ITodoItem[] = [];
-  let cmwtd: string = "";
   let lastDone: string = "";
 
   // start main program loop
   let running = true;
   while (running) {
     const answer = promptUserWithMainMenu();
-    [todoList, cmwtd, lastDone, running] = menuActions[answer](
+    [todoList, lastDone, running] = menuActions[answer](
       todoList,
-      cmwtd,
       lastDone
     );
   }

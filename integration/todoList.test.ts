@@ -2,7 +2,7 @@ import { expect } from 'chai';
 
 import { conductReviewsEpic, setupReview } from '../src/review';
 import { ITodoItem, TodoState } from '../src/todoItem';
-import { listToMarks, undotAll } from '../src/todoList';
+import { listToMarks, undotAll, getCMWTD } from '../src/todoList';
 import { FRUITS, makeNItemArray } from '../unit/test-util';
 
 describe('TODO LIST INTEGRATION TESTS', () => {
@@ -17,11 +17,10 @@ describe('TODO LIST INTEGRATION TESTS', () => {
 	describe('Conducting list iteration', () => {
 		it('should correctly update CMWTD for input `[n, y]` ', () => {
 			let todoList: ITodoItem[] = makeNItemArray(3);
-			let cmwtd = "";
 			const lastDone = "";
-			[todoList, cmwtd] = setupReview(todoList, cmwtd);
-			[todoList, cmwtd] = conductReviewsEpic(todoList, cmwtd, lastDone, ['n', 'y']);
-			expect(cmwtd).equals(FRUITS[2]);
+			todoList = setupReview(todoList);
+			todoList = conductReviewsEpic(todoList, lastDone, ['n', 'y']);
+			expect(getCMWTD(todoList)).equals(FRUITS[2]);
 		});
 	})
 

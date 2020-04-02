@@ -2,7 +2,7 @@ import { expect } from "chai";
 
 import { readyToReview, setupReview } from "../src/review";
 import { ITodoItem, TodoState } from "../src/todoItem";
-import { getFirstUnmarked, listToMarks } from "../src/todoList";
+import { getFirstUnmarked, listToMarks, getCMWTD } from "../src/todoList";
 import { FRUITS, makeNItemArray, markAllAs } from "./test-util";
 
 describe("REVIEW MODE UNIT TESTS", () => {
@@ -64,12 +64,11 @@ describe("REVIEW MODE UNIT TESTS", () => {
 
     it("determines list `[x] [o] [ ]` ready for review", () => {
       let todoList: ITodoItem[] = makeNItemArray(3);
-      let cmwtd: string = "";
       let lastDone = "";
       todoList[0].state = TodoState.Completed;
       lastDone = todoList[0].header;
-      [todoList, cmwtd] = setupReview(todoList, cmwtd);
-			expect(cmwtd).equals(FRUITS[1]);
+      todoList = setupReview(todoList);
+			expect(getCMWTD(todoList)).equals(FRUITS[1]);
 			expect(listToMarks(todoList)).equals('[x] [o] [ ]');
       expect(readyToReview(todoList)).equals(true);
       expect(lastDone).equals(FRUITS[0]);
