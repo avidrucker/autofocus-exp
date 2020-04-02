@@ -23,7 +23,7 @@ export const markLastMarkedComplete = (
   todoList: ITodoItem[],
   lastDone: string
 ): any => {
-	[todoList, lastDone] = updateLastDone(todoList, lastDone); // 2. update last done
+  [todoList, lastDone] = updateLastDone(todoList, lastDone); // 2. update last done
   todoList[getLastMarked(todoList)].state = TodoState.Completed; // 3. set it to completed
   return [todoList, lastDone];
 };

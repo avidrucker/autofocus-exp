@@ -6,28 +6,37 @@ import {
   setState,
   TodoState
 } from "./todoItem";
-import { itemExists, numListToTodoList, getLastMarked, getLastUnmarked, getFirstUnmarked } from "./todoList";
+import {
+  itemExists,
+  numListToTodoList,
+  getLastMarked,
+  getLastUnmarked,
+  getFirstUnmarked
+} from "./todoList";
 import { isDefinedString, isEmpty } from "./util";
 
 export const markFirstUnmarkedIfExists = (todoList: ITodoItem[]): any => {
-	if(itemExists(todoList, "state", TodoState.Unmarked) && !itemExists(todoList, "state", TodoState.Marked)) {
-		const i = getFirstUnmarked(todoList);
-		todoList[i] = markItem(todoList[i]);
-	}
-	return todoList;
-}
+  if (
+    itemExists(todoList, "state", TodoState.Unmarked) &&
+    !itemExists(todoList, "state", TodoState.Marked)
+  ) {
+    const i = getFirstUnmarked(todoList);
+    todoList[i] = markItem(todoList[i]);
+  }
+  return todoList;
+};
 
 // issue: Architect decides how to manage todo items in backend #108
 // issue: Architect reviews for opportunity to make DRY, SOLID #299
 export const setupReview = (todoList: ITodoItem[]): any => {
-	// short-circuit if the list is empty OR if there are marked items already
+  // short-circuit if the list is empty OR if there are marked items already
   if (isEmpty(todoList) || itemExists(todoList, "state", TodoState.Marked)) {
     return todoList;
   }
-	
-	// if there are no marked items AND any unmarked items, the first unmarked item becomes marked
-	todoList = markFirstUnmarkedIfExists(todoList);
-  
+
+  // if there are no marked items AND any unmarked items, the first unmarked item becomes marked
+  todoList = markFirstUnmarkedIfExists(todoList);
+
   return todoList;
 };
 
@@ -96,16 +105,13 @@ export const reviewAndRebuild = (
   const reviewableList = getReviewableList(todoList, lastDone);
   const nonReviewableList = getNonReviewableList(todoList, lastDone); // issue: Dev refactors to remove getNonReviewableList #295
   let tempReviewedList = [];
-  tempReviewedList = conductReviews(
-    numListToTodoList(reviewableList),
-    answers
-  );
+  tempReviewedList = conductReviews(numListToTodoList(reviewableList), answers);
   const reviewedListReverse: ITodoItem[] = JSON.parse(
     JSON.stringify(tempReviewedList)
   ).reverse();
   let newList: ITodoItem[] = [];
-	newList = newList.concat(nonReviewableList);
-	// todo: refactor out for loop
+  newList = newList.concat(nonReviewableList);
+  // todo: refactor out for loop
   for (let i = nonReviewableList.length; i < todoList.length; i++) {
     if (todoList[i].state === TodoState.Completed) {
       // console.log(`${todoList[i].header} is COMPLETE, leaving as is`);
@@ -148,10 +154,7 @@ const markItem = (i: ITodoItem): ITodoItem => {
 };
 
 // todo: refactor to increase readability, consider FP approach
-export const applyAnswers = (
-  todoList: ITodoItem[],
-  answers: string[]
-): any => {
+export const applyAnswers = (todoList: ITodoItem[], answers: string[]): any => {
   todoList.map((x, i) =>
     answers[i] === "y"
       ? (todoList[i] = markItem(x))
@@ -183,5 +186,8 @@ export const conductReviews = (
 // 2. If there are any marked items,
 // the list has more unmarked after the last marked item
 export const readyToReview = (todoList: ITodoItem[]): boolean =>
-	itemExists(todoList, "state", TodoState.Unmarked) &&
-	!(itemExists(todoList, "state", TodoState.Marked) && getLastMarked(todoList) > getLastUnmarked(todoList));
+  itemExists(todoList, "state", TodoState.Unmarked) &&
+  !(
+    itemExists(todoList, "state", TodoState.Marked) &&
+    getLastMarked(todoList) > getLastUnmarked(todoList)
+  );

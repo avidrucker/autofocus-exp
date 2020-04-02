@@ -83,9 +83,9 @@ export const undotAll = (todoList: ITodoItem[]): ITodoItem[] => {
 
 // "getLastMarkedHeader"
 export const getCMWTD = (todoList: ITodoItem[]): string => {
-	// short-circuit with empty string when there is no CMWTD
-	if(!itemExists(todoList, "state", TodoState.Marked)) {
-		return "";
-	}
-	return todoList[getLastMarked(todoList)].header;
-}
+  // short-circuit with empty string when there is no CMWTD
+  if (!itemExists(todoList, "state", TodoState.Marked)) {
+    return "";
+  }
+  return todoList[getLastMarked(todoList)].header;
+};
