@@ -1,6 +1,6 @@
 import { expect } from 'chai';
 
-import { conductReviewsEpic, setupReview } from '../src/review';
+import { setupReview, conductAllReviews } from '../src/review';
 import { ITodoItem, TodoState } from '../src/todoItem';
 import { listToMarks, undotAll, getCMWTD } from '../src/todoList';
 import { FRUITS, makeNItemArray } from '../unit/test-util';
@@ -19,7 +19,7 @@ describe('TODO LIST INTEGRATION TESTS', () => {
 			let todoList: ITodoItem[] = makeNItemArray(3);
 			const lastDone = "";
 			todoList = setupReview(todoList);
-			todoList = conductReviewsEpic(todoList, lastDone, ['n', 'y']);
+			todoList = conductAllReviews(todoList, lastDone, ['n', 'y']);
 			expect(getCMWTD(todoList)).equals(FRUITS[2]);
 		});
 	})

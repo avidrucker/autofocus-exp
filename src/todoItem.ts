@@ -8,7 +8,7 @@ export enum TodoState {
 }
 
 export interface ITodoItem {
-  body?: string | null;
+  // body?: string | null;
   // created: string;
   header: string;
   // modified: string;
@@ -18,11 +18,11 @@ export interface ITodoItem {
 
 export const constructNewTodoItem = (
   headerText: string,
-  bodyText: string = "",
+  // bodyText: string = "",
   stateIn: TodoState = TodoState.Unmarked
 ): ITodoItem => {
   const newItem: ITodoItem = {
-    body: bodyText,
+    // body: bodyText,
     // created:"temp_created_date",
     header: headerText,
     // modified:"temp_created_date",
@@ -59,7 +59,7 @@ export const isReady = (i: ITodoItem): boolean => {
 
 // issue: Dev implements deep copy of UUID, & updated modified date value #283
 export const setState = (i: ITodoItem, newState: TodoState): ITodoItem => {
-  return constructNewTodoItem(i.header, "", newState); // note: this creates a NEW todo item
+  return constructNewTodoItem(i.header, newState); // note: this creates a NEW todo item
 };
 
 // note: this creates a NEW todo item

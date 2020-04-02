@@ -1,9 +1,10 @@
 import { expect } from "chai";
 
-import { readyToReview, setupReview } from "../src/review";
+import { readyToReview, setupReview, getLastDoneIndex } from "../src/review";
 import { ITodoItem, TodoState } from "../src/todoItem";
 import { getFirstUnmarked, listToMarks, getCMWTD } from "../src/todoList";
 import { FRUITS, makeNItemArray, markAllAs } from "./test-util";
+import { conductFocus } from "../src/focus";
 
 describe("REVIEW MODE UNIT TESTS", () => {
   describe("Finding unmarked todos", () => {
@@ -103,6 +104,19 @@ describe("REVIEW MODE UNIT TESTS", () => {
       todoList[1].state = TodoState.Marked;
       expect(listToMarks(todoList)).equals("[x] [o] [ ]");
       expect(readyToReview(todoList)).equals(true);
+    });
+  });
+
+  describe("Determining the last done index", () => {
+    it("gets the correct index as last done", () => {
+      let todoList: ITodoItem[] = makeNItemArray(3);
+      let lastDone = "";
+      todoList = setupReview(todoList);
+      [todoList, lastDone] = conductFocus(todoList, lastDone, {
+        workLeft: "n"
+      });
+      expect(getLastDoneIndex(todoList, lastDone)).equals(0);
+      expect(listToMarks(todoList)).equals("[x] [ ] [ ]");
     });
   });
 });
