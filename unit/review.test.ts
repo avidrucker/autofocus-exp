@@ -2,7 +2,7 @@ import { expect } from "chai";
 
 import { readyToReview, setupReview } from "../src/review";
 import { ITodoItem, TodoState } from "../src/todoItem";
-import { getFirstUnmarked, listToMarks } from "../src/todoList";
+import { getFirstUnmarked, listToMarks, getCMWTD } from "../src/todoList";
 import { FRUITS, makeNItemArray, markAllAs } from "./test-util";
 
 describe("REVIEW MODE UNIT TESTS", () => {
@@ -42,68 +42,67 @@ describe("REVIEW MODE UNIT TESTS", () => {
   describe("Ready to review check", () => {
     it("determines list `[o] [o] [o]` NOT ready for review", () => {
       let todoList: ITodoItem[] = makeNItemArray(3);
-			todoList = markAllAs(todoList, TodoState.Marked);
-			expect(listToMarks(todoList)).equals('[o] [o] [o]');
+      todoList = markAllAs(todoList, TodoState.Marked);
+      expect(listToMarks(todoList)).equals("[o] [o] [o]");
       expect(readyToReview(todoList)).equals(false);
     });
 
     it("determines list `[x] [x] [x]` NOT ready for review", () => {
       let todoList: ITodoItem[] = makeNItemArray(3);
-			todoList = markAllAs(todoList, TodoState.Completed);
-			expect(listToMarks(todoList)).equals('[x] [x] [x]');
+      todoList = markAllAs(todoList, TodoState.Completed);
+      expect(listToMarks(todoList)).equals("[x] [x] [x]");
       expect(readyToReview(todoList)).equals(false);
     });
 
     it("determines list `[x] [x] [o]` NOT ready for review", () => {
       let todoList: ITodoItem[] = makeNItemArray(3);
       todoList = markAllAs(todoList, TodoState.Completed);
-			todoList[2].state = TodoState.Marked;
-			expect(listToMarks(todoList)).equals('[x] [x] [o]');
+      todoList[2].state = TodoState.Marked;
+      expect(listToMarks(todoList)).equals("[x] [x] [o]");
       expect(readyToReview(todoList)).equals(false);
     });
 
     it("determines list `[x] [o] [ ]` ready for review", () => {
       let todoList: ITodoItem[] = makeNItemArray(3);
-      let cmwtd: string = "";
       let lastDone = "";
       todoList[0].state = TodoState.Completed;
       lastDone = todoList[0].header;
-      [todoList, cmwtd] = setupReview(todoList, cmwtd);
-			expect(cmwtd).equals(FRUITS[1]);
-			expect(listToMarks(todoList)).equals('[x] [o] [ ]');
+      todoList = setupReview(todoList);
+      expect(getCMWTD(todoList)).equals(FRUITS[1]);
+      expect(listToMarks(todoList)).equals("[x] [o] [ ]");
       expect(readyToReview(todoList)).equals(true);
       expect(lastDone).equals(FRUITS[0]);
     });
 
     it("determines list `[x] [ ] [ ]` ready for review", () => {
       const todoList: ITodoItem[] = makeNItemArray(3);
-			todoList[0].state = TodoState.Completed;
-			expect(listToMarks(todoList)).equals('[x] [ ] [ ]');
+      todoList[0].state = TodoState.Completed;
+      expect(listToMarks(todoList)).equals("[x] [ ] [ ]");
       expect(readyToReview(todoList)).equals(true);
-		});
-		
-		it("determines list `[o] [ ] [o]` NOT ready for review", () => {
+    });
+
+    it("determines list `[o] [ ] [o]` NOT ready for review", () => {
       let todoList: ITodoItem[] = makeNItemArray(3);
-			todoList[0].state = TodoState.Marked;
-			todoList[2].state = TodoState.Marked;
-			expect(listToMarks(todoList)).equals('[o] [ ] [o]');
+      todoList[0].state = TodoState.Marked;
+      todoList[2].state = TodoState.Marked;
+      expect(listToMarks(todoList)).equals("[o] [ ] [o]");
       expect(readyToReview(todoList)).equals(false);
-		});
-		
-		it("determines list `[o] [ ] [o] [ ]` ready for review", () => {
+    });
+
+    it("determines list `[o] [ ] [o] [ ]` ready for review", () => {
       let todoList: ITodoItem[] = makeNItemArray(4);
-			todoList[0].state = TodoState.Marked;
-			todoList[2].state = TodoState.Marked;
-			expect(listToMarks(todoList)).equals('[o] [ ] [o] [ ]');
+      todoList[0].state = TodoState.Marked;
+      todoList[2].state = TodoState.Marked;
+      expect(listToMarks(todoList)).equals("[o] [ ] [o] [ ]");
       expect(readyToReview(todoList)).equals(true);
-		});
-		
-		it("determines list `[x] [o] [ ]` ready for review", () => {
+    });
+
+    it("determines list `[x] [o] [ ]` ready for review", () => {
       const todoList: ITodoItem[] = makeNItemArray(3);
-			todoList[0].state = TodoState.Completed;
-			todoList[1].state = TodoState.Marked;
-			expect(listToMarks(todoList)).equals('[x] [o] [ ]');
+      todoList[0].state = TodoState.Completed;
+      todoList[1].state = TodoState.Marked;
+      expect(listToMarks(todoList)).equals("[x] [o] [ ]");
       expect(readyToReview(todoList)).equals(true);
-		});
+    });
   });
 });

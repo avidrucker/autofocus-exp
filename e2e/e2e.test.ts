@@ -4,13 +4,12 @@ import { step } from 'mocha-steps';
 import { conductFocus } from '../src/focus';
 import { conductReviewsEpic, setupReview } from '../src/review';
 import { constructNewTodoItem, ITodoItem, TodoState } from '../src/todoItem';
-import { addTodoToList, listToMarks } from '../src/todoList';
+import { addTodoToList, listToMarks, getCMWTD } from '../src/todoList';
 
 describe('Simple E2E test', () => {
   describe('should pass each successive step', () => {
 		let todoList: ITodoItem[] = [];
 		const firstThree = ["Write report","Check email","Tidy desk"];
-		let cmwtd = "";
 		let lastDone = "";
 
 		step('should confirm 3 specific items have been added', () => {
@@ -25,26 +24,26 @@ describe('Simple E2E test', () => {
 		});
 
 		step('should confirm that the 1st item has been marked', () => {
-			[todoList, cmwtd] = setupReview(todoList, cmwtd);
+			todoList = setupReview(todoList);
 			expect(listToMarks(todoList)).equals("[o] [ ] [ ]");
 		})
 
 		step('should confirm 3 items have been marked', () => {
 			const answers001 = ['y','y'];
-			[todoList, cmwtd] = conductReviewsEpic(todoList, cmwtd, lastDone, answers001);
+			todoList = conductReviewsEpic(todoList, lastDone, answers001);
 			expect(listToMarks(todoList)).equals("[o] [o] [o]");
 		});
 
 		step('should confirm that CMWTD has been updated to last item',() => {
-			expect(cmwtd).equals(todoList[2].header);
+			expect(getCMWTD(todoList)).equals(todoList[2].header);
 		});
 
 		step('should confirm 3rd item has been completed',() => { 
 			// and that CMWTD & lastDone have been updated
-			const beforeCMWTD = String(cmwtd);
-			[todoList, cmwtd, lastDone] = conductFocus(todoList, cmwtd, lastDone, {workLeft: "n"});
+			const beforeCMWTD = String(getCMWTD(todoList));
+			[todoList, lastDone] = conductFocus(todoList, lastDone, {workLeft: "n"});
 			expect(todoList[2].state).equals(TodoState.Completed);
-			expect(cmwtd).equals(todoList[1].header);
+			expect(getCMWTD(todoList)).equals(todoList[1].header);
 			expect(lastDone).equals(beforeCMWTD);
 		});
 	});
@@ -56,7 +55,6 @@ describe('Long E2E test', () => {
 		const longList = ["Email", "In-Tray", "Voicemail", "Project X Report",
 			"Tidy Desk", "Call Dissatisfied Customer", "Make Dental Appointment",
 			"File Invoices", "Discuss Project Y with Bob", "Back Up"];
-		let cmwtd = "";
 		let lastDone = "";
 
 		// create 10 items, and add them to the list
@@ -72,7 +70,7 @@ describe('Long E2E test', () => {
 
 		// "put a dot in front of the first task"
 		step('should confirm that the 1st item has been marked', () => {
-			[todoList, cmwtd] = setupReview(todoList, cmwtd);
+			todoList = setupReview(todoList);
 			expect(todoList[0].state).equals(TodoState.Marked);
 		})
 
@@ -84,34 +82,34 @@ describe('Long E2E test', () => {
 		// review items, saying yes only for 3rd & 5th items
 		step('should confirm 3 items have been marked', () => {
 			const answers001 = ['n','y','n','y','q'];
-			[todoList, cmwtd] = conductReviewsEpic(todoList, cmwtd, lastDone, answers001);
+			todoList = conductReviewsEpic(todoList, lastDone, answers001);
 			expect(listToMarks(todoList)).equals(
 				"[o] [ ] [o] [ ] [o] [ ] [ ] [ ] [ ] [ ]");
 		});
 
 		step('should confirm that CMWTD has been updated to last marked item',() => {
-			expect(cmwtd).equals(todoList[4].header);
+			expect(getCMWTD(todoList)).equals(todoList[4].header);
 		});
 
 		// Do the "Tidy Desk" task (last marked item / CMWTD)
 		step('should confirm 3rd item has been completed',() => {
-			[todoList, cmwtd, lastDone] = conductFocus(todoList, cmwtd, lastDone, {workLeft: "n"});
+			[todoList,  lastDone] = conductFocus(todoList, lastDone, {workLeft: "n"});
 			expect(todoList[4].state).equals(TodoState.Completed);
 		});
 
 		step('should confirm that CMWTD has been updated',() => {
-			expect(cmwtd).equals(todoList[2].header);
+			expect(getCMWTD(todoList)).equals(todoList[2].header);
 		});
 
 		// note: this is not specifically part of the e2e flow, but
 		// please leave as is
 		// 1. setting up reviews here should do nothing
-		step('should confirm starting new review leaves list & CMWTD alone', () => {
+		step('should confirm starting new review leaves list alone', () => {
 			const beforeList: string = listToMarks(todoList);
-			const beforeCMWTD: string = String(cmwtd);
-			[todoList, cmwtd] = setupReview(todoList, cmwtd);
+			const beforeCMWTD: string = String(getCMWTD(todoList));
+			todoList = setupReview(todoList);
 			const afterList: string = listToMarks(todoList);
-			const afterCMWTD: string = String(cmwtd);
+			const afterCMWTD: string = String(getCMWTD(todoList));
 			expect(beforeList).equals(afterList);
 			expect(beforeCMWTD).equals(afterCMWTD);
 		})
@@ -120,7 +118,7 @@ describe('Long E2E test', () => {
 		// but, still, it is useful to test in situations such as this
 		step('should confirm review-then-quit leaves list as-is', () => {
 			const answer = ['q']; // immediately quitting, w/ no 'y' or 'n' answers
-			[todoList, cmwtd] = conductReviewsEpic(todoList, cmwtd, lastDone, answer);
+			todoList = conductReviewsEpic(todoList, lastDone, answer);
 			expect(listToMarks(todoList)).equals(
 				"[o] [ ] [o] [ ] [x] [ ] [ ] [ ] [ ] [ ]");
 		});
@@ -131,15 +129,15 @@ describe('Long E2E test', () => {
 		// review items, saying yes only to last item (in this review it will be the 5th)
 		step('should confirm 3 specific items have been marked', () => {
 			const answers002 = ['n','n','n','n','y'];
-			[todoList, cmwtd] = conductReviewsEpic(todoList, cmwtd, lastDone, answers002);
+			todoList = conductReviewsEpic(todoList, lastDone, answers002);
 			expect(listToMarks(todoList)).equals(
 				"[o] [ ] [o] [ ] [x] [ ] [ ] [ ] [ ] [o]");
 		});
 
 		// "Do it." (Back Up)
 		step('should confirm last item has been done', () => {
-			[todoList, cmwtd, lastDone] = conductFocus(
-				todoList, cmwtd, lastDone, {workLeft:'n'});
+			[todoList, lastDone] = conductFocus(
+				todoList, lastDone, {workLeft:'n'});
 				expect(listToMarks(todoList)).equals(
 					"[o] [ ] [o] [ ] [x] [ ] [ ] [ ] [ ] [x]");
 				expect(lastDone).equals(todoList[9].header);
@@ -149,8 +147,8 @@ describe('Long E2E test', () => {
 		// need to check whether you want to do any tasks more than
 		// you want to do Voicemail. You just do it."
 		step('should confirm last marked item is done next', () => {
-			[todoList, cmwtd, lastDone] = conductFocus(
-				todoList, cmwtd, lastDone, {workLeft:'n'});
+			[todoList, lastDone] = conductFocus(
+				todoList, lastDone, {workLeft:'n'});
 				expect(listToMarks(todoList)).equals(
 					"[o] [ ] [x] [ ] [x] [ ] [ ] [ ] [ ] [x]");
 				expect(lastDone).equals(todoList[2].header);
@@ -161,7 +159,7 @@ describe('Long E2E test', () => {
 		// "You decide you want to do Make Dental Appointment"
 		step('should confirm 3 specific items have been marked', () => {
 			const answers003 = ['n','n','y','n','y'];
-			[todoList, cmwtd] = conductReviewsEpic(todoList, cmwtd, lastDone, answers003);
+			todoList = conductReviewsEpic(todoList, lastDone, answers003);
 			expect(listToMarks(todoList)).equals(
 				"[o] [ ] [x] [ ] [x] [ ] [o] [ ] [o] [x]");
 		});
@@ -169,10 +167,10 @@ describe('Long E2E test', () => {
 		// As this is the last task on the list you do it immediately,
 		// and then do Make Dental Appointment immediately too.
 		step('should confirm 4 specific items have been completed', () => {
-			[todoList, cmwtd, lastDone] = conductFocus(
-				todoList, cmwtd, lastDone, {workLeft:'n'});
-			[todoList, cmwtd, lastDone] = conductFocus(
-					todoList, cmwtd, lastDone, {workLeft:'n'});
+			[todoList, lastDone] = conductFocus(
+				todoList, lastDone, {workLeft:'n'});
+			[todoList, lastDone] = conductFocus(
+					todoList, lastDone, {workLeft:'n'});
 			expect(listToMarks(todoList)).equals(
 				"[o] [ ] [x] [ ] [x] [ ] [x] [ ] [x] [x]");
 		});

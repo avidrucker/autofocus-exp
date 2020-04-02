@@ -6,18 +6,15 @@ import {
   setState,
   TodoState
 } from "../src/todoItem";
-import { addTodoToList } from "../src/todoList";
+import { addTodoToList, getCMWTD } from "../src/todoList";
 
 // test constants
 export const FRUITS = ["apple", "banana", "cherry"];
 
-export const expectOneMarkedApple = (
-  todoList: ITodoItem[],
-  cmwtd: string
-): void => {
+export const expectOneMarkedApple = (todoList: ITodoItem[]): void => {
   expect(todoList.length).equals(1);
   expect(todoList[0].state).equals(TodoState.Marked);
-  expect(cmwtd).equals(FRUITS[0]);
+  expect(getCMWTD(todoList)).equals(FRUITS[0]);
 };
 
 export const throwBadInputError = () => {

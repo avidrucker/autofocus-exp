@@ -34,6 +34,7 @@ export const listToMarks = (todoList: ITodoItem[]): string => {
   return todoList.map(x => getMark[x.state]()).join(" ");
 };
 
+// note: this is useful for logging purposes only, marked for deletion
 export const numListToMarks = (todoList: INumberedItem[]): string => {
   return todoList.map((x, i) => `[${i}: ${getMark[x.item.state]()}]`).join(" ");
 };
@@ -78,4 +79,13 @@ export const firstReady = (todoList: ITodoItem[]): number => {
 
 export const undotAll = (todoList: ITodoItem[]): ITodoItem[] => {
   return todoList.map(x => undot(x));
+};
+
+// "getLastMarkedHeader"
+export const getCMWTD = (todoList: ITodoItem[]): string => {
+  // short-circuit with empty string when there is no CMWTD
+  if (!itemExists(todoList, "state", TodoState.Marked)) {
+    return "";
+  }
+  return todoList[getLastMarked(todoList)].header;
 };
