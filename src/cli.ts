@@ -3,23 +3,22 @@ import readlineSync from "readline-sync";
 import { conductFocus } from "./focus";
 import { greetUser } from "./main";
 import {
-  conductReviewsEpic,
-  getReviewableList,
   readyToReview,
-  setupReview
+  setupReview,
+	determineReviewStart,
+	numberAndSlice,
+	conductReviewNum
 } from "./review";
 import { constructNewTodoItem, ITodoItem, TodoState } from "./todoItem";
 import {
   addTodoToList,
-  firstReady,
   makePrintableTodoItemList,
-  numListToTodoList,
   undotAll,
   itemExists,
-  getLastMarked,
   getCMWTD
 } from "./todoList";
 import { getPluralS, isEmpty } from "./util";
+import { INumberedItem } from "./numberedItem";
 
 // ****************************************
 // PROMPTS
@@ -76,7 +75,7 @@ export const promptUserForNewTodoItemCLI = (): ITodoItem | null => {
     //// 113. bodyText = readlineSync.question(newItemBodyPrompt);
     // issue: Dev implements momentjs datetime #103
     // issue: Dev implements ITodoItem uuid #104
-    const newItem: ITodoItem = constructNewTodoItem(headerText, ""); //// 113. bodyText
+    const newItem: ITodoItem = constructNewTodoItem(headerText); //// 113. bodyText
 
     generalPrint(`New todo item '${newItem.header}' successfully created!`);
 
@@ -110,7 +109,7 @@ export const printUpdate = (todoList: ITodoItem[]): void => {
   if (!itemExists(todoList, "state", TodoState.Marked)) {
     generalPrint(`Your CMWTD is currently set to nothing.`);
   } else {
-    generalPrint(`Your CMWTD is '${getLastMarked(todoList)}'.`);
+    generalPrint(`Your CMWTD is '${getCMWTD(todoList)}'.`);
   }
 
   if (isEmpty(todoList)) {
@@ -125,44 +124,17 @@ export const printUpdate = (todoList: ITodoItem[]): void => {
 // REVIEWING
 // ****************************************
 
-// issue: Dev fixes bug where review question count & content are correct #344
-export const getReviewAnswersEpicCLI = (
-  todoList: ITodoItem[],
-  lastDone: string
-): string[] => {
-  const reviewableList = getReviewableList(todoList, lastDone);
-  if (!isEmpty(reviewableList)) {
-    // console.log('Getting numbered list...');
-    return getReviewAnswersCLI(numListToTodoList(reviewableList));
-  } else {
-    // issue: Dev inspects getReviewAnswersEpicCLI for empty string result #294
-    // console.log('Getting NON-numbered list...');
-    return getReviewAnswersCLI(todoList);
-  }
+export const conductAllReviewsCLI = (todoList: ITodoItem[], lastDone: string): any => {
+	const reviewStart = determineReviewStart(todoList, lastDone);
+	let subsetList: INumberedItem[] = numberAndSlice(todoList, reviewStart);
+	let reviewables = subsetList.filter(x => 
+		x['item']['state'] === TodoState.Unmarked);
+	let cmwtd = getCMWTD(todoList);
+	reviewables = reviewables.map((x) => conductReviewNum(x, getAnswer(cmwtd, x.item.header)));
 };
 
-export const getAnswer = (x: string, y: string) => {
-  return promptUserForYNQ(`Do you want to '${x}' more than '${y}'? (Y/N/Q) `);
-};
-
-// issue: Architect reviews for opportunity to make DRY, SOLID #299
-// issue: Dev refactors getReviewAnswersCLI #216 // todo: modify issue #216 to use FP approach
-export const getReviewAnswersCLI = (todoList: ITodoItem[]): string[] => {
-  const answers: string[] = [];
-  for (const x of todoList) {
-    const ans = getAnswer(x.header, getCMWTD(todoList));
-    if (ans === "y") {
-      answers.push("y");
-    }
-    if (ans === "n") {
-      answers.push("n");
-    }
-    if (ans === "q") {
-      answers.push("q");
-      break;
-    }
-  }
-  return answers;
+export const getAnswer = (a: string, b: string): string => {
+  return promptUserForYNQ(`Do you want to '${b}' more than '${a}'? (Y/N/Q) `);
 };
 
 // issue: Dev refactors printReviewSetupMessage to be atomic #273
@@ -171,7 +143,7 @@ const printReviewSetupMessage = (todoList: ITodoItem[]): void => {
     generalPrint(
       "There are no items to review. Please enter mores items and try again."
     );
-  } else if (firstReady(todoList) === -1) {
+  } else if (!itemExists(todoList, 'state', TodoState.Unmarked)) {
     generalPrint(
       "There are no items left to dot. Please enter more items and try again."
     );
@@ -181,18 +153,12 @@ const printReviewSetupMessage = (todoList: ITodoItem[]): void => {
 };
 
 // issue: Architect reviews for opportunity to make DRY, SOLID #299
-const attemptReviewTodosCLI = (
-  todoList: ITodoItem[],
-  lastDone: string
-): any => {
-  printReviewSetupMessage(todoList);
+const attemptReviewTodosCLI = (todoList: ITodoItem[],lastDone: string): any => {
   if (isEmpty(todoList)) {
     return todoList;
-  }
-
-  //if (todoList.map(x => x.state).indexOf(TodoState.Marked) === -1) {
+	}
   todoList = setupReview(todoList);
-  //}
+	printReviewSetupMessage(todoList);
 
   // step 0: check to see if there are any non-complete, non-archived items
   if (readyToReview(todoList)) {
@@ -200,8 +166,7 @@ const attemptReviewTodosCLI = (
     // issue: Architect designs option to always quit mid-menu #109
     // issue: Dev implements E2E test for CLA #110
     // issue: Dev implements todo item store using redux pattern #106
-    const answers = getReviewAnswersEpicCLI(todoList, lastDone);
-    todoList = conductReviewsEpic(todoList, lastDone, answers);
+    todoList = conductAllReviewsCLI(todoList, lastDone);
     printUpdate(todoList);
   }
   return todoList;
