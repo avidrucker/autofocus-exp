@@ -14,7 +14,7 @@ describe("test suite2", () => {
 });
 
 describe("test suite3", () => {
-	it("test case3", () => {
-		expect(false).equals(true);
-	});
+  it("test case3", () => {
+    expect(false).equals(true);
+  });
 });
