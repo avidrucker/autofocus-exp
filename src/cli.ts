@@ -6,8 +6,7 @@ import {
   readyToReview,
   setupReview,
   determineReviewStart,
-  numberAndSlice,
-  conductReviewNum
+  numberAndSlice
 } from "./review";
 import { constructNewTodoItem, ITodoItem, TodoState } from "./todoItem";
 import {
@@ -125,6 +124,29 @@ export const printUpdate = (todoList: ITodoItem[]): void => {
 // REVIEWING
 // ****************************************
 
+export const conductReviewsLoopCLI = (
+  todoList: INumberedItem[],
+  originalCMWTD: string
+) => {
+  // FVP step 2: user story: User is asked to answer yes, no, or quit per review item #170
+  let tempCMWTD = String(originalCMWTD);
+  for (let i = 0; i < todoList.length; i++) {
+    //// get user answer
+    let ans = getAnswer(tempCMWTD, todoList[i].item.header);
+    if (ans === "y") {
+      todoList[i].item.state = TodoState.Marked;
+      tempCMWTD = todoList[i].item.header;
+    }
+    if (ans === "n") {
+      // do nothing, and pass
+    }
+    if (ans === "q") {
+      break;
+    }
+  }
+  return todoList;
+};
+
 export const conductAllReviewsCLI = (
   todoList: ITodoItem[],
   lastDone: string
@@ -134,12 +156,9 @@ export const conductAllReviewsCLI = (
   let reviewables = subsetList.filter(
     x => x["item"]["state"] === TodoState.Unmarked
   );
-  let cmwtd = getCMWTD(todoList);
 
   // CLI SPECIFIC CONDUCTING REVIEWS
-  reviewables = reviewables.map(x =>
-    conductReviewNum(x, getAnswer(cmwtd, x.item.header))
-  );
+  reviewables = conductReviewsLoopCLI(reviewables, getCMWTD(todoList));
 
   for (let i = 0; i < reviewables.length; i++) {
     // find item with index of  in subset list
