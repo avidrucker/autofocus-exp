@@ -1,9 +1,4 @@
-import {
-  ITodoItem,
-  setState,
-  TodoState,
-  constructNewTodoItem
-} from "./todoItem";
+import { ITodoItem, setState, TodoState } from "./todoItem";
 import {
   itemExists,
   getLastMarked,
