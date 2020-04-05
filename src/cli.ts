@@ -329,7 +329,27 @@ const menuActions: any = {
 
 // todo: dev implements deleteList w/ warning this is irreversible, are they sure?
 
-// todo: dev implements loadState
+interface IDeserializeableTodoList {
+  todoList: ITodoItem[];
+  lastDone: string;
+}
+
+const loadState = (): [ITodoItem[], string] => {
+  const strBuffer = "Loading todo list";
+  let todoList: ITodoItem[] = [];
+  let lastDone: string = "";
+  let jsonData: IDeserializeableTodoList = { todoList: [], lastDone: "" };
+  try {
+    jsonData = JSON.parse(fs.readFileSync("todos.json", "utf8"));
+    console.log(strBuffer, "... load was successful!");
+    todoList = jsonData["todoList"];
+    lastDone = jsonData["lastDone"];
+  } catch (err) {
+    console.log(strBuffer, "... load was NOT successful :(");
+  }
+
+  return [todoList, lastDone];
+};
 
 // SAVE STATE
 // todo: dev implements over-write check where user decides they want to overwrite
@@ -341,7 +361,7 @@ const saveState = (todoList: ITodoItem[], lastDone: string): void => {
     lastDone: lastDone
   });
   try {
-    fs.writeFileSync("todos.json", jsonData);
+    fs.writeFileSync("todos.json", jsonData, "utf8");
     console.log(strBuffer, "... save was successful!");
   } catch (err) {
     console.log(strBuffer, "... save was NOT successful :(");
@@ -351,11 +371,12 @@ const saveState = (todoList: ITodoItem[], lastDone: string): void => {
 export const mainCLI = (): void => {
   generalPrint(greetUser());
 
-  // todo: add auto-load here
-
   // initialize program variables
   let todoList: ITodoItem[] = [];
   let lastDone: string = "";
+
+  // todo: add auto-load here
+  [todoList, lastDone] = loadState();
 
   // start main program loop
   let running = true;
