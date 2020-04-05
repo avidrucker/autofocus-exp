@@ -10,7 +10,9 @@ import {
 import { isEmpty } from "./util";
 import { INumberedItem } from "./numberedItem";
 
-export const markFirstUnmarkedIfExists = (todoList: ITodoItem[]): any => {
+export const markFirstUnmarkedIfExists = (
+  todoList: ITodoItem[]
+): ITodoItem[] => {
   if (
     itemExists(todoList, "state", TodoState.Unmarked) &&
     !itemExists(todoList, "state", TodoState.Marked)
@@ -23,7 +25,7 @@ export const markFirstUnmarkedIfExists = (todoList: ITodoItem[]): any => {
 
 // issue: Architect decides how to manage todo items in backend #108
 // issue: Architect reviews for opportunity to make DRY, SOLID #299
-export const setupReview = (todoList: ITodoItem[]): any => {
+export const setupReview = (todoList: ITodoItem[]): ITodoItem[] => {
   // short-circuit if the list is empty OR if there are marked items already
   if (isEmpty(todoList) || itemExists(todoList, "state", TodoState.Marked)) {
     return todoList;
@@ -113,7 +115,7 @@ export const conductAllReviews = (
   todoList: ITodoItem[],
   lastDone: string,
   answers: string[]
-): any => {
+): ITodoItem[] => {
   // get a subset of reviewable items (ie. the last chunk
   // of a list that follows the either the last done item if it exists,
   // otherwise the last marked item).
