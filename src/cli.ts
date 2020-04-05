@@ -1,3 +1,4 @@
+import fs from "fs";
 import readlineSync from "readline-sync";
 
 import { conductFocus } from "./focus";
@@ -326,8 +327,31 @@ const menuActions: any = {
   }
 };
 
+// todo: dev implements deleteList w/ warning this is irreversible, are they sure?
+
+// todo: dev implements loadState
+
+// SAVE STATE
+// todo: dev implements over-write check where user decides they want to overwrite
+// list A with list B or not: eg: list A has X items and list B has Y items
+const saveState = (todoList: ITodoItem[], lastDone: string): void => {
+  const strBuffer = "Saving todo list";
+  const jsonData = JSON.stringify({
+    todoList: todoList,
+    lastDone: lastDone
+  });
+  try {
+    fs.writeFileSync("todos.json", jsonData);
+    console.log(strBuffer, "... save was successful!");
+  } catch (err) {
+    console.log(strBuffer, "... save was NOT successful :(");
+  }
+};
+
 export const mainCLI = (): void => {
   generalPrint(greetUser());
+
+  // todo: add auto-load here
 
   // initialize program variables
   let todoList: ITodoItem[] = [];
@@ -339,6 +363,9 @@ export const mainCLI = (): void => {
     const answer = promptUserWithMainMenu();
     [todoList, lastDone, running] = menuActions[answer](todoList, lastDone);
   }
+
+  // todo: add auto-save here
+  saveState(todoList, lastDone);
 
   generalPrint("Have a nice day!");
 };
