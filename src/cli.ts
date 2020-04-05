@@ -327,13 +327,32 @@ const menuActions: any = {
   }
 };
 
-// todo: dev implements deleteList w/ warning this is irreversible, are they sure?
+// issue: Dev implements delete list feature #369
 
-// todo: dev implements loadState
+interface IDeserializeableTodoList {
+  todoList: ITodoItem[];
+  lastDone: string;
+}
+
+const loadState = (): [ITodoItem[], string] => {
+  const strBuffer = "Loading todo list";
+  let todoList: ITodoItem[] = [];
+  let lastDone: string = "";
+  let jsonData: IDeserializeableTodoList = { todoList: [], lastDone: "" };
+  try {
+    jsonData = JSON.parse(fs.readFileSync("todos.json", "utf8"));
+    console.log(strBuffer, "... load was successful!");
+    todoList = jsonData["todoList"];
+    lastDone = jsonData["lastDone"];
+  } catch (err) {
+    console.log(strBuffer, "... load was NOT successful :(");
+  }
+
+  return [todoList, lastDone];
+};
 
 // SAVE STATE
-// todo: dev implements over-write check where user decides they want to overwrite
-// list A with list B or not: eg: list A has X items and list B has Y items
+// issue: Dev implements saving over-write check #370
 const saveState = (todoList: ITodoItem[], lastDone: string): void => {
   const strBuffer = "Saving todo list";
   const jsonData = JSON.stringify({
@@ -341,7 +360,7 @@ const saveState = (todoList: ITodoItem[], lastDone: string): void => {
     lastDone: lastDone
   });
   try {
-    fs.writeFileSync("todos.json", jsonData);
+    fs.writeFileSync("todos.json", jsonData, "utf8");
     console.log(strBuffer, "... save was successful!");
   } catch (err) {
     console.log(strBuffer, "... save was NOT successful :(");
@@ -351,11 +370,11 @@ const saveState = (todoList: ITodoItem[], lastDone: string): void => {
 export const mainCLI = (): void => {
   generalPrint(greetUser());
 
-  // todo: add auto-load here
-
   // initialize program variables
   let todoList: ITodoItem[] = [];
   let lastDone: string = "";
+
+  [todoList, lastDone] = loadState(); // auto-load
 
   // start main program loop
   let running = true;
@@ -364,8 +383,7 @@ export const mainCLI = (): void => {
     [todoList, lastDone, running] = menuActions[answer](todoList, lastDone);
   }
 
-  // todo: add auto-save here
-  saveState(todoList, lastDone);
+  saveState(todoList, lastDone); // auto-save
 
   generalPrint("Have a nice day!");
 };
