@@ -7,7 +7,7 @@ Know how to make things on a screen look good? Leave us a comment in this projec
 ## How To Contribute Design Work
 
 1. [see the Figma design doc](https://www.figma.com/file/xLQLwhw01n12pKgAnRt8Pt/AutoFocus-Design-Doc?node-id=0%3A1)
-2. see the [currently open design requests](https://github.com/avidrucker/autofocus-exp/issues?q=is%3Aopen+is%3Aissue+label%3Adesign+milestone%3Amvp-demo)
+2. see the [currently open design requests](https://github.com/avidrucker/autofocus-exp/issues?q=is%3Aissue+label%3Adesign+-milestone%3Aicebox+is%3Aopen)
 3. suggest other design improvements by [posting an issue](https://github.com/avidrucker/autofocus-exp/issues/new)
 4. ask unanswered questions you have [as a new issue](https://github.com/avidrucker/autofocus-exp/issues/new)
 
