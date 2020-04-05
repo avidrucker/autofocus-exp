@@ -39,6 +39,7 @@ const DONE = "x";
 // const ERROR = '!';
 // const NULL = '?';
 
+// issue: Dev refactors out any type from function returns #374
 export const getMark: any = {
   [TodoState.Marked]: () => `[${MARKED}]`,
   [TodoState.Unmarked]: () => `[${NO_MARK}]`,

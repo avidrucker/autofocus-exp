@@ -8,24 +8,39 @@ import {
 } from "./todoItem";
 import { getMinFrom0Up, isEmpty } from "./util";
 
-export const indexOfItem = (list: any[], attr: any, val: any): number => {
+// issue: Dev refactors out any type from function returns #374
+export const indexOfItem = (
+  list: any[],
+  attr: string,
+  val: TodoState
+): number => {
   return list.map(e => e[attr]).indexOf(val);
 };
 
+// issue: Dev refactors out any type from function returns #374
 export const indexOfItemAfter = (
   list: any[],
-  attr: any,
-  val: any,
+  attr: string,
+  val: TodoState,
   from: number
 ): number => {
   return list.map(e => e[attr]).indexOf(val, from);
 };
 
-export const lastIndexOfItem = (list: any[], attr: any, val: any): number => {
+// issue: Dev refactors out any type from function returns #374
+export const lastIndexOfItem = (
+  list: any[],
+  attr: string,
+  val: TodoState
+): number => {
   return list.map(e => e[attr]).lastIndexOf(val);
 };
 
-export const itemExists = (list: any[], attr: any, val: any): boolean => {
+export const itemExists = (
+  list: ITodoItem[],
+  attr: string,
+  val: TodoState
+): boolean => {
   return indexOfItem(list, attr, val) !== -1;
 };
 

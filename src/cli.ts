@@ -151,7 +151,7 @@ export const conductReviewsLoopCLI = (
 export const conductAllReviewsCLI = (
   todoList: ITodoItem[],
   lastDone: string
-): any => {
+): ITodoItem[] => {
   const reviewStart = determineReviewStart(todoList, lastDone);
   let subsetList: INumberedItem[] = numberAndSlice(todoList, reviewStart);
   let reviewables = subsetList.filter(
@@ -202,7 +202,7 @@ const printReviewSetupMessage = (todoList: ITodoItem[]): void => {
 const attemptReviewTodosCLI = (
   todoList: ITodoItem[],
   lastDone: string
-): any => {
+): ITodoItem[] => {
   if (isEmpty(todoList)) {
     return todoList;
   }
@@ -226,7 +226,10 @@ const attemptReviewTodosCLI = (
 // ****************************************
 
 // issue: Architect reviews for opportunity to make DRY, SOLID #299
-const enterFocusCLI = (todoList: ITodoItem[], lastDone: string): any => {
+const enterFocusCLI = (
+  todoList: ITodoItem[],
+  lastDone: string
+): [ITodoItem[], string] => {
   // 0. confirm that focusMode can be safely entered
   if (isEmpty(todoList)) {
     generalPrint(
@@ -253,6 +256,8 @@ const enterFocusCLI = (todoList: ITodoItem[], lastDone: string): any => {
 
   // 4. ask the user if they have work left to do on current item
   // If there is work left to do on the cmwtd item, a duplicate issue is created.
+  // todo: refactor workLeft object to simple yes/no prompt or, more formalized interface
+  // issue: Dev refactors out any type from function returns #374
   const response: any = { workLeft: "n" }; // initialize default "no" workLeft response
   if (promptUserForYNQ(`Do you have work left to do on this item?`) === "y") {
     response.workLeft = "y";
@@ -264,7 +269,7 @@ const enterFocusCLI = (todoList: ITodoItem[], lastDone: string): any => {
   return [todoList, lastDone];
 };
 
-const addNewCLI = (todoList: ITodoItem[]): any => {
+const addNewCLI = (todoList: ITodoItem[]): ITodoItem[] => {
   const temp: ITodoItem | null = promptUserForNewTodoItemCLI();
   if (temp !== null) {
     todoList = addTodoToList(todoList, temp);
@@ -279,8 +284,12 @@ const addNewCLI = (todoList: ITodoItem[]): any => {
 // ****************************************
 
 // issue: Architect reviews for opportunity to make DRY, SOLID #299
+// issue: Dev refactors out any type from function returns #374
 const menuActions: any = {
-  [MainMenuChoice.AddNew]: (todoList: ITodoItem[], lastDone: string): any => {
+  [MainMenuChoice.AddNew]: (
+    todoList: ITodoItem[],
+    lastDone: string
+  ): [ITodoItem[], string, boolean] => {
     todoList = addNewCLI(todoList);
     printTodoItemCount(todoList);
     return [todoList, lastDone, true];
@@ -288,28 +297,28 @@ const menuActions: any = {
   [MainMenuChoice.ReviewTodos]: (
     todoList: ITodoItem[],
     lastDone: string
-  ): any => {
+  ): [ITodoItem[], string, boolean] => {
     todoList = attemptReviewTodosCLI(todoList, lastDone);
     return [todoList, lastDone, true];
   },
   [MainMenuChoice.EnterFocus]: (
     todoList: ITodoItem[],
     lastDone: string
-  ): any => {
+  ): [ITodoItem[], string, boolean] => {
     [todoList, lastDone] = enterFocusCLI(todoList, lastDone);
     return [todoList, lastDone, true];
   },
   [MainMenuChoice.PrintList]: (
     todoList: ITodoItem[],
     lastDone: string
-  ): any => {
+  ): [ITodoItem[], string, boolean] => {
     printUpdate(todoList);
     return [todoList, lastDone, true];
   },
   [MainMenuChoice.ClearDots]: (
     todoList: ITodoItem[],
     lastDone: string
-  ): any => {
+  ): [ITodoItem[], string, boolean] => {
     generalPrint("Removing dots from dotted items...");
     generalPrint("Resetting the CMWTD...");
     return [undotAll(todoList), lastDone, true];
@@ -317,12 +326,15 @@ const menuActions: any = {
   [MainMenuChoice.ReadAbout]: (
     todoList: ITodoItem[],
     lastDone: string
-  ): any => {
+  ): [ITodoItem[], string, boolean] => {
     // issue: Dev adds about section text print out #128
     generalPrint("This is stub (placeholder) text. Please check back later.");
     return [todoList, lastDone, true];
   },
-  [MainMenuChoice.Quit]: (todoList: ITodoItem[], lastDone: string): any => {
+  [MainMenuChoice.Quit]: (
+    todoList: ITodoItem[],
+    lastDone: string
+  ): [ITodoItem[], string, boolean] => {
     return [todoList, lastDone, false];
   }
 };
@@ -405,6 +417,6 @@ New todo item 'Make cup of coffee' created!
 Your list now has 1 todo item.
 `;
 
-export const printSampleOutput = () => {
+export const printSampleOutput = (): void => {
   generalPrint(sampleOutput);
 };
