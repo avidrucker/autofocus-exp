@@ -327,7 +327,7 @@ const menuActions: any = {
   }
 };
 
-// todo: dev implements deleteList w/ warning this is irreversible, are they sure?
+// issue: Dev implements delete list feature #369
 
 interface IDeserializeableTodoList {
   todoList: ITodoItem[];
@@ -352,8 +352,7 @@ const loadState = (): [ITodoItem[], string] => {
 };
 
 // SAVE STATE
-// todo: dev implements over-write check where user decides they want to overwrite
-// list A with list B or not: eg: list A has X items and list B has Y items
+// issue: Dev implements saving over-write check #370
 const saveState = (todoList: ITodoItem[], lastDone: string): void => {
   const strBuffer = "Saving todo list";
   const jsonData = JSON.stringify({
@@ -375,8 +374,7 @@ export const mainCLI = (): void => {
   let todoList: ITodoItem[] = [];
   let lastDone: string = "";
 
-  // todo: add auto-load here
-  [todoList, lastDone] = loadState();
+  [todoList, lastDone] = loadState(); // auto-load
 
   // start main program loop
   let running = true;
@@ -385,8 +383,7 @@ export const mainCLI = (): void => {
     [todoList, lastDone, running] = menuActions[answer](todoList, lastDone);
   }
 
-  // todo: add auto-save here
-  saveState(todoList, lastDone);
+  saveState(todoList, lastDone); // auto-save
 
   generalPrint("Have a nice day!");
 };

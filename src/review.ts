@@ -67,7 +67,8 @@ const getNextItemOfStateAfterIndex = (
   return indexOfItemAfter(todoList, "state", state, i);
 };
 
-// currently this code is declarative/imperative, todo: let's make it into FP style
+// issue: Dev refactors determineReviewStart into FP style #372
+// currently this code is declarative/imperative
 export const determineReviewStart = (
   todoList: ITodoItem[],
   lastDone: string
@@ -106,7 +107,8 @@ export const numberAndSlice = (
   return todoList.map((x, i) => ({ item: x, index: i })).slice(reviewStart);
 };
 
-// todo: consider a sample list `[x] [o] [ ]`
+// consider a sample list `[x] [o] [ ]`
+// isssue: Dev refactors conductAllReviews() to be modular and atomic #371
 export const conductAllReviews = (
   todoList: ITodoItem[],
   lastDone: string,
