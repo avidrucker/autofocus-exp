@@ -1,6 +1,6 @@
 {
-  "name": "autofocus-exp",
-  "version": "0.0.0",
+  "name": "@autofocus/core",
+  "version": "0.1.0",
   "description": "cross platform app for todos",
   "main": "src/index.js",
   "devDependencies": {
@@ -48,7 +48,7 @@
     "url": "git+https://github.com/avidrucker/autofocus-exp.git"
   },
   "keywords": [
-    "todo-app"
+    "todo app", "todo list", "productivity"
   ],
   "author": "Avi Drucker",
   "license": "MIT",
