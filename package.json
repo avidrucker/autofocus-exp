@@ -1,7 +1,7 @@
 {
   "name": "@autofocus/core",
   "version": "0.1.0",
-  "description": "cross platform app for todos",
+	"description": "core library for todo list management app and experiement",
   "main": "src/index.js",
   "devDependencies": {
     "@istanbuljs/nyc-config-typescript": "^1.0.1",
