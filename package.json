@@ -1,5 +1,5 @@
 {
-  "name": "@autofocus/core",
+  "name": "@avidrucker/autofocus-core",
   "version": "0.1.0",
 	"description": "core library for todo list management app and experiement",
   "main": "src/index.js",
