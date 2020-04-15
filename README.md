@@ -2,6 +2,8 @@
 
 ![CircleCI](https://img.shields.io/circleci/build/github/avidrucker/autofocus-exp/master) ![GitHub commit activity](https://img.shields.io/github/commit-activity/m/avidrucker/autofocus-exp) ![GitHub last commit (branch)](https://img.shields.io/github/last-commit/avidrucker/autofocus-exp/master)
 
+[![GitHub license](https://img.shields.io/github/license/avidrucker/autofocus-exp)](https://github.com/avidrucker/autofocus-exp/blob/master/LICENSE) [![GitHub issues](https://img.shields.io/github/issues/avidrucker/autofocus-exp)](https://github.com/avidrucker/autofocus-exp/issues) [![Twitter](https://img.shields.io/twitter/url?style=social&url=https%3A%2F%2Fgithub.com%2Favidrucker%2Fautofocus-exp)](https://twitter.com/intent/tweet?text=Wow:&url=https%3A%2F%2Fgithub.com%2Favidrucker%2Fautofocus-exp)
+
 Hi, we're building a todo list app! This project tests the limits of remote team-work<sup>[[1]](#first)</sup> and to-do lists<sup>[[2]](#second)</sup>. You can [get paid](https://github.com/avidrucker/autofocus-exp/blob/master/docs/compensation_rules.md) to work on this project. Click on a role below to learn more about how you can help. To see this project's current status and roadmap, [click here](https://github.com/avidrucker/autofocus-exp/blob/master/docs/roadmap.md).
 
 ![Command Line App Making First Item](assets/cla_screenshot_2.png)
