@@ -36,7 +36,7 @@ You can see our full list of project tasks on our [issues board](https://github.
 
 ## Project License :page_with_curl:
 
-[GNU GPLv3](https://choosealicense.com/licenses/gpl-3.0/#)
+[MIT](https://choosealicense.com/licenses/mit/#)
 
 ## References :electric_plug:
 
