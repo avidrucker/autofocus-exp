@@ -1,6 +1,14 @@
-# AutoFocus: A Todo-List App
+Update `[Thursday, July 2nd, 2020]`: Thank you all for participating in this app construction project, data experiment, and quest for knowledge. This project is now officially closed`*`, though the results (and efforts and energy put in) will live on in a new form: "functional programming style AutoFocus" (abbrev. "FP-AF"). As part of this process, I will be [updating the user stores here](https://docs.google.com/spreadsheets/d/1ZUg1y6-fdnvYPiLu9joaE-Vifqe4W_dTsBdKYAAIdb8/edit?usp=sharing) as well as [updating and maintaining the new code here](https://github.com/avidrucker/fp-autofocus). Feel free to leave an issue on either repo or to email me directly if you have any questions.
+
+Ps. I've left the readme as-is for historical purposes.
+
+`*`We won't be taking on new participants, though still feel free to ask us how we're doing.
+
+# AutoFocus: A Todo-List App (no longer maintained, see fp-autofocus instead)
 
 ![CircleCI](https://img.shields.io/circleci/build/github/avidrucker/autofocus-exp/master) ![GitHub commit activity](https://img.shields.io/github/commit-activity/m/avidrucker/autofocus-exp) ![GitHub last commit (branch)](https://img.shields.io/github/last-commit/avidrucker/autofocus-exp/master)
+
+[![GitHub license](https://img.shields.io/github/license/avidrucker/autofocus-exp)](https://github.com/avidrucker/autofocus-exp/blob/master/LICENSE) [![GitHub issues](https://img.shields.io/github/issues/avidrucker/autofocus-exp)](https://github.com/avidrucker/autofocus-exp/issues) [![Twitter](https://img.shields.io/twitter/url?style=social&url=https%3A%2F%2Fgithub.com%2Favidrucker%2Fautofocus-exp)](https://twitter.com/intent/tweet?text=Wow:&url=https%3A%2F%2Fgithub.com%2Favidrucker%2Fautofocus-exp)
 
 Hi, we're building a todo list app! This project tests the limits of remote team-work<sup>[[1]](#first)</sup> and to-do lists<sup>[[2]](#second)</sup>. You can [get paid](https://github.com/avidrucker/autofocus-exp/blob/master/docs/compensation_rules.md) to work on this project. Click on a role below to learn more about how you can help. To see this project's current status and roadmap, [click here](https://github.com/avidrucker/autofocus-exp/blob/master/docs/roadmap.md).
 
@@ -34,7 +42,7 @@ You can see our full list of project tasks on our [issues board](https://github.
 
 ## Project License :page_with_curl:
 
-[GNU GPLv3](https://choosealicense.com/licenses/gpl-3.0/#)
+[MIT](https://choosealicense.com/licenses/mit/#)
 
 ## References :electric_plug:
 
