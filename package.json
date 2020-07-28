@@ -1,7 +1,7 @@
 {
   "name": "@avidrucker/autofocus-core",
   "version": "0.1.0",
-	"description": "core library for todo list management app and experiement",
+  "description": "core library for todo list management app and experiement",
   "main": "src/index.js",
   "devDependencies": {
     "@istanbuljs/nyc-config-typescript": "^1.0.1",
@@ -48,7 +48,9 @@
     "url": "git+https://github.com/avidrucker/autofocus-exp.git"
   },
   "keywords": [
-    "todo app", "todo list", "productivity"
+    "todo app",
+    "todo list",
+    "productivity"
   ],
   "author": "Avi Drucker",
   "license": "MIT",
